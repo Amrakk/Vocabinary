@@ -9,9 +9,9 @@ class LearningTypeModel {
     this.weight = 0,
   });
 
-  factory LearningTypeModel.fromMap(Map<String, dynamic> map) {
+  factory LearningTypeModel.fromMap(Map<String, dynamic> map, String id) {
     return LearningTypeModel(
-      id: map['id'],
+      id: id,
       name: map['name'],
       weight: map['weight'],
     );
@@ -22,5 +22,10 @@ class LearningTypeModel {
       'name': name,
       'weight': weight,
     };
+  }
+
+  @override
+  String toString() {
+    return 'LearningTypeModel{id: $id, name: $name, weight: $weight}';
   }
 }
