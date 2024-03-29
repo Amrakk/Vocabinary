@@ -4,18 +4,12 @@ import 'package:vocabinary/services/firebase/firestore_service.dart';
 class EngWordRepo {
   final _firestoreService = FirestoreService.instance;
 
-  static String documentPath(String id) => 'engWords/$id';
   static String collectionPath = 'engWords';
+  static String documentPath(String id) => 'engWords/$id';
 
-  Future<EngWordModel?> getEngWord({String? id, String? path}) {
-    assert(id != null || path != null, 'Either id or path must be provided.');
-    assert(!(id != null && path != null),
-        'Only one of id or path should be provided.');
+  Future<EngWordModel?> getEngWord(String id) => engWordStream(id).first;
 
-    return id != null
-        ? engWordStream(id: id).first
-        : engWordStream(path: path!).first;
-  }
+  Future<List<EngWordModel>> getEngWords() => engWordsStream().first;
 
   Future<String?> createEngWord(EngWordModel data) =>
       _firestoreService.createData(
@@ -23,10 +17,10 @@ class EngWordRepo {
         data: data.toMap(),
       );
 
-  Future<bool> updateEngWord(String id, Map<String, dynamic> data) =>
+  Future<bool> updateEngWord(String id, EngWordModel data) =>
       _firestoreService.updateData(
         documentPath: documentPath(id),
-        data: data,
+        data: data.toMap(),
       );
 
   Future<bool> deleteEngWord(String id) =>
@@ -38,19 +32,15 @@ class EngWordRepo {
         builder: _builder,
       );
 
-  Stream<EngWordModel?> engWordStream({String? id, String? path}) {
-    assert(id != null || path != null, 'Either id or path must be provided.');
-    assert(!(id != null && path != null),
-        'Only one of id or path should be provided.');
-
-    return _firestoreService.documentStream<EngWordModel?>(
-      path: id != null ? documentPath(id) : path!,
-      builder: _builder,
-    );
-  }
+  Stream<EngWordModel?> engWordStream(String id) =>
+      _firestoreService.documentStream<EngWordModel?>(
+        path: documentPath(id),
+        builder: _builder,
+      );
 
   Future<EngWordModel?> _builder(
-      Map<String, dynamic>? data, String documentID) async {
-    return data != null ? EngWordModel.fromMap(data, documentID) : null;
-  }
+    Map<String, dynamic>? data,
+    String documentID,
+  ) async =>
+      data != null ? EngWordModel.fromMap(data, documentID) : null;
 }

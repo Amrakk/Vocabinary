@@ -4,27 +4,30 @@ import 'package:vocabinary/services/firebase/firestore_service.dart';
 class WordRepo {
   final _firestoreService = FirestoreService.instance;
 
+  static String collectionPath(String topicID) => 'topics/$topicID/words';
   static String documentPath(String topicID, String id) =>
       'topics/$topicID/words/$id';
-  static String collectionPath(String topicID) => 'topics/$topicID/words';
 
   Future<WordModel?> getWord(String topicID, String id) =>
       wordStream(topicID, id).first;
 
-  Future<String?> createWord(String topicID, Map<String, dynamic> data) =>
+  Future<List<WordModel>> getWords(String topicID) =>
+      wordsStream(topicID).first;
+
+  Future<String?> createWord(String topicID, WordModel data) =>
       _firestoreService.createData(
         collectionPath: collectionPath(topicID),
-        data: data,
+        data: data.toMap(),
       );
 
   Future<bool> updateWord(
     String topicID,
     String id,
-    Map<String, dynamic> data,
+    WordModel data,
   ) =>
       _firestoreService.updateData(
         documentPath: documentPath(topicID, id),
-        data: data,
+        data: data.toMap(),
       );
 
   Future<bool> deleteWord(String topicID, String id) =>
@@ -43,8 +46,11 @@ class WordRepo {
       );
 
   Future<WordModel?> _builder(
-      Map<String, dynamic>? data, String documentID) async {
+    Map<String, dynamic>? data,
+    String documentID,
+  ) async {
     if (data == null) return null;
+
     final wordModel = WordModel.fromMap(data, documentID);
     await wordModel.loadEngWord;
     return wordModel;
