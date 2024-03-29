@@ -11,11 +11,11 @@ class WordModel {
   bool isPublic;
   bool isFavorite;
 
-  String _engWordRef = '';
+  String _engWordID = '';
 
   WordModel({
     this.id,
-    required String engWordRef,
+    required String engWordID,
     required this.userDefinition,
     this.description,
     this.illustration,
@@ -23,16 +23,16 @@ class WordModel {
     this.isPublic = false,
     this.isFavorite = false,
   }) {
-    _engWordRef = engWordRef;
+    _engWordID = engWordID;
   }
 
   Future<void> get loadEngWord async =>
-      engWord = await EngWordRepo().getEngWord(path: _engWordRef);
+      engWord = await EngWordRepo().getEngWord(_engWordID);
 
   factory WordModel.fromMap(Map<String, dynamic> map, String id) {
     return WordModel(
       id: id,
-      engWordRef: map['engWord'],
+      engWordID: map['engWord'],
       userDefinition: map['userDefinition'],
       description: map['description'],
       illustration: map['illustration'],
@@ -43,7 +43,7 @@ class WordModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'engWord': _engWordRef,
+      'engWord': _engWordID,
       'userDefinition': userDefinition,
       'description': description,
       'illustration': illustration,

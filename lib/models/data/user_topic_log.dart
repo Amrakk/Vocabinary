@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vocabinary/models/data/learning.dart';
+import 'package:vocabinary/data/repositories/learning_repo.dart';
 
 class UserTopicLogModel {
   String? id;
@@ -16,9 +17,9 @@ class UserTopicLogModel {
     this.learnings = const [],
   });
 
-  Future<void> loadLearnings() async {
-    assert(id == null, 'UserTopicLog ID is null');
-    // learnings = await LearningRepo().getLearnings(id!);
+  Future<void> loadLearnings(String topicID) async {
+    assert(id != null, 'UserTopicLog ID should not be null');
+    learnings = await LearningRepo().getLearnings(topicID, id!);
   }
 
   factory UserTopicLogModel.fromMap(Map<String, dynamic> map, String id) {
