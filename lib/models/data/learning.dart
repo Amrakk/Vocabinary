@@ -36,6 +36,6 @@ class LearningModel {
 
   @override
   String toString() {
-    return 'LearningModel{id: $id, point: $completion, learningType: $learningType, start: $start, finish: $finish}';
+    return 'LearningModel{id: $id, completion: $completion, learningType: $learningType, start: $start, finish: $finish}';
   }
 }
