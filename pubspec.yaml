@@ -41,6 +41,7 @@ dependencies:
     ## FIREBASE
     firebase_core: ^2.27.1
     cloud_firestore: ^4.15.9
+    audioplayers: ^6.0.0
 
 dev_dependencies:
     flutter_test:
