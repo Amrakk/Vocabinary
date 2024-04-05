@@ -42,6 +42,15 @@ class Dimensions {
       screenHeight(context) / getRatio(context, 22);
   static double height30(BuildContext context) =>
       screenHeight(context) / getRatio(context, 30);
+  static double heightSize(BuildContext context, double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.height * value;
+  }
+
+  static double widthSize(BuildContext context, double value) {
+    value /= 100;
+    return MediaQuery.of(context).size.width * value;
+  }
 
   // Width
   static double width(BuildContext context, double size) =>

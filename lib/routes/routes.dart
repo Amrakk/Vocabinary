@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:vocabinary/views/home_view.dart';
+import 'package:vocabinary/views/home/home_view.dart';
 
-class AppRoutes {
-  AppRoutes._();
-
-  static const String home = '/';
-
-  static final routes = <String, WidgetBuilder>{
-    home: (BuildContext context) => const HomePage(),
-  };
+Route<dynamic> appRoutes(RouteSettings settings) {
+  switch (settings.name) {
+    case '/':
+      return MaterialPageRoute(builder: (_) => const HomeView());
+    default:
+      return MaterialPageRoute(
+        builder: (_) => Scaffold(
+          body: Center(
+            child: Text('No route defined for ${settings.name}'),
+          ),
+        ),
+      );
+  }
 }
