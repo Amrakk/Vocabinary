@@ -1,16 +1,13 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class ChartTitles {
- static Widget  bottomTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.normal,
-      fontSize: 10,
-    );
+  static Widget bottomTitleWidgets(double value, TitleMeta meta) {
+    const style = TextStyle(fontWeight: FontWeight.normal, fontSize: 10);
     Widget text;
     switch (value.toInt()) {
       case 0:
-        text =  const Text('Mon', style: style);
+        text = const Text('Mon', style: style);
         break;
       case 1:
         text = const Text('Tue', style: style);
@@ -40,10 +37,7 @@ class ChartTitles {
   }
 
   static Widget leftTitleWidgets(double value, TitleMeta meta) {
-    const style = TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 10,
-    );
+    const style = TextStyle(fontWeight: FontWeight.bold, fontSize: 10);
     String text;
     switch (value.toInt()) {
       case 1:

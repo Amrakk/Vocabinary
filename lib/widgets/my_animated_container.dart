@@ -1,13 +1,11 @@
+import '../utils/dimensions.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/dimensions.dart';
-
 class MyAnimatedContainer extends StatefulWidget {
-  MyAnimatedContainer({required this.child, double? width, super.key})
-      : width = width ?? 85;
+  final Widget child;
+  final double width;
 
-  Widget child;
-  double width;
+  const MyAnimatedContainer({required this.child, this.width = 85, super.key});
 
   @override
   State<MyAnimatedContainer> createState() => _MyAnimatedContainerState();
@@ -17,7 +15,7 @@ class _MyAnimatedContainerState extends State<MyAnimatedContainer> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      width: Dimensions.widthSize(context, widget.width),
+      width: Dimensions.widthRatio(context, widget.width),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(10),
@@ -26,14 +24,16 @@ class _MyAnimatedContainerState extends State<MyAnimatedContainer> {
             color: Color(0x89000000),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: Offset(0, 3),
           ),
         ],
       ),
       duration: const Duration(milliseconds: 300),
       child: Padding(
-        padding:
-            const EdgeInsets.only(top: 20, bottom: 20, right: 15, left: 15),
+        padding: EdgeInsets.symmetric(
+          vertical: Dimensions.height20(context),
+          horizontal: Dimensions.width(context, 15),
+        ),
         child: widget.child,
       ),
     );

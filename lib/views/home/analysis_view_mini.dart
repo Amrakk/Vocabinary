@@ -1,14 +1,11 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:vocabinary/utils/dimensions.dart';
-import 'package:vocabinary/widgets/home/drop_down_button.dart';
-import 'package:vocabinary/widgets/home/pie_chart.dart';
-import 'package:vocabinary/widgets/my_animated_container.dart';
+import 'package:flutter/material.dart';
 
-import '../../widgets/home/line_chart_titles.dart';
-import '../../widgets/home/line_chart.dart';
-import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'package:vocabinary/utils/dimensions.dart';
+import 'package:vocabinary/widgets/home/pie_chart.dart';
+import 'package:vocabinary/widgets/home/line_chart.dart';
+import 'package:vocabinary/widgets/my_animated_container.dart';
+import 'package:vocabinary/widgets/home/drop_down_button.dart';
 
 class AnalysisView extends StatefulWidget {
   const AnalysisView({super.key});
@@ -23,7 +20,7 @@ class _AnalysisViewState extends State<AnalysisView> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(top: Dimensions.height20(context)),
       child: Align(
         alignment: Alignment.topCenter,
         child: SingleChildScrollView(
@@ -33,58 +30,52 @@ class _AnalysisViewState extends State<AnalysisView> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                     const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Total Vocabulary',
                           style: TextStyle(
-                            fontSize: 19,
+                            fontSize: Dimensions.fontSize(context, 19),
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        MyDropDownButton()
+                        const MyDropDownButton()
                       ],
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
+                    SizedBox(height: Dimensions.height30(context)),
                     SizedBox(
-                      height: Dimensions.heightSize(context, 30),
+                      height: Dimensions.heightRatio(context, 30),
                       child: const MyLineChart(),
                     )
-                  ]
+                  ],
                 ),
               ),
-              const SizedBox(height: 20,),
+              SizedBox(height: Dimensions.height20(context)),
               MyAnimatedContainer(
                 child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Word Level',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Word Level',
+                          style: TextStyle(
+                            fontSize: Dimensions.fontSize20(context),
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SizedBox(
-                        height: Dimensions.heightSize(context, 30),
-                        child: const MyPieChart(),
-                      ),
-                      const SizedBox(height: 20,)
-                    ]
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: Dimensions.height30(context)),
+                    SizedBox(
+                      height: Dimensions.heightRatio(context, 30),
+                      child: const MyPieChart(),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 30,),
+              SizedBox(height: Dimensions.height(context, 40)),
             ],
           ),
         ),

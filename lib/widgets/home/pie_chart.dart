@@ -1,10 +1,8 @@
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
-
-import 'Indicator.dart';
+import 'package:vocabinary/widgets/home/indicator.dart';
 
 int touchedIndex = -1;
 
@@ -14,6 +12,7 @@ class MyPieChart extends StatefulWidget {
   @override
   State<MyPieChart> createState() => _MyPieChartState();
 }
+
 class _MyPieChartState extends State<MyPieChart> {
   @override
   Widget build(BuildContext context) {
@@ -21,11 +20,11 @@ class _MyPieChartState extends State<MyPieChart> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          width: Dimensions.widthSize(context, 50),
+          width: Dimensions.widthRatio(context, 50),
           child: PieChart(
             PieChartData(
-              centerSpaceRadius: 55,
-              sectionsSpace:  10,
+              centerSpaceRadius: Dimensions.width(context, 55),
+              sectionsSpace: Dimensions.width10(context),
               pieTouchData: PieTouchData(
                 touchCallback: (event, pieTouchResponse) {
                   setState(() {
@@ -35,8 +34,8 @@ class _MyPieChartState extends State<MyPieChart> {
                       touchedIndex = -1;
                       return;
                     }
-                    touchedIndex = pieTouchResponse
-                        .touchedSection!.touchedSectionIndex;
+                    touchedIndex =
+                        pieTouchResponse.touchedSection!.touchedSectionIndex;
                   });
                 },
               ),
@@ -44,44 +43,36 @@ class _MyPieChartState extends State<MyPieChart> {
             ),
           ),
         ),
-        const SizedBox(width: 28),
-        const Column(
+        SizedBox(width: Dimensions.width(context, 28)),
+        Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Indicator(
-              color: Color(0xff0293ee),
+              color: AppColors.pieChartIndicator['Easy']!,
               text: 'Easy',
               isSquare: true,
             ),
-            SizedBox(
-              height: 4,
-            ),
+            SizedBox(height: Dimensions.height(context, 4)),
             Indicator(
-              color: Color(0xfff8b250),
+              color: AppColors.pieChartIndicator['Normal']!,
               text: 'Normal',
               isSquare: true,
             ),
-            SizedBox(
-              height: 4,
-            ),
+            SizedBox(height: Dimensions.height(context, 4)),
             Indicator(
-              color: Color(0xff845bef),
+              color: AppColors.pieChartIndicator['Hard']!,
               text: 'Hard',
               isSquare: true,
             ),
-            SizedBox(
-              height: 4,
-            ),
+            SizedBox(height: Dimensions.height(context, 4)),
             Indicator(
-              color: Color(0xff13d38e),
+              color: AppColors.pieChartIndicator['Ultimate']!,
               text: 'Ultimate',
               isSquare: true,
             ),
-            SizedBox(
-              height: 18,
-            ),
+            SizedBox(height: Dimensions.height(context, 18)),
           ],
         ),
       ],
@@ -91,22 +82,22 @@ class _MyPieChartState extends State<MyPieChart> {
 
 List<Map<String, dynamic>> data = [
   {
-    'color': const Color(0xff0293ee),
+    'color': AppColors.pieChartIndicator['Easy']!,
     'value': 40,
     'title': '40%',
   },
   {
-    'color': const Color(0xfff8b250),
+    'color': AppColors.pieChartIndicator['Normal']!,
     'value': 30,
     'title': '30%',
   },
   {
-    'color': const Color(0xff845bef),
+    'color': AppColors.pieChartIndicator['Hard']!,
     'value': 15,
     'title': '15%',
   },
   {
-    'color': const Color(0xff13d38e),
+    'color': AppColors.pieChartIndicator['Ultimate']!,
     'value': 15,
     'title': '15%',
   },
@@ -124,9 +115,9 @@ List<PieChartSectionData> showingSections() {
       title: data[i]['title'],
       radius: radius,
       titleStyle: TextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-          shadows: shadows
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        shadows: shadows,
       ),
     );
   });

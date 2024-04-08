@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
+import 'package:vocabinary/utils/colors.dart';
+import 'package:vocabinary/utils/dimensions.dart';
+
 class MyDropDownButton extends StatefulWidget {
-  const MyDropDownButton({Key? key}) : super(key: key);
+  const MyDropDownButton({super.key});
 
   @override
   State<MyDropDownButton> createState() => _MyDropDownButtonState();
 }
 
-class _MyDropDownButtonState extends State<MyDropDownButton>{
-  var style = const TextStyle(
-    fontSize: 15,
-    fontWeight: FontWeight.bold,
-  );
-  var gradientColors = [
-    const Color(0xff5efce8),
-    const Color(0xff2196f3),
-  ];
-
+class _MyDropDownButtonState extends State<MyDropDownButton> {
   @override
   Widget build(BuildContext context) {
+    const gradientColors = AppColors.lineChartGradient;
+    final style = TextStyle(
+      fontSize: Dimensions.fontSize(context, 15),
+      fontWeight: FontWeight.bold,
+    );
+
     return DropdownButton(
       borderRadius: BorderRadius.circular(10),
       underline: Container(),
       value: 'Week',
-      items:  [
+      items: [
         DropdownMenuItem(
           value: 'Week',
           child: GradientText(
@@ -50,9 +50,7 @@ class _MyDropDownButtonState extends State<MyDropDownButton>{
           ),
         ),
       ],
-      onChanged: (value) {  },
+      onChanged: (value) {},
     );
   }
-
 }
-
