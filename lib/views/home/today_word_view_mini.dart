@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/widgets/home/card_vocabulary.dart';
 
 class TodayWorldView extends StatefulWidget {

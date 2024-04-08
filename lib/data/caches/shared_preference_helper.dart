@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceHelper {
@@ -6,6 +8,12 @@ class SharedPreferenceHelper {
 
   SharedPreferenceHelper() {
     _sharedPreference = SharedPreferences.getInstance();
+  }
+
+  Future<bool> changeTheme(bool value) {
+    return _sharedPreference!.then((prefs) {
+      return prefs.setBool(is_dark_mode, value);
+    });
   }
 
   Future<bool> get isDarkMode {
