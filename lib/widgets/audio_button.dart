@@ -1,10 +1,7 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:vocabinary/data/caches/audio_cache_manager.dart';
-
 import 'package:vocabinary/utils/dimensions.dart';
+import 'package:vocabinary/data/caches/audio_cache_manager.dart';
 
 class AudioButton extends StatefulWidget {
   final String url;
@@ -21,16 +18,18 @@ class _AudioButtonState extends State<AudioButton> {
 
   void _init() async {
     _player = AudioPlayer();
-    final audioSource = await AudioCacheManager.getAudioSource(widget.url);
-
-    await _player.setAudioSource(audioSource);
-    _player.playerStateStream.listen((event) {
-      if (event.processingState == ProcessingState.completed) {
-        setState(() {
-          isProcessing = false;
+    await AudioCacheManager.getAudioSource(widget.url).then(
+      (value) async {
+        await _player.setAudioSource(value);
+        _player.playerStateStream.listen((event) {
+          if (event.processingState == ProcessingState.completed) {
+            setState(() {
+              isProcessing = false;
+            });
+          }
         });
-      }
-    });
+      },
+    );
   }
 
   @override
@@ -40,9 +39,9 @@ class _AudioButtonState extends State<AudioButton> {
   }
 
   void _dispose() async {
-    await AudioCacheManager.removeAudioSource(widget.url);
-    await AudioCacheManager.dispose();
-    await _player.dispose();
+    await AudioCacheManager.removeAudioSource(widget.url).then((value) async {
+      await _player.dispose();
+    });
   }
 
   @override
@@ -61,7 +60,7 @@ class _AudioButtonState extends State<AudioButton> {
               setState(() {
                 isProcessing = true;
               });
-              AudioCacheManager.stat();
+
               await _player.play().catchError((e) {
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -7,6 +7,7 @@ class WordModel {
   String userDefinition;
   String? description;
   String? illustration;
+  int level;
   int point;
   bool isPublic;
   bool isFavorite;
@@ -19,6 +20,7 @@ class WordModel {
     required this.userDefinition,
     this.description,
     this.illustration,
+    this.level = 1,
     this.point = 0,
     this.isPublic = false,
     this.isFavorite = false,
@@ -36,6 +38,7 @@ class WordModel {
       userDefinition: map['userDefinition'],
       description: map['description'],
       illustration: map['illustration'],
+      level: map['level'],
       point: map['point'],
       isFavorite: map['isFavorite'],
     );
@@ -47,6 +50,7 @@ class WordModel {
       'userDefinition': userDefinition,
       'description': description,
       'illustration': illustration,
+      'level': level,
       'point': point,
       'isPublic': isPublic,
       'isFavorite': isFavorite,
@@ -55,6 +59,6 @@ class WordModel {
 
   @override
   String toString() {
-    return 'WordModel{id: $id, engWord: $engWord, userDefinition: $userDefinition, description: $description, illustration: $illustration, point: $point, isPublic: $isPublic, isFavorite: $isFavorite}';
+    return 'WordModel{id: $id, engWord: $engWord, userDefinition: $userDefinition, description: $description, illustration: $illustration, level: $level, point: $point, isPublic: $isPublic, isFavorite: $isFavorite}';
   }
 }

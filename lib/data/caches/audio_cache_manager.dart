@@ -40,29 +40,17 @@ class AudioCacheManager {
 
   static int _getAudioSourceIndex(String url) {
     try {
-      var audioSource = _audioSources
-          .firstWhere((element) => element.keys.first.uri.toString() == url);
+      var audioSource =
+          _audioSources.firstWhere((e) => e.keys.first.uri.toString() == url);
       return _audioSources.indexOf(audioSource);
     } catch (e) {
       return -1;
     }
   }
 
-  static void stat() {
-    print('========================');
-    _audioSources.toList().forEach((element) {
-      print(element.keys.first.uri.toString());
-      print(element.values.first);
-    });
-    print('========================');
-  }
-
   static LockCachingAudioSource? _getSingleAudioSource() {
     try {
-      return _audioSources
-          .firstWhere((element) => element.values.first == 1)
-          .keys
-          .first;
+      return _audioSources.firstWhere((e) => e.values.first == 1).keys.first;
     } catch (e) {
       return null;
     }
@@ -73,7 +61,8 @@ class AudioCacheManager {
       for (final audioSource in _audioSources) {
         await audioSource.keys.first.clearCache().catchError((_) {});
       }
-    } catch (e) {}
-    _audioSources.clear();
+    } finally {
+      _audioSources.clear();
+    }
   }
 }
