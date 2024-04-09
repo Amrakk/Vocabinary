@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vocabinary/data/caches/audio_cache_manager.dart';
+import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
-import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
-import 'package:vocabinary/views/home/home_view.dart';
+import 'package:vocabinary/viewmodels/theme_view_model.dart';
+import 'package:vocabinary/data/caches/audio_cache_manager.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class MyApp extends StatefulWidget {
@@ -43,7 +43,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _mainNavigatorKey = GlobalKey<NavigatorState>();
   var _bottomBarIndex = 0;
+
+  @override
+  void dispose() {
+    AudioCacheManager.dispose();
+    _mainNavigatorKey.currentState!.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
         preferredSize: Size.fromHeight(70),
         child: MyAppBar(),
       ),
-      body: const HomeView(),
+      body: Navigator(
+        key: _mainNavigatorKey,
+        initialRoute: AppRoutes.initialRoute,
+        onGenerateRoute: AppRoutes.generateMainRoutes,
+      ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
         iconSize: 25,
         inactiveColor:
@@ -76,7 +88,11 @@ class _MyHomePageState extends State<MyHomePage> {
         notchSmoothness: NotchSmoothness.smoothEdge,
         leftCornerRadius: 20,
         rightCornerRadius: 20,
-        onTap: (index) => setState(() => _bottomBarIndex = index),
+        onTap: (index) {
+          setState(() => _bottomBarIndex = index);
+          _mainNavigatorKey.currentState!
+              .pushReplacementNamed(AppRoutes.mainRoutes.keys.toList()[index]);
+        },
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,

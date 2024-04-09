@@ -7,6 +7,7 @@ import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/data/repositories/user_topic_log_repo.dart';
 
 class TopicModel {
+  int level;
   String? id;
   String? name;
   int wordCount;
@@ -22,6 +23,7 @@ class TopicModel {
     this.id,
     this.name,
     this.ownerID,
+    this.level = 1,
     this.wordCount = 0,
     this.isPublic = false,
     this.createdAt,
@@ -63,6 +65,7 @@ class TopicModel {
       id: id,
       name: map['name'],
       ownerID: map['ownerID'],
+      level: map['level'] ?? 1,
       wordCount: map['wordCount'] ?? 0,
       isPublic: map['isPublic'] ?? false,
       createdAt: map['createdAt'],
@@ -73,9 +76,10 @@ class TopicModel {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'level': level,
       'ownerID': ownerID,
-      'wordCount': wordCount,
       'isPublic': isPublic,
+      'wordCount': wordCount,
       'createdAt': createdAt,
       'followers': followers,
     };
@@ -83,6 +87,6 @@ class TopicModel {
 
   @override
   String toString() {
-    return 'Topic{id: $id, name: $name, wordCount: $wordCount, isPublic: $isPublic, ownerID: $ownerID, createdAt: $createdAt}';
+    return 'Topic{id: $id, name: $name, level: $level, wordCount: $wordCount, isPublic: $isPublic, ownerID: $ownerID, createdAt: $createdAt}';
   }
 }
