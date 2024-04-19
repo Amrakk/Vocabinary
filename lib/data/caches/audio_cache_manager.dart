@@ -29,6 +29,8 @@ class AudioCacheManager {
 
   static Future<void> removeAudioSource(String url) async {
     final index = _getAudioSourceIndex(url);
+
+    if (index == -1) return;
     final audioSourceMap = _audioSources.elementAt(index);
     audioSourceMap.update(audioSourceMap.keys.first, (value) => value--);
 
