@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/dimensions.dart';
-import 'package:vocabinary/widgets/audio_button.dart';
+import 'package:vocabinary/widgets/audio_button/audio_button.dart';
 
 class CardVocabulary extends StatefulWidget {
   const CardVocabulary({super.key});
@@ -56,6 +56,7 @@ class _CardVocabularyState extends State<CardVocabulary> {
                   ],
                 ),
                 const AudioButton(
+                  word: 'rendezvous',
                   url:
                       'https://api.dictionaryapi.dev/media/pronunciations/en/rendezvous-us.mp3',
                 ),
