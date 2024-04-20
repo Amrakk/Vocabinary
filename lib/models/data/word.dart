@@ -9,7 +9,6 @@ class WordModel {
   String? illustration;
   int level;
   int point;
-  bool isPublic;
   bool isFavorite;
 
   String _engWordID = '';
@@ -18,11 +17,11 @@ class WordModel {
     this.id,
     required String engWordID,
     required this.userDefinition,
+    this.engWord,
     this.description,
     this.illustration,
     this.level = 1,
     this.point = 0,
-    this.isPublic = false,
     this.isFavorite = false,
   }) {
     _engWordID = engWordID;
@@ -52,13 +51,12 @@ class WordModel {
       'illustration': illustration,
       'level': level,
       'point': point,
-      'isPublic': isPublic,
       'isFavorite': isFavorite,
     };
   }
 
   @override
   String toString() {
-    return 'WordModel{id: $id, engWord: $engWord, userDefinition: $userDefinition, description: $description, illustration: $illustration, level: $level, point: $point, isPublic: $isPublic, isFavorite: $isFavorite}';
+    return 'WordModel{id: $id, engWord: $engWord, userDefinition: $userDefinition, description: $description, illustration: $illustration, level: $level, point: $point, isFavorite: $isFavorite}';
   }
 }
