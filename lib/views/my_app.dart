@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
+import 'package:vocabinary/models/data/eng_word.dart';
+import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
-import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
+// import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class MyApp extends StatefulWidget {
@@ -21,7 +24,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
-        ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
+        // ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
       ],
       child: Consumer<ThemeViewModel>(
         builder: (_, themeViewModel, __) => MaterialApp(
@@ -31,6 +34,7 @@ class _MyAppState extends State<MyApp> {
           themeMode:
               themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: const MyHomePage(),
+          onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
     );
@@ -65,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Navigator(
         key: _mainNavigatorKey,
         initialRoute: AppRoutes.initialRoute,
-        onGenerateRoute: AppRoutes.generateMainRoutes,
+        onGenerateRoute: AppRoutes.generateRoutes,
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
         iconSize: 25,
@@ -94,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (index == _bottomBarIndex) return;
           setState(() => _bottomBarIndex = index);
           _mainNavigatorKey.currentState!
-              .pushReplacementNamed(AppRoutes.mainRoutes.keys.toList()[index]);
+              .pushReplacementNamed(AppRoutes.homeRoutes.keys.toList()[index]);
         },
       ),
       floatingActionButtonLocation:

@@ -31,26 +31,33 @@ dependencies:
     flutter:
         sdk: flutter
 
-    ## ICON
-    icons_plus: ^5.0.0
-    cupertino_icons: ^1.0.6
+    ## ANIMATION
+    page_transition: ^2.1.0
+
+    ## AUDIO
+    just_audio: ^0.9.37
 
     ## CARD
     flip_card: ^0.7.0
     flutter_card_swiper: ^7.0.0
 
-    ## STATE MANAGEMENT
-    provider: ^6.1.2
-
     ## ENV
     flutter_dotenv: ^5.1.0
     shared_preferences: ^2.2.2
 
+    ## FIREBASE
+    firebase_core: ^2.27.1
+    cloud_firestore: ^4.15.9
+
     ## FONT
     google_fonts: ^6.2.1
 
-    ## AUDIO
-    just_audio: ^0.9.37
+    ## ICON
+    icons_plus: ^5.0.0
+    cupertino_icons: ^1.0.6
+
+    ## STATE MANAGEMENT
+    provider: ^6.1.2
 
     ## WIDGET
     fl_chart: ^0.67.0
@@ -58,10 +65,6 @@ dependencies:
     stylish_bottom_bar: ^1.1.0
     simple_gradient_text: ^1.3.0
     animated_bottom_navigation_bar: ^1.3.3
-
-    ## FIREBASE
-    firebase_core: ^2.27.1
-    cloud_firestore: ^4.15.9
 
     ## OTHERS
     bcrypt: ^1.1.3
@@ -90,7 +93,7 @@ flutter:
     # To add assets to your application, add an assets section, like this:
     assets:
         - .env
-          # - images/a_dot_burr.jpeg
+        - assets/images/
           # - images/a_dot_ham.jpeg
 
     # An image asset can refer to one or more resolution-specific "variants", see
