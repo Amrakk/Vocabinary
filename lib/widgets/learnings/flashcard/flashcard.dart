@@ -98,17 +98,18 @@ class FlashcardState extends State<Flashcard> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: Dimensions.width12(context),
+                horizontal: Dimensions.width16(context),
               ),
-
-              // TODO: handle overflow text
-              child: Text(
-                widget.word.engWord?.word ?? '',
-                style: TextStyle(
-                  fontSize: Dimensions.fontSize(context, 70),
-                  fontWeight: FontWeight.bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.word.engWord?.word ?? '',
+                  style: TextStyle(
+                    fontSize: Dimensions.fontSize(context, 70),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
             SizedBox(height: Dimensions.heightRatio(context, 0.5)),
@@ -126,7 +127,7 @@ class FlashcardState extends State<Flashcard> {
               key: ValueKey(widget.word.id),
               controller: _audioButtonController,
               word: widget.word.engWord?.word ?? '',
-              size: Dimensions.iconSize(context, 100),
+              size: Dimensions.iconSize(context, 80),
               url: widget.word.engWord?.audio ?? '',
             ),
           ],
@@ -158,13 +159,16 @@ class FlashcardState extends State<Flashcard> {
             Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: Dimensions.width12(context)),
-              child: Text(
-                widget.word.userDefinition,
-                style: TextStyle(
-                  fontSize: Dimensions.fontSize(context, 70),
-                  fontWeight: FontWeight.bold,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  widget.word.userDefinition,
+                  style: TextStyle(
+                    fontSize: Dimensions.fontSize(context, 70),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
             SizedBox(height: Dimensions.heightRatio(context, 1.0)),

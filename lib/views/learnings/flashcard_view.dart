@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/models/data/word.dart';
@@ -147,7 +149,7 @@ class _FlashcardViewState extends State<FlashcardView> {
                               .setBorderColor(Colors.transparent);
                         }
                       },
-                      threshold: 150,
+                      threshold: 125,
                       cardCount: _flashcardViewModel.count,
                       swipeOptions:
                           const SwipeOptions.symmetric(horizontal: true),
@@ -182,7 +184,7 @@ class _FlashcardViewState extends State<FlashcardView> {
                       await _cardSwiperController.unswipe();
                     },
                     icon: Icons.replay_rounded,
-                    size: Dimensions.iconSize(context, 70),
+                    size: Dimensions.iconSize(context, 60),
                   ),
                   MyIconButton(
                     onTap: () async {
@@ -195,7 +197,7 @@ class _FlashcardViewState extends State<FlashcardView> {
                       setState(() {});
                     },
                     icon: Icons.shuffle_rounded,
-                    size: Dimensions.iconSize(context, 70),
+                    size: Dimensions.iconSize(context, 60),
                   ),
                   Consumer<FlashcardViewModel>(
                     builder: (_, flashcardViewModel, __) => MyIconButton(
@@ -205,7 +207,7 @@ class _FlashcardViewState extends State<FlashcardView> {
                       icon: flashcardViewModel.isPlaying
                           ? Icons.pause_rounded
                           : Icons.play_arrow_rounded,
-                      size: Dimensions.iconSize(context, 70),
+                      size: Dimensions.iconSize(context, 60),
                     ),
                   ),
                 ],
@@ -254,12 +256,15 @@ class _FlashcardViewState extends State<FlashcardView> {
                   fit: BoxFit.cover,
                 ),
               ),
-              Text(
-                'CONGRATULATIONS!',
-                style: TextStyle(
-                  color: const Color(0xFFFFD8BE),
-                  fontSize: Dimensions.fontSize30(context),
-                  fontWeight: FontWeight.w900,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'CONGRATULATIONS!',
+                  style: TextStyle(
+                    color: const Color(0xFFFFD8BE),
+                    fontSize: Dimensions.fontSize30(context),
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
               SizedBox(height: Dimensions.height(context, 4)),
@@ -267,17 +272,20 @@ class _FlashcardViewState extends State<FlashcardView> {
                 'You have memorized',
                 style: TextStyle(
                   color: const Color(0xFFFFD8BE),
-                  fontSize: Dimensions.fontSize22(context),
+                  fontSize: Dimensions.fontSize20(context),
                   fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(height: Dimensions.height10(context)),
-              Text(
-                '${_flashcardViewModel.learnedWords.length}/${_flashcardViewModel.count} Words',
-                style: TextStyle(
-                  color: const Color(0xFFFFD8BE),
-                  fontSize: Dimensions.fontSize(context, 48),
-                  fontWeight: FontWeight.w900,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${_flashcardViewModel.learnedWords.length}/${_flashcardViewModel.count} Words',
+                  style: TextStyle(
+                    color: const Color(0xFFFFD8BE),
+                    fontSize: Dimensions.fontSize(context, 40),
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
               SizedBox(height: Dimensions.height30(context)),
