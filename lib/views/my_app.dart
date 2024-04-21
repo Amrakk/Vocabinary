@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vocabinary/data/repositories/word_repo.dart';
+import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
+import 'package:vocabinary/models/data/eng_word.dart';
+import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
@@ -31,6 +35,7 @@ class _MyAppState extends State<MyApp> {
           themeMode:
               themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: const MyHomePage(),
+          onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
     );
@@ -47,6 +52,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _mainNavigatorKey = GlobalKey<NavigatorState>();
   var _bottomBarIndex = 0;
+  late List<WordModel> words;
+
+  void init() async {
+    words = await WordRepo().getWords('wIEzPcEYaaCwzCrNghTh');
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -65,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Navigator(
         key: _mainNavigatorKey,
         initialRoute: AppRoutes.initialRoute,
-        onGenerateRoute: AppRoutes.generateMainRoutes,
+        onGenerateRoute: AppRoutes.generateRoutes,
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
         iconSize: 25,
@@ -94,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (index == _bottomBarIndex) return;
           setState(() => _bottomBarIndex = index);
           _mainNavigatorKey.currentState!
-              .pushReplacementNamed(AppRoutes.mainRoutes.keys.toList()[index]);
+              .pushReplacementNamed(AppRoutes.homeRoutes[index]);
         },
       ),
       floatingActionButtonLocation:
@@ -103,7 +119,15 @@ class _MyHomePageState extends State<MyHomePage> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context, rootNavigator: true).pushNamed(
+            '/level',
+            arguments: SelectWordsArgs(
+              words: words,
+              topicID: 'wIEzPcEYaaCwzCrNghTh',
+            ),
+          );
+        },
         tooltip: 'Add new word',
         child: const Icon(Icons.add),
       ),
