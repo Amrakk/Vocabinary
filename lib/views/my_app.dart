@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 import 'package:vocabinary/models/data/eng_word.dart';
 import 'package:vocabinary/models/data/word.dart';
@@ -8,7 +9,7 @@ import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
-// import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
+import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class MyApp extends StatefulWidget {
@@ -24,7 +25,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
-        // ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
+        ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
       ],
       child: Consumer<ThemeViewModel>(
         builder: (_, themeViewModel, __) => MaterialApp(
@@ -51,6 +52,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _mainNavigatorKey = GlobalKey<NavigatorState>();
   var _bottomBarIndex = 0;
+  late List<WordModel> words;
+
+  void init() async {
+    words = await WordRepo().getWords('wIEzPcEYaaCwzCrNghTh');
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -98,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (index == _bottomBarIndex) return;
           setState(() => _bottomBarIndex = index);
           _mainNavigatorKey.currentState!
-              .pushReplacementNamed(AppRoutes.homeRoutes.keys.toList()[index]);
+              .pushReplacementNamed(AppRoutes.homeRoutes[index]);
         },
       ),
       floatingActionButtonLocation:
@@ -107,7 +119,15 @@ class _MyHomePageState extends State<MyHomePage> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context, rootNavigator: true).pushNamed(
+            '/level',
+            arguments: SelectWordsArgs(
+              words: words,
+              topicID: 'wIEzPcEYaaCwzCrNghTh',
+            ),
+          );
+        },
         tooltip: 'Add new word',
         child: const Icon(Icons.add),
       ),

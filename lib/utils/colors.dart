@@ -7,6 +7,7 @@ class AppColors {
   static const lineChartGradient = [Color(0xff5efce8), Color(0xff2196f3)];
   static const lineChartInnerGradient = [Color(0xff3c8ce7), Color(0xff000000)];
   static const animatedLayerGradient = [Color(0xff003566), Color(0xff006FD6)];
+  static const primaryButtonGradient = [Color(0xFF023E8A), Color(0xFF003270)];
 
   static const mainGreen = Color(0xFF06FF00);
   static const mainRed = Color(0xFFFF1700);

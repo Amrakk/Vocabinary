@@ -1,25 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 
 class ConfirmButton extends StatelessWidget {
   final String label;
+  final double fontSize;
   final Function() onPressed;
   final IconData? icon;
+  final double iconSize;
+  final double heightRatio;
+  final double widthRatio;
+  final double borderRadius;
+
   const ConfirmButton({
     super.key,
     required this.label,
     required this.onPressed,
     this.icon,
+    this.iconSize = 20.0,
+    this.fontSize = 16.0,
+    this.heightRatio = 7.0,
+    this.widthRatio = 55.5,
+    this.borderRadius = 10.0,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: Dimensions.heightRatio(context, 7),
-      width: Dimensions.widthRatio(context, 55),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: Dimensions.heightRatio(context, heightRatio),
+      width: Dimensions.widthRatio(context, widthRatio),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          stops: [0.08, 1.0],
+          colors: AppColors.primaryButtonGradient,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+      ),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(const Color(0xFF023E8A)),
+          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+            ),
+          ),
         ),
         onPressed: onPressed,
         child: Row(
@@ -28,7 +55,7 @@ class ConfirmButton extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                fontSize: Dimensions.fontSize16(context),
+                fontSize: Dimensions.fontSize(context, fontSize),
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),
@@ -37,6 +64,7 @@ class ConfirmButton extends StatelessWidget {
               Icon(
                 icon,
                 color: Colors.white,
+                size: iconSize,
               ),
           ],
         ),

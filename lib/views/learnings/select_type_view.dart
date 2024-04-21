@@ -50,7 +50,13 @@ class SelectTypeView extends StatelessWidget {
                   child: Column(
                     children: [
                       OptionButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/flashcard',
+                            arguments: args,
+                          );
+                        },
                         label: 'Flashcard',
                       ),
                       SizedBox(height: Dimensions.height30(context)),

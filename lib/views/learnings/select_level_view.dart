@@ -98,6 +98,7 @@ class SelectLevelView extends StatelessWidget {
       '/type',
       arguments: SelectWordsArgs(
         words: _getWords(level, args.words),
+        topicID: args.topicID,
       ),
     );
   }
