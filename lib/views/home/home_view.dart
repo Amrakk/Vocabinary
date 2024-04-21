@@ -13,7 +13,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  var _selectedIndexTabBar = 1;
+  var _selectedIndexTabBar = 0;
   final _searchController = TextEditingController();
 
   List<Widget> listTab = [

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vocabinary/data/repositories/word_repo.dart';
-import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
-import 'package:vocabinary/models/data/eng_word.dart';
-import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
@@ -52,17 +48,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _mainNavigatorKey = GlobalKey<NavigatorState>();
   var _bottomBarIndex = 0;
-  late List<WordModel> words;
-
-  void init() async {
-    words = await WordRepo().getWords('wIEzPcEYaaCwzCrNghTh');
-  }
-
-  @override
-  void initState() {
-    init();
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -119,15 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
-        onPressed: () {
-          Navigator.of(context, rootNavigator: true).pushNamed(
-            '/level',
-            arguments: SelectWordsArgs(
-              words: words,
-              topicID: 'wIEzPcEYaaCwzCrNghTh',
-            ),
-          );
-        },
+        onPressed: () {},
         tooltip: 'Add new word',
         child: const Icon(Icons.add),
       ),

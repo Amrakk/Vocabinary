@@ -63,28 +63,28 @@ class _CardVocabularyState extends State<CardVocabulary> {
               ],
             ),
             SizedBox(height: Dimensions.height10(context)),
-            Row(
-              children: [
-                const Icon(
-                  Icons.star,
-                  color: Colors.yellow,
-                ),
-                SizedBox(width: Dimensions.width(context, 7)),
-                Text(
-                  "TODAY",
-                  style: TextStyle(
-                    fontSize: Dimensions.fontSize(context, 15),
-                    color: Colors.greenAccent,
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _isExpendable = !_isExpendable;
+                });
+              },
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.star,
+                    color: Colors.yellow,
                   ),
-                ),
-                SizedBox(width: Dimensions.width(context, 7)),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      _isExpendable = !_isExpendable;
-                    });
-                  },
-                  child: _isExpendable
+                  SizedBox(width: Dimensions.width(context, 7)),
+                  Text(
+                    "TODAY",
+                    style: TextStyle(
+                      fontSize: Dimensions.fontSize(context, 15),
+                      color: Colors.greenAccent,
+                    ),
+                  ),
+                  SizedBox(width: Dimensions.width(context, 7)),
+                  _isExpendable
                       ? Icon(
                           Icons.keyboard_arrow_up,
                           color: Theme.of(context).colorScheme.secondary,
@@ -93,8 +93,8 @@ class _CardVocabularyState extends State<CardVocabulary> {
                           Icons.keyboard_arrow_down,
                           color: Theme.of(context).colorScheme.secondary,
                         ),
-                ),
-              ],
+                ],
+              ),
             ),
             SizedBox(height: Dimensions.height(context, 15)),
             // Expendable Text
