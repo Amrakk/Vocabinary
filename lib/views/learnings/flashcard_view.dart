@@ -232,6 +232,7 @@ class _FlashcardViewState extends State<FlashcardView> {
     if (activity.direction == AxisDirection.right) {
       _flashcardViewModel.increasePoint(prev);
     }
+
     return true;
   }
 

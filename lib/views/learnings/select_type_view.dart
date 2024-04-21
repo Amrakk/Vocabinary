@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/widgets/background_layer.dart';
 import 'package:vocabinary/widgets/learnings/option_button.dart';
+import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 
 class SelectTypeView extends StatelessWidget {
   const SelectTypeView({super.key});

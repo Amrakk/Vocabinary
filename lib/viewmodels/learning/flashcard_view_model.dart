@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:vocabinary/data/repositories/word_repo.dart';
+import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/models/data/word.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
-import 'package:vocabinary/utils/colors.dart';
+import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/widgets/learnings/flashcard/flashcard_controller.dart';
 
 class FlashcardViewModel extends ChangeNotifier {
@@ -30,6 +30,7 @@ class FlashcardViewModel extends ChangeNotifier {
   }
 
   void clear() {
+    _topicID = null;
     _currentIndex = -1;
 
     _words.clear();
