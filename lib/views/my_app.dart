@@ -31,6 +31,7 @@ class _MyAppState extends State<MyApp> {
           themeMode:
               themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: const MyHomePage(),
+          onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
     );
@@ -65,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Navigator(
         key: _mainNavigatorKey,
         initialRoute: AppRoutes.initialRoute,
-        onGenerateRoute: AppRoutes.generateMainRoutes,
+        onGenerateRoute: AppRoutes.generateRoutes,
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
         iconSize: 25,
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (index == _bottomBarIndex) return;
           setState(() => _bottomBarIndex = index);
           _mainNavigatorKey.currentState!
-              .pushReplacementNamed(AppRoutes.mainRoutes.keys.toList()[index]);
+              .pushReplacementNamed(AppRoutes.homeRoutes[index]);
         },
       ),
       floatingActionButtonLocation:

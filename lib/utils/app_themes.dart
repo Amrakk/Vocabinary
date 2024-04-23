@@ -13,7 +13,7 @@ class AppThemes {
       primaryColor: Colors.black,
       scaffoldBackgroundColor: const Color(0xFF222222),
       appBarTheme: const AppBarTheme().copyWith(
-        backgroundColor: const Color(0xFF343A40),
+        backgroundColor: const Color(0xFF222222),
       ),
       iconTheme: const IconThemeData().copyWith(
         color: Colors.black,
