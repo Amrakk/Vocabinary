@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
+import 'package:vocabinary/views/explore/inside_topic_view.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
-import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
+// import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class MyApp extends StatefulWidget {
@@ -21,7 +22,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
-        ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
+        // ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
       ],
       child: Consumer<ThemeViewModel>(
         builder: (_, themeViewModel, __) => MaterialApp(
@@ -30,7 +31,7 @@ class _MyAppState extends State<MyApp> {
           darkTheme: AppThemes.darkTheme(),
           themeMode:
               themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-          home: const MyHomePage(),
+          home: const InsideTopicView(),
           onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
