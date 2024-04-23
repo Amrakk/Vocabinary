@@ -27,35 +27,44 @@ class _InsideTopicViewState extends State<InsideTopicView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             SizedBox(height: Dimensions.height30(context)),
+            SizedBox(height: Dimensions.height30(context)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-              Row(
-                children: [
-                  Text('Recent Cards',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: Dimensions.fontSize(context, 28))),
-                  SizedBox(width: Dimensions.width20(context)),
-                  FloatingActionButton.small(
-                    onPressed: () {
-                    },
-                    backgroundColor: const Color(0xFF023E8A),
-                    foregroundColor: Colors.white,
-                    child: const Icon(Icons.add),
-                  ),
-                ],
-              ),
-                Image.network("https://i.ibb.co/FD3Prty/man-business-coach.png",
+                Row(
+                  children: [
+                    Text('Recent Cards',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: Dimensions.fontSize(context, 28))),
+                    SizedBox(width: Dimensions.width20(context)),
+                    FloatingActionButton.small(
+                      onPressed: () {},
+                      backgroundColor: const Color(0xFF023E8A),
+                      foregroundColor: Colors.white,
+                      child: const Icon(Icons.add),
+                    ),
+                  ],
+                ),
+                Image.network(
+                  "https://i.ibb.co/FD3Prty/man-business-coach.png",
                   height: Dimensions.heightRatio(context, 12),
                   width: Dimensions.widthRatio(context, 16),
                 )
               ],
             ),
-            const ItemVocab(),
-            SizedBox(height: Dimensions.height20(context)),
-            const ItemVocab(),
+            SizedBox(
+                height: Dimensions.heightRatio(context, 52),
+                child: ListView.separated(
+                    itemBuilder: (context, index) => GestureDetector(
+                        onTap: () {
+                          // Todo: ItemVocab
+                        },
+                        child: const ItemVocab()),
+                    separatorBuilder: (context, index) => SizedBox(
+                          height: Dimensions.height30(context),
+                        ),
+                    itemCount: 10)),
             SizedBox(height: Dimensions.height30(context)),
             InkWell(
               onTap: () {
@@ -73,9 +82,14 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Play', style: TextStyle(color: Colors.white, fontSize: Dimensions.fontSize(context, 28))),
+                      Text('Play',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: Dimensions.fontSize(context, 30))),
                       SizedBox(width: Dimensions.width(context, 8)),
-                      Icon(Icons.play_circle_outline_outlined, color: Colors.white, size: Dimensions.iconSize(context, 50)),
+                      Icon(Icons.play_circle_outline_outlined,
+                          color: Colors.white,
+                          size: Dimensions.iconSize(context, 50)),
                     ],
                   ),
                 ),
@@ -86,10 +100,6 @@ class _InsideTopicViewState extends State<InsideTopicView> {
       ),
     );
   }
-
-
-
-
 
   PreferredSize myAppBar(BuildContext context) {
     return PreferredSize(
