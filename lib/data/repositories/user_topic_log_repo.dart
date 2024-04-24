@@ -14,6 +14,18 @@ class UserTopicLogRepo {
   Future<List<UserTopicLogModel>> getUserTopicLogs(String topicID) =>
       userTopicLogsStream(topicID).first;
 
+  Future<UserTopicLogModel?> getUserTopicLogByUserID(
+    String topicID,
+    String userID,
+  ) async {
+    final userTopicLogs = await getUserTopicLogs(topicID);
+    try {
+      return userTopicLogs.firstWhere((element) => element.userID == userID);
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<String?> createUserTopicLog(String topicID, UserTopicLogModel data) =>
       _firestoreService.createData(
         collectionPath: collectionPath(topicID),

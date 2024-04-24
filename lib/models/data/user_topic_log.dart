@@ -14,8 +14,8 @@ class UserTopicLogModel {
     this.userID,
     this.learnedCount = 0,
     this.lastAccess,
-    this.learnings = const [],
-  });
+    List<LearningModel>? learnings,
+  }) : learnings = learnings ?? [];
 
   Future<void> loadLearnings(String topicID) async {
     assert(id != null, 'UserTopicLog ID should not be null');
@@ -41,6 +41,6 @@ class UserTopicLogModel {
 
   @override
   String toString() {
-    return 'UserTopicLog{id: $id, userID: $userID, learnedCount: $learnedCount, lastAccess: $lastAccess}';
+    return 'UserTopicLog{id: $id, userID: $userID, learnedCount: $learnedCount, lastAccess: $lastAccess, learnings: $learnings}';
   }
 }
