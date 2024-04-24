@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 
 class LevelStarBar extends StatelessWidget {
@@ -13,7 +14,7 @@ class LevelStarBar extends StatelessWidget {
       children: List.generate(3, (index) {
         return Icon(
           index + 1 <= level ? Icons.star_rounded : Icons.star_border_rounded,
-          color: const Color(0xFFEDC531),
+          color: AppColors.mainYellow,
           size: Dimensions.iconSize(context, size),
         );
       }),

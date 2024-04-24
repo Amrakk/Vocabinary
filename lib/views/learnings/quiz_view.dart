@@ -192,7 +192,7 @@ class _QuizViewState extends State<QuizView> {
                             AppColors.correctColor,
                             Color(0xFF023E8A)
                           ],
-                          icon: quizViewModel.count - 1 >
+                          rightIcon: quizViewModel.count - 1 >
                                   quizViewModel.currentIndex
                               ? Icons.arrow_forward_ios_rounded
                               : null,

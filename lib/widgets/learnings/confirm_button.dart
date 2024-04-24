@@ -6,7 +6,8 @@ class ConfirmButton extends StatelessWidget {
   final String label;
   final double fontSize;
   final Function() onPressed;
-  final IconData? icon;
+  final IconData? leftIcon;
+  final IconData? rightIcon;
   final double iconSize;
   final double heightRatio;
   final double widthRatio;
@@ -18,7 +19,8 @@ class ConfirmButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
-    this.icon,
+    this.leftIcon,
+    this.rightIcon,
     this.iconSize = 20.0,
     this.fontSize = 16.0,
     this.heightRatio = 7.0,
@@ -56,6 +58,14 @@ class ConfirmButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            if (leftIcon != null)
+              Icon(
+                leftIcon,
+                color: Colors.white,
+                size: iconSize,
+              ),
+            if (leftIcon != null)
+              SizedBox(width: Dimensions.widthRatio(context, 0.75)),
             Text(
               label,
               style: TextStyle(
@@ -64,10 +74,11 @@ class ConfirmButton extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(width: Dimensions.widthRatio(context, 0.75)),
-            if (icon != null)
+            if (rightIcon != null)
+              SizedBox(width: Dimensions.widthRatio(context, 0.75)),
+            if (rightIcon != null)
               Icon(
-                icon,
+                rightIcon,
                 color: Colors.white,
                 size: iconSize,
               ),
