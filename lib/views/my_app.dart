@@ -6,6 +6,7 @@ import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
+import 'package:vocabinary/views/explore/inside_topic_view.dart';
 import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
@@ -36,7 +37,7 @@ class _MyAppState extends State<MyApp> {
           darkTheme: AppThemes.darkTheme(),
           themeMode:
               themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-          home: const MyHomePage(),
+          home: const InsideTopicView(),
           onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
