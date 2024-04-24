@@ -23,7 +23,6 @@ class ThemeViewModel extends ChangeNotifier {
     _sharedPrefsHelper.isDarkMode.then((darkModeStatus) {
       _isDarkModeOn = darkModeStatus;
     });
-
     notifyListeners();
   }
 }
