@@ -61,13 +61,25 @@ class SelectTypeView extends StatelessWidget {
                       ),
                       SizedBox(height: Dimensions.height30(context)),
                       OptionButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/quiz',
+                            arguments: args,
+                          );
+                        },
                         label: 'Multiple-Choice',
                         disabled: disableQuiz,
                       ),
                       SizedBox(height: Dimensions.height30(context)),
                       OptionButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/typing',
+                            arguments: args,
+                          );
+                        },
                         label: 'Fill in Word',
                       ),
                       SizedBox(height: Dimensions.height22(context)),

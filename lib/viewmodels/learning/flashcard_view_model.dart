@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/colors.dart';
+import 'package:vocabinary/utils/constants.dart';
 import 'package:vocabinary/models/data/word.dart';
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:vocabinary/data/repositories/word_repo.dart';
+import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/widgets/learnings/flashcard/flashcard_controller.dart';
 
 class FlashcardViewModel extends ChangeNotifier {
@@ -10,8 +12,9 @@ class FlashcardViewModel extends ChangeNotifier {
   int _currentIndex = -1;
   bool _isPlaying = false;
   List<WordModel> _words = [];
-  final Set<String> _learnedWords = {};
   List<FlashcardController> _flashcardControllers = [];
+
+  final Set<String> _learnedWords = {};
   final AppinioSwiperController _cardSwiperController =
       AppinioSwiperController();
 
@@ -36,6 +39,12 @@ class FlashcardViewModel extends ChangeNotifier {
     _words.clear();
     _learnedWords.clear();
     _flashcardControllers.clear();
+  }
+
+  @override
+  void dispose() {
+    _cardSwiperController.dispose();
+    super.dispose();
   }
 
   bool get isPlaying => _isPlaying;
@@ -88,11 +97,15 @@ class FlashcardViewModel extends ChangeNotifier {
   }
 
   void increasePoint(int index) {
-    _words[index].point++;
+    _words[index].point += AppConstants.learningTypes['flashcard']!;
     _learnedWords.add(_words[index].id!);
   }
 
   Future<List<bool>> save() async {
+    // TODO: get userID from auth view model
+    String userID = '4VtPfzFkETVqg29YJdpW';
+    if (!await TopicRepo().isTopicOwner(_topicID!, userID)) return [];
+
     final repo = WordRepo();
     final futures = _learnedWords
         .map(
