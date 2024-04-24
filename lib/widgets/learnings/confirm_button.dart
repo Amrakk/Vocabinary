@@ -11,6 +11,8 @@ class ConfirmButton extends StatelessWidget {
   final double heightRatio;
   final double widthRatio;
   final double borderRadius;
+  final List<Color> colorsGradient;
+  final List<double> stopsGradient;
 
   const ConfirmButton({
     super.key,
@@ -22,6 +24,8 @@ class ConfirmButton extends StatelessWidget {
     this.heightRatio = 7.0,
     this.widthRatio = 55.5,
     this.borderRadius = 10.0,
+    this.stopsGradient = const [0.08, 1.0],
+    this.colorsGradient = AppColors.primaryButtonGradient,
   });
 
   @override
@@ -31,11 +35,11 @@ class ConfirmButton extends StatelessWidget {
       height: Dimensions.heightRatio(context, heightRatio),
       width: Dimensions.widthRatio(context, widthRatio),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
-          stops: [0.08, 1.0],
-          colors: AppColors.primaryButtonGradient,
+          stops: stopsGradient,
+          colors: colorsGradient,
         ),
         borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
       ),
@@ -60,6 +64,7 @@ class ConfirmButton extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
+            SizedBox(width: Dimensions.widthRatio(context, 0.75)),
             if (icon != null)
               Icon(
                 icon,

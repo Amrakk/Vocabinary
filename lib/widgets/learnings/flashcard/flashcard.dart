@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:flip_card/flip_card_controller.dart';
@@ -78,7 +79,7 @@ class FlashcardState extends State<Flashcard> {
         width: Dimensions.widthRatio(context, 90),
         height: Dimensions.heightRatio(context, 65),
         decoration: BoxDecoration(
-          color: const Color(0xFF023E8A),
+          color: AppColors.primary,
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
             color: _isFront ? _borderColor : Colors.transparent,
@@ -138,7 +139,7 @@ class FlashcardState extends State<Flashcard> {
         width: Dimensions.widthRatio(context, 90),
         height: Dimensions.heightRatio(context, 65),
         decoration: BoxDecoration(
-          color: const Color(0xFF023E8A),
+          color: AppColors.primary,
           borderRadius: BorderRadius.circular(50),
           border: Border.all(
             color: _isFront ? Colors.transparent : _borderColor,
