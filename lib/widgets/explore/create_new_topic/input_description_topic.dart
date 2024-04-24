@@ -13,7 +13,7 @@ class _InputDescriptionTopicState extends State<InputDescriptionTopic> {
   @override
   Widget build(BuildContext context) {
     return  Container(
-      height: Dimensions.heightRatio(context, 20),
+      height: Dimensions.heightRatio(context, 15),
       decoration: BoxDecoration(
         boxShadow:  const [
           BoxShadow(
@@ -30,7 +30,7 @@ class _InputDescriptionTopicState extends State<InputDescriptionTopic> {
         maxLines: null,
         cursorColor: Colors.white,
         style: TextStyle(
-          fontSize: Dimensions.fontSize(context, 30),
+          fontSize: Dimensions.fontSize(context, 20),
           fontWeight: FontWeight.w500,
           color: Colors.white,
         ),

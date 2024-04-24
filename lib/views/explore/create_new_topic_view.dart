@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,19 +67,19 @@ class _CreateNewTopicState extends State<CreateNewTopic> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: Dimensions.heightRatio(context,6 )),
-                Text('Add to description', style: TextStyle(fontSize: Dimensions.fontSize(context, 30), fontWeight: FontWeight.normal),),
+                Text('Add to description', style: TextStyle(fontSize: Dimensions.fontSize(context, 22), fontWeight: FontWeight.normal),),
                 SizedBox(height: Dimensions.heightRatio(context, 2)),
                 const InputDescriptionTopic(),
                 SizedBox(height: Dimensions.heightRatio(context, 3)),
-                Text('Upload cover photo', style: TextStyle(fontSize: Dimensions.fontSize(context, 30), fontWeight: FontWeight.normal),),
+                Text('Upload cover photo', style: TextStyle(fontSize: Dimensions.fontSize(context, 22), fontWeight: FontWeight.normal),),
                 Center(
                   child: SizedBox(
-                    height: Dimensions.heightRatio(context, 30),
+                    height: Dimensions.heightRatio(context, 22),
                     child: GestureDetector(
                       onTap: (){
                         // Todo: Add image picker
                       },
-                      child: SvgPicture.asset('images/upload.svg',
+                      child: SvgPicture.asset('assets/images/upload.svg',
                       ),
                     ),
                   ),
@@ -90,7 +89,7 @@ class _CreateNewTopicState extends State<CreateNewTopic> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Public Topic', style: TextStyle(fontSize: Dimensions.fontSize(context, 30), fontWeight: FontWeight.normal),),
+                    Text('Public Topic', style: TextStyle(fontSize: Dimensions.fontSize(context, 22), fontWeight: FontWeight.normal),),
                     CupertinoSwitch(value: true, onChanged: (value) {})
                   ],
                 ),
@@ -106,7 +105,7 @@ class _CreateNewTopicState extends State<CreateNewTopic> {
                       color: Color(0xFF023E8A),
                     ),
                     child: SizedBox(
-                      height: Dimensions.heightRatio(context, 9),
+                      height: Dimensions.heightRatio(context, 7),
                       width: double.infinity,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -114,8 +113,7 @@ class _CreateNewTopicState extends State<CreateNewTopic> {
                           Text('Apply',
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: Dimensions.fontSize(context, 30))),
-                          SizedBox(width: Dimensions.width(context, 8)),
+                                  fontSize: Dimensions.fontSize(context, 22))),
                         ],
                       ),
                     ),
