@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/dimensions.dart';
-import 'package:vocabinary/widgets/level_bar_star.dart';
 import 'package:vocabinary/widgets/learnings/quiz/answer.dart';
 import 'package:vocabinary/widgets/learnings/quiz/answer_controller.dart';
+import 'package:vocabinary/widgets/level_star_bar.dart';
 
 class Quiz extends StatefulWidget {
   final int level;

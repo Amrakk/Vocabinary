@@ -4,13 +4,11 @@ import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
-import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
 import 'package:vocabinary/views/explore/inside_topic_view.dart';
 import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
-import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
 class MyApp extends StatefulWidget {
