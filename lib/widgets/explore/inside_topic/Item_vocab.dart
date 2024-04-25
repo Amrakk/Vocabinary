@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
-import '../../../utils/app_colors.dart';
-import '../../../utils/dimensions.dart';
-import '../../global/level_bar_star.dart';
+import 'package:vocabinary/utils/app_colors.dart';
+import 'package:vocabinary/utils/colors.dart';
+import 'package:vocabinary/utils/dimensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:vocabinary/widgets/level_star_bar.dart';
 
 class ItemVocab extends StatefulWidget {
   const ItemVocab({super.key});
@@ -19,46 +19,42 @@ class _ItemVocabState extends State<ItemVocab> {
         Theme.of(context).extension<AppColorsThemeData>()!;
     return Slidable(
       startActionPane: ActionPane(motion: const DrawerMotion(), children: [
-
         SlidableAction(
-          onPressed: (ctx) {},
+          onPressed: (ctx) {
+            // TODO: imeplement delete word
+          },
           icon: Icons.delete,
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.mainRed,
           foregroundColor: Colors.white,
         ),
         SlidableAction(
-          onPressed: (ctx) {},
+          onPressed: (ctx) {
+            // TODO: imeplement edit word
+          },
           icon: Icons.edit,
-          backgroundColor: const Color(0xFFEDC531),
+          backgroundColor: AppColors.mainYellow,
           foregroundColor: Colors.white,
         ),
       ]),
-      child: Stack(children: [
-        Container(
-          height: Dimensions.heightRatio(context, 15),
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              bottomRight: Radius.circular(15),
-              topRight: Radius.circular(15),
-              bottomLeft: Radius.circular(5),
-              topLeft: Radius.circular(5),
+      child: Stack(
+        children: [
+          Container(
+            height: Dimensions.heightRatio(context, 12),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                bottomRight: Radius.circular(15),
+                topRight: Radius.circular(15),
+              ),
+              color: appColors.containerColor,
             ),
-            color: appColors.containerColor,
-            // boxShadow: const [
-            //   BoxShadow(
-            //     color: Colors.black26,
-            //     blurRadius: 4,
-            //     spreadRadius: 3,
-            //   ),
-            // ],
-          ),
-          child: Padding(
+            child: Padding(
               padding: EdgeInsets.only(
-                  left: Dimensions.padding(context, 40),
-                  right: Dimensions.padding30(context),
-                  top: Dimensions.padding20(context),
-                  bottom: Dimensions.padding20(context)),
+                left: Dimensions.widthRatio(context, 8.5),
+                right: Dimensions.widthRatio(context, 6),
+                top: Dimensions.heightRatio(context, 0.75),
+                bottom: Dimensions.heightRatio(context, 0.75),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -66,16 +62,23 @@ class _ItemVocabState extends State<ItemVocab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text("Economic",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: Dimensions.fontSize(context, 28))),
-                      SizedBox(height: Dimensions.height10(context)),
-                      Text("/ēkəˈnämik/",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: Dimensions.fontSize(context, 20))),
+                      Text(
+                        "Economic",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: Dimensions.fontSize22(context),
+                        ),
+                      ),
+                      SizedBox(height: Dimensions.heightRatio(context, 1)),
+                      Text(
+                        "/ēkəˈnämik/",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: Dimensions.fontSize18(context),
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
                     ],
                   ),
                   Column(
@@ -83,31 +86,35 @@ class _ItemVocabState extends State<ItemVocab> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       IconButton(
+                        padding: EdgeInsets.zero,
                         onPressed: () {
-                          // Todo: Favorite button
+                          // TODO: Favorite button
                         },
-                        icon: Icon(Icons.favorite,
-                            color: const Color(0xFFEDC531),
-                            size: Dimensions.iconSize(context, 39)),
+                        icon: Icon(
+                          Icons.favorite,
+                          color: AppColors.mainYellow,
+                          size: Dimensions.widthRatio(context, 7.25),
+                        ),
                       ),
-                      LevelStarBar(level: 3),
+                      LevelStarBar(
+                        level: 3,
+                        size: Dimensions.widthRatio(context, 6.75),
+                      ),
                     ],
                   )
                 ],
-              )),
-        ),
-        Container(
-          height: Dimensions.heightRatio(context, 15),
-          width: Dimensions.width12(context),
-          decoration: const BoxDecoration(
-            // borderRadius: BorderRadius.only(
-            //   bottomLeft: Radius.circular(2),
-            //   topLeft: Radius.circular(2),
-            // ),
-            color: Color(0xFFEDC531),
+              ),
+            ),
           ),
-        )
-      ]),
+          Container(
+            height: Dimensions.heightRatio(context, 12),
+            width: Dimensions.widthRatio(context, 1.25),
+            decoration: const BoxDecoration(
+              color: AppColors.mainYellow,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

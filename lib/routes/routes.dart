@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 import 'package:vocabinary/views/home/home_view.dart';
-import 'package:vocabinary/views/explore/explore_view.dart';
-import 'package:vocabinary/views/learnings/flashcard_view.dart';
-import 'package:vocabinary/views/learnings/select_level_view.dart';
-import 'package:vocabinary/views/learnings/select_type_view.dart';
+import 'package:vocabinary/views/learnings/quiz_view.dart';
 import 'package:vocabinary/views/setting/setting_view.dart';
+import 'package:vocabinary/views/explore/explore_view.dart';
+import 'package:vocabinary/views/learnings/typing_view.dart';
+import 'package:vocabinary/views/learnings/flashcard_view.dart';
 import 'package:vocabinary/views/community/community_view.dart';
+import 'package:vocabinary/views/learnings/select_type_view.dart';
+import 'package:vocabinary/views/learnings/select_level_view.dart';
+import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -19,7 +21,6 @@ class AppRoutes {
     '/flashcard',
     '/quiz',
     '/typing',
-    '/result'
   ];
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
@@ -49,12 +50,22 @@ class AppRoutes {
           FlashcardView(words: words, topicID: topicID),
           settings,
         );
-      // case '/quiz':
-      //   return _buildPageTransition(const QuizView(), settings);
-      // case '/typing':
-      //   return _buildPageTransition(const TypingView(), settings);
-      // case '/result':
-      //   return _buildPageTransition(const ResultView(), settings);
+      case '/quiz':
+        args = args as SelectWordsArgs;
+        var words = args.words;
+        var topicID = args.topicID;
+        return _buildPageTransition(
+          QuizView(words: words, topicID: topicID),
+          settings,
+        );
+      case '/typing':
+        args = args as SelectWordsArgs;
+        var words = args.words;
+        var topicID = args.topicID;
+        return _buildPageTransition(
+          TypingView(topicID: topicID, words: words),
+          settings,
+        );
 
       default:
         return MaterialPageRoute(

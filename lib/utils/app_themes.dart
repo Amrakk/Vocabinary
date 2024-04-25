@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/app_colors.dart';
-import 'package:vocabinary/utils/colors.dart';
 
 class AppThemes {
   static ThemeData darkTheme() {

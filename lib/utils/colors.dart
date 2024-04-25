@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // define all the colors used in the app
-  // static const Color primary = Color.fromARGB(255, 112, 32, 233);
+  static const Color primary = Color(0xFF023E8A);
 
   static const lineChartGradient = [Color(0xff5efce8), Color(0xff2196f3)];
   static const lineChartInnerGradient = [Color(0xff3c8ce7), Color(0xff000000)];
   static const animatedLayerGradient = [Color(0xff003566), Color(0xff006FD6)];
   static const primaryButtonGradient = [Color(0xFF023E8A), Color(0xFF003270)];
 
-  static const mainGreen = Color(0xFF06FF00);
   static const mainRed = Color(0xFFFF1700);
+  static const mainGreen = Color(0xFF06FF00);
+  static const mainYellow = Color(0xFFEDC531);
+
+  static const correctColor = Color(0xFF0049A5);
+  static const wrongColor = Color(0xFF9A0000);
 
   static const pieChartIndicator = {
     'Easy': Color(0xff0293ee),

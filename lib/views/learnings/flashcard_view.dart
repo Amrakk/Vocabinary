@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/models/data/word.dart';
@@ -16,8 +14,8 @@ import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:vocabinary/widgets/learnings/flashcard/flashcard_controller.dart';
 
 class FlashcardView extends StatefulWidget {
-  final List<WordModel> words;
   final String topicID;
+  final List<WordModel> words;
   const FlashcardView({super.key, required this.words, required this.topicID});
 
   @override
@@ -53,6 +51,7 @@ class _FlashcardViewState extends State<FlashcardView> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: handle disable/dialog for back button
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -64,6 +63,7 @@ class _FlashcardViewState extends State<FlashcardView> {
             left: Dimensions.widthRatio(context, 5),
             top: Dimensions.heightRatio(context, 2),
           ),
+          height: Dimensions.heightRatio(context, 7),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -78,13 +78,15 @@ class _FlashcardViewState extends State<FlashcardView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    _flashcardViewModel.progress != 1
-                        ? '${_flashcardViewModel.count} words'
-                        : 'Done',
-                    style: TextStyle(
-                      fontSize: Dimensions.fontSize(context, 15),
-                      color: Colors.white60,
+                  Consumer<FlashcardViewModel>(
+                    builder: (_, flashcardViewModel, __) => Text(
+                      _flashcardViewModel.progress < 1
+                          ? '${_flashcardViewModel.count} words'
+                          : 'Done',
+                      style: TextStyle(
+                        fontSize: Dimensions.fontSize(context, 15),
+                        color: Colors.white60,
+                      ),
                     ),
                   ),
                   SizedBox(width: Dimensions.width(context, 14)),
@@ -149,7 +151,7 @@ class _FlashcardViewState extends State<FlashcardView> {
                               .setBorderColor(Colors.transparent);
                         }
                       },
-                      threshold: 125,
+                      threshold: 100,
                       cardCount: _flashcardViewModel.count,
                       swipeOptions:
                           const SwipeOptions.symmetric(horizontal: true),

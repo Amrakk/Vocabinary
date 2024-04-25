@@ -9,3 +9,5 @@ enum AuthStatus {
   Unauthenticated,
   Registering
 }
+
+enum LearnMode { Flashcard, Quiz, Typing }

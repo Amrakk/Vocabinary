@@ -1,3 +1,4 @@
+import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vocabinary/utils/app_colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
-import 'package:vocabinary/widgets/global/button.dart';
 
 import '../../utils/app_themes.dart';
 import '../../widgets/explore/inside_topic/Item_vocab.dart';
@@ -71,7 +71,29 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                 // Todo: Play button
               },
               borderRadius: BorderRadius.circular(15),
-              child: Button(nameButton: 'Play')
+              child: Ink(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  color: Color(0xFF023E8A),
+                ),
+                child: SizedBox(
+                  height: Dimensions.heightRatio(context, 9),
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Play',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: Dimensions.fontSize(context, 30))),
+                      SizedBox(width: Dimensions.width(context, 8)),
+                      Icon(Icons.play_circle_outline_outlined,
+                          color: Colors.white,
+                          size: Dimensions.iconSize(context, 50)),
+                    ],
+                  ),
+                ),
+              ),
             )
           ],
         ),
