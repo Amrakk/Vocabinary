@@ -29,12 +29,11 @@ class _ResultViewState extends State<ResultView> {
 
   @override
   Widget build(BuildContext context) {
+    print(1);
     return FutureBuilder(
       future: widget.quizViewModel != null
           ? widget.quizViewModel!.save()
-          : Future.value(),
-      // TODO: Remove comment after implementing typing view model
-      // : typingViewModel!.save(),
+          : widget.typingViewModel!.save(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
@@ -130,8 +129,7 @@ class _ResultViewState extends State<ResultView> {
                 // TODO: Remove comment after implementing typing view model
                 itemCount: widget.quizViewModel != null
                     ? widget.quizViewModel!.count
-                    : 0,
-                // : typingViewModel!.count,
+                    : widget.typingViewModel!.count,
                 itemBuilder: (context, index) => _buildAnswer(index),
               ),
             ),
@@ -142,11 +140,9 @@ class _ResultViewState extends State<ResultView> {
               stopsGradient: const [0.62, 0.87],
               colorsGradient: const [AppColors.correctColor, AppColors.primary],
               onPressed: () {
-                // TODO: Remove comment after implementing typing view model
                 widget.quizViewModel != null
                     ? widget.quizViewModel!.clear()
-                    : null;
-                // : typingViewModel!.clear();
+                    : widget.typingViewModel!.clear();
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },
             )
@@ -181,11 +177,9 @@ class _ResultViewState extends State<ResultView> {
                 crossAxisAlignment: CrossAxisAlignment.baseline,
                 children: [
                   Text(
-                    // TODO: Remove comment after implementing typing view model
                     widget.quizViewModel != null
                         ? widget.quizViewModel!.score.toString()
-                        : '',
-                    // : typingViewModel!.score.toString(),
+                        : widget.typingViewModel!.score.toString(),
                     style: GoogleFonts.jomhuria(
                       color: Colors.white,
                       fontWeight: FontWeight.w900,
@@ -193,9 +187,7 @@ class _ResultViewState extends State<ResultView> {
                     ),
                   ),
                   Text(
-                    // TODO: Remove comment after implementing typing view model
-                    ' /${widget.quizViewModel != null ? widget.quizViewModel!.totalScore.toString() : ''}',
-                    // : typingViewModel!.score.toString(),
+                    ' /${widget.quizViewModel != null ? widget.quizViewModel!.totalScore.toString() : widget.typingViewModel!.totalScore.toString()}',
                     style: GoogleFonts.jomhuria(
                       color: const Color(0xFF9F9F9F),
                       fontWeight: FontWeight.w900,
@@ -212,7 +204,7 @@ class _ResultViewState extends State<ResultView> {
   Widget _buildDuration() {
     final duration = widget.quizViewModel != null
         ? widget.quizViewModel!.duration
-        : Duration.zero;
+        : widget.typingViewModel!.duration;
     final minute = duration.inMinutes;
     final second = duration.inSeconds - (minute * 60);
     _duration = '${minute}m ${second.toString().padLeft(2, '0')}s';
@@ -254,13 +246,10 @@ class _ResultViewState extends State<ResultView> {
   Widget _buildAnswer(int index) {
     final word = widget.quizViewModel != null
         ? widget.quizViewModel!.words[index]
-        : null;
-    // TODO: Remove comment after implementing typing view model
-    // : typingViewModel!.words[index];
-    if (word == null) throw Exception('Word is null');
+        : widget.typingViewModel!.words[index];
     final isCorrect = widget.quizViewModel != null
         ? widget.quizViewModel!.isCorrect(index)
-        : false;
+        : widget.typingViewModel!.isCorrect(index);
 
     Color color = isCorrect ? AppColors.correctColor : AppColors.wrongColor;
 
