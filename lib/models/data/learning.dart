@@ -46,7 +46,7 @@ class LearningModel {
         ? 1
         : score < other.score
             ? -1
-            : duration.compareTo(other.duration);
+            : other.duration.compareTo(duration);
   }
 
   @override
