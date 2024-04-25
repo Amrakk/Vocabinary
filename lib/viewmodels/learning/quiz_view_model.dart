@@ -100,7 +100,7 @@ class QuizViewModel extends ChangeNotifier {
     );
 
     // TODO: get userID from auth view model
-    String userID = '4VtPfzFkETVqg29YJdpW';
+    String userID = '4VtPfzFkETVqg29YJdpWx';
     var futures = <Future<dynamic>>[];
 
     if (await TopicRepo().isTopicOwner(_topicID!, userID)) {
