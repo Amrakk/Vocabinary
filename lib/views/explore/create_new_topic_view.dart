@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vocabinary/widgets/explore/create_new_topic/input_description_topic.dart';
+import 'package:vocabinary/widgets/global/button.dart';
 
 import '../../widgets/explore/create_new_topic/input_name_topic.dart';
 
@@ -15,6 +16,9 @@ class CreateNewTopic extends StatefulWidget {
 }
 
 class _CreateNewTopicState extends State<CreateNewTopic> {
+  bool isPublic = true;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,35 +94,15 @@ class _CreateNewTopicState extends State<CreateNewTopic> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text('Public Topic', style: TextStyle(fontSize: Dimensions.fontSize(context, 22), fontWeight: FontWeight.normal),),
-                    CupertinoSwitch(value: true, onChanged: (value) {})
+                    CupertinoSwitch(value: isPublic, onChanged: (value) {
+                      setState(() {
+                        isPublic = value;
+                      });
+                    })
                   ],
                 ),
                 SizedBox(height: Dimensions.heightRatio(context, 4)),
-                InkWell(
-                  onTap: () {
-                    // Todo: Play button
-                  },
-                  borderRadius: BorderRadius.circular(15),
-                  child: Ink(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      color: Color(0xFF023E8A),
-                    ),
-                    child: SizedBox(
-                      height: Dimensions.heightRatio(context, 7),
-                      width: double.infinity,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Apply',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Dimensions.fontSize(context, 22))),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
+                Button(nameButton: 'Apply'),
               ],
             ),
           ),

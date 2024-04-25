@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/utils/app_themes.dart';
+import 'package:vocabinary/utils/colors.dart';
 
+import '../../../utils/app_colors.dart';
 import '../../../utils/dimensions.dart';
 
 class InputDescriptionTopic extends StatefulWidget {
@@ -12,18 +15,19 @@ class InputDescriptionTopic extends StatefulWidget {
 class _InputDescriptionTopicState extends State<InputDescriptionTopic> {
   @override
   Widget build(BuildContext context) {
+    final AppColorsThemeData myColors = Theme.of(context).extension<AppColorsThemeData>()!;
     return  Container(
       height: Dimensions.heightRatio(context, 15),
       decoration: BoxDecoration(
         boxShadow:  const [
           BoxShadow(
-            color: Colors.black26,
+            color: Colors.black12,
             blurRadius: 4,
             spreadRadius: 3,
             offset: Offset(0, 0),
           ),
         ],
-        color: const Color(0xFF616161),
+        color: myColors.containerColor,
         borderRadius: BorderRadius.circular(25),
       ),
       child: TextField(
@@ -45,7 +49,7 @@ class _InputDescriptionTopicState extends State<InputDescriptionTopic> {
             borderSide: const BorderSide(color: Colors.transparent),
             borderRadius: BorderRadius.circular(25),
           ),
-          fillColor: const Color(0xFF616161),
+          fillColor: myColors.containerColor,
         ),
       ),
     );

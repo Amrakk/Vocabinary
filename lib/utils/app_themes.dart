@@ -10,6 +10,18 @@ class AppThemes {
           containerColor: Color(0xFF46494C),
         ),
       ],
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5)
+            ),
+
+        )
+      ),
+      dialogTheme: const DialogTheme().copyWith(
+        backgroundColor: const Color(0xFF222222),
+      ),
       primaryColor: Colors.black,
       scaffoldBackgroundColor: const Color(0xFF222222),
       appBarTheme: const AppBarTheme().copyWith(
@@ -40,6 +52,14 @@ class AppThemes {
       tabBarTheme: const TabBarTheme().copyWith(
         labelColor: const Color(0xFF0061FF),
         unselectedLabelColor: Colors.grey,
+      ),
+      sliderTheme: const SliderThemeData().copyWith(
+        activeTrackColor: const Color(0xFF0061FF),
+        inactiveTrackColor: Colors.grey,
+        trackHeight: 7.0,
+
+        thumbColor: const Color(0xFFFFFFFF),
+        overlayColor: const Color(0xFF0061FF).withOpacity(0.2),
       ),
     );
   }
