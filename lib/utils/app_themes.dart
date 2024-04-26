@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/utils/app_colors.dart';
 
 class AppThemes {
   static ThemeData darkTheme() {
     return ThemeData.dark().copyWith(
+      extensions: [
+        const AppColorsThemeData(
+          containerColor: Color(0xFF46494C),
+        ),
+      ],
       primaryColor: Colors.black,
-      scaffoldBackgroundColor: const Color(0xFF343A40),
+      scaffoldBackgroundColor: const Color(0xFF222222),
       appBarTheme: const AppBarTheme().copyWith(
-        backgroundColor: const Color(0xFF343A40),
+        backgroundColor: const Color(0xFF222222),
       ),
       iconTheme: const IconThemeData().copyWith(
         color: Colors.black,

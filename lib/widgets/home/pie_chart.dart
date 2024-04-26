@@ -18,6 +18,7 @@ class _MyPieChartState extends State<MyPieChart> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         SizedBox(
           width: Dimensions.widthRatio(context, 50),
@@ -43,7 +44,7 @@ class _MyPieChartState extends State<MyPieChart> {
             ),
           ),
         ),
-        SizedBox(width: Dimensions.width(context, 28)),
+        SizedBox(width: Dimensions.widthRatio(context, 5)),
         Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,

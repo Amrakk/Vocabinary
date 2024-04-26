@@ -7,6 +7,9 @@ class TopicRepo {
   static String documentPath(String id) => 'topics/$id';
   static String collectionPath = 'topics';
 
+  Future<bool> isTopicOwner(String id, String userID) async =>
+      (await getTopic(id))?.ownerID == userID;
+
   Future<TopicModel?> getTopic(String id) => topicStream(id).first;
 
   Future<List<TopicModel>> getTopics() => topicsStream().first;

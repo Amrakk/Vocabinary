@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LearningModel {
   String? id;
-  double completion;
+  int score;
   String learningType;
   Timestamp? start;
   Timestamp? finish;
 
   LearningModel({
     this.id,
-    this.completion = 0.0,
+    this.score = 0,
     required this.learningType,
     this.start,
     this.finish,
@@ -18,7 +18,7 @@ class LearningModel {
   factory LearningModel.fromMap(Map<String, dynamic> map, String id) {
     return LearningModel(
       id: id,
-      completion: map['completion'] ?? 0.0,
+      score: map['score'] ?? 0,
       learningType: map['learningType'],
       start: map['start'],
       finish: map['finish'],
@@ -27,15 +27,30 @@ class LearningModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'completion': completion,
+      'score': score,
       'learningType': learningType,
       'start': start,
       'finish': finish,
     };
   }
 
+  Duration get duration {
+    if (start == null || finish == null) {
+      return Duration.zero;
+    }
+    return finish!.toDate().difference(start!.toDate());
+  }
+
+  int compareTo(LearningModel other) {
+    return score > other.score
+        ? 1
+        : score < other.score
+            ? -1
+            : other.duration.compareTo(duration);
+  }
+
   @override
   String toString() {
-    return 'LearningModel{id: $id, completion: $completion, learningType: $learningType, start: $start, finish: $finish}';
+    return 'LearningModel{id: $id, score: $score, learningType: $learningType, start: $start, finish: $finish}';
   }
 }

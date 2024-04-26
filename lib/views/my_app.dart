@@ -5,6 +5,9 @@ import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
+import 'package:vocabinary/views/explore/inside_topic_view.dart';
+import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
+import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 
@@ -21,6 +24,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
+        ChangeNotifierProvider(create: (context) => QuizViewModel()),
+        ChangeNotifierProvider(create: (context) => TypingViewModel()),
         ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
       ],
       child: Consumer<ThemeViewModel>(
@@ -31,6 +36,7 @@ class _MyAppState extends State<MyApp> {
           themeMode:
               themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: const MyHomePage(),
+          onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
     );
@@ -65,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Navigator(
         key: _mainNavigatorKey,
         initialRoute: AppRoutes.initialRoute,
-        onGenerateRoute: AppRoutes.generateMainRoutes,
+        onGenerateRoute: AppRoutes.generateRoutes,
       ),
       bottomNavigationBar: AnimatedBottomNavigationBar(
         iconSize: 25,
@@ -94,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
           if (index == _bottomBarIndex) return;
           setState(() => _bottomBarIndex = index);
           _mainNavigatorKey.currentState!
-              .pushReplacementNamed(AppRoutes.mainRoutes.keys.toList()[index]);
+              .pushReplacementNamed(AppRoutes.homeRoutes[index]);
         },
       ),
       floatingActionButtonLocation:
