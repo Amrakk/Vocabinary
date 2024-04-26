@@ -41,6 +41,7 @@ class _QuizViewState extends State<QuizView> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        scrolledUnderElevation: 0.0,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         title: AnimatedContainer(
@@ -66,8 +67,8 @@ class _QuizViewState extends State<QuizView> {
                 children: [
                   Consumer<QuizViewModel>(
                     builder: (_, quizViewModel, __) => Text(
-                      _quizViewModel.progress < 1
-                          ? '${_quizViewModel.count} words'
+                      quizViewModel.progress < 1
+                          ? '${quizViewModel.count} words'
                           : 'Done',
                       style: TextStyle(
                         fontSize: Dimensions.fontSize(context, 15),
