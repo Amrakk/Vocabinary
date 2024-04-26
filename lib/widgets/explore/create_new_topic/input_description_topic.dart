@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:vocabinary/utils/app_themes.dart';
-import 'package:vocabinary/utils/colors.dart';
-
-import '../../../utils/app_colors.dart';
-import '../../../utils/dimensions.dart';
+import 'package:vocabinary/utils/app_colors.dart';
+import 'package:vocabinary/utils/dimensions.dart';
 
 class InputDescriptionTopic extends StatefulWidget {
-  const InputDescriptionTopic({super.key});
+   const InputDescriptionTopic({ required this.textDescriptionController,super.key});
+
+  final TextEditingController textDescriptionController;
 
   @override
   State<InputDescriptionTopic> createState() => _InputDescriptionTopicState();
@@ -31,6 +30,7 @@ class _InputDescriptionTopicState extends State<InputDescriptionTopic> {
         borderRadius: BorderRadius.circular(25),
       ),
       child: TextField(
+        controller: widget.textDescriptionController,
         maxLines: null,
         cursorColor: Colors.white,
         style: TextStyle(

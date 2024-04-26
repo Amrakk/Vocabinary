@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 
 class ItemTopicSelect extends StatefulWidget {
-  const ItemTopicSelect({super.key});
+   ItemTopicSelect({ required this.name ,void Function()? onTap ,super.key}) : onTap = onTap ?? ((){});
+
+  void Function()? onTap ;
+  String name;
 
   @override
   State<ItemTopicSelect> createState() => _ItemTopicSelectState();
@@ -14,7 +17,9 @@ class _ItemTopicSelectState extends State<ItemTopicSelect> {
   Widget build(BuildContext context) {
     AppColorsThemeData myColors = Theme.of(context).extension<AppColorsThemeData>()!;
     return InkWell(
-      onTap: (){},
+      onTap: (){
+        widget.onTap!();
+      },
       borderRadius: BorderRadius.circular(17),
       child: Ink(
         decoration: BoxDecoration(
@@ -23,7 +28,6 @@ class _ItemTopicSelectState extends State<ItemTopicSelect> {
         ),
         child: Container(
           height: 42,
-          width: 90,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(17),
             boxShadow: const [
@@ -35,13 +39,16 @@ class _ItemTopicSelectState extends State<ItemTopicSelect> {
               ),
             ],
           ),
-          child: const Center(
-            child: Text(
-              'Nature',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+          child:  Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: Text(
+                widget.name,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
           ),

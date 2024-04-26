@@ -7,8 +7,10 @@ class AppThemes {
       extensions: [
         const AppColorsThemeData(
           containerColor: Color(0xFF46494C),
+          subTextColor: Color(0x99FFFFFF),
         ),
       ],
+
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
@@ -38,7 +40,7 @@ class AppThemes {
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         filled: true,
-        fillColor: Colors.black,
+        fillColor: const Color(0xFF616161),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
         backgroundColor: const Color(0xFF0645BB),

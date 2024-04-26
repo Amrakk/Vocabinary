@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/dimensions.dart';
+import 'package:vocabinary/utils/dimensions.dart';
 
 class SliderLevel extends StatefulWidget {
    SliderLevel({required this.currentLevel ,super.key});

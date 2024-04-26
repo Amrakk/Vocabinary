@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
-import '../../../utils/dimensions.dart';
+import 'package:vocabinary/utils/dimensions.dart';
 
 class InputTopicName extends StatefulWidget {
-  const InputTopicName({super.key});
+   InputTopicName({required this.textNameController,super.key});
 
-  // var _textNameController = TextEditingController();
+  var textNameController = TextEditingController();
 
   @override
   State<InputTopicName> createState() => _InputTopicNameState();
@@ -22,6 +21,7 @@ class _InputTopicNameState extends State<InputTopicName> {
         borderRadius: BorderRadius.circular(25),
       ),
       child:  TextField(
+        controller: widget.textNameController,
         expands: true,
         maxLines: null,
         textAlign: TextAlign.center,
