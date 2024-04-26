@@ -45,7 +45,6 @@ class AppRoutes {
         args = args as SelectWordsArgs;
         var words = args.words;
         var topicID = args.topicID;
-
         return _buildPageTransition(
           FlashcardView(words: words, topicID: topicID),
           settings,
@@ -63,7 +62,7 @@ class AppRoutes {
         var words = args.words;
         var topicID = args.topicID;
         return _buildPageTransition(
-          TypingView(topicID: topicID, words: words),
+          TypingView(words: words, topicID: topicID),
           settings,
         );
 

@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
           darkTheme: AppThemes.darkTheme(),
           themeMode:
               themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-          home: const InsideTopicView(),
+          home: const MyHomePage(),
           onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
