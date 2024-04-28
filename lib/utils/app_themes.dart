@@ -8,6 +8,7 @@ class AppThemes {
         const AppColorsThemeData(
           containerColor: Color(0xFF46494C),
           subTextColor: Color(0x99FFFFFF),
+          blueColor: Color(0xFF287AFF),
         ),
       ],
 
@@ -36,6 +37,15 @@ class AppThemes {
           borderSide: BorderSide(color: Colors.grey, width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.5),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        focusedErrorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.red, width: 1.5),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        errorStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
         enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
