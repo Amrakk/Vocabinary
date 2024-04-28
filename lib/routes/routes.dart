@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:vocabinary/views/authenticate/register_view.dart';
 import 'package:vocabinary/views/home/home_view.dart';
 import 'package:vocabinary/views/learnings/quiz_view.dart';
 import 'package:vocabinary/views/setting/setting_view.dart';
@@ -11,6 +10,10 @@ import 'package:vocabinary/views/community/community_view.dart';
 import 'package:vocabinary/views/learnings/select_type_view.dart';
 import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
+
+import '../models/arguments/explore/folder_args.dart';
+import '../views/explore/folder_view.dart';
+import '../views/explore/inside_topic_view.dart';
 
 import '../views/authenticate/login_view.dart';
 
@@ -31,6 +34,12 @@ class AppRoutes {
     '/forgot-password',
   ];
 
+  static final exploreRoutes = [
+    '/topic',
+    '/inside-topic',
+    '/folder',
+    'inside-folder'
+  ];
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     var args = settings.arguments;
@@ -72,6 +81,24 @@ class AppRoutes {
         var topicID = args.topicID;
         return _buildPageTransition(
           TypingView(words: words, topicID: topicID),
+          settings,
+        );
+      case '/topic':
+        args = args as TopicArguments;
+        var userID = args.userID;
+        var topics = args.topics;
+        return _buildPageTransition(
+          TopicView(userID: userID, topics: topics),
+          settings,
+        );
+      case '/inside-topic':
+        return _buildPageTransition(const InsideTopicView(), settings);
+      case '/folder':
+        args = args as FolderArguments;
+        var userID = args.userID;
+        var folders = args.folders;
+        return _buildPageTransition(
+          FolderView(userID: userID, folders: folders),
           settings,
         );
 

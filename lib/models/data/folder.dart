@@ -1,14 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/models/data/topic.dart';
 
 class FolderModel {
   String? id;
   String? name;
+  String? ownerID;
+  Timestamp? createdAt;
   List<String> topicIDs;
 
   FolderModel({
     this.id,
     this.name,
+    this.ownerID,
+    this.createdAt,
     this.topicIDs = const [],
   });
 
@@ -30,6 +35,8 @@ class FolderModel {
     return FolderModel(
       id: id,
       name: map['name'],
+      ownerID: map['ownerID'],
+      createdAt: map['createdAt'],
       topicIDs: List<String>.from(map['topics'] ?? []),
     );
   }
@@ -37,12 +44,20 @@ class FolderModel {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'ownerID': ownerID,
+      'createdAt': createdAt,
       'topics': topicIDs,
     };
   }
 
+  //DD/MM/YYYY
+  String get createdAtFormatted {
+    if (createdAt == null) return '';
+    return '${createdAt!.toDate().day}/${createdAt!.toDate().month}/${createdAt!.toDate().year}';
+  }
+
   @override
   String toString() {
-    return 'FolderModel{id: $id, name: $name, topics: $topicIDs}';
+    return 'FolderModel{id: $id, name: $name, ownerID: $ownerID, createdAr: $createdAt,topics: $topicIDs}';
   }
 }

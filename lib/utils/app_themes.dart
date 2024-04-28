@@ -11,19 +11,6 @@ class AppThemes {
           blueColor: Color(0xFF287AFF),
         ),
       ],
-
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5)
-            ),
-
-        )
-      ),
-      dialogTheme: const DialogTheme().copyWith(
-        backgroundColor: const Color(0xFF222222),
-      ),
       primaryColor: Colors.black,
       scaffoldBackgroundColor: const Color(0xFF222222),
       appBarTheme: const AppBarTheme().copyWith(
@@ -37,15 +24,6 @@ class AppThemes {
           borderSide: BorderSide(color: Colors.grey, width: 2.0),
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
-        errorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.5),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        focusedErrorBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.red, width: 1.5),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        errorStyle: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
         enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
@@ -71,6 +49,9 @@ class AppThemes {
 
         thumbColor: const Color(0xFFFFFFFF),
         overlayColor: const Color(0xFF0061FF).withOpacity(0.2),
+      ),
+      buttonTheme: const ButtonThemeData().copyWith(
+        buttonColor: const Color(0xFF0645BB),
       ),
     );
   }

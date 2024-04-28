@@ -19,6 +19,15 @@ class FolderRepo {
         collectionPath: collectionPath(userID),
         data: data.toMap(),
       );
+  Future<FolderModel> getFolderByTopicID(String userID, String topicID) async {
+    final folders = await getFolders(userID);
+    //find if topic id is in any folder contain topic array
+    final folder = folders.firstWhere(
+      (folder) => folder.topicIDs.contains(topicID),
+      orElse: () => FolderModel(),
+    );
+    return folder;
+  }
 
   Future<bool> updateFolder(
     String userID,
