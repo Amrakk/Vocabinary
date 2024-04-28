@@ -5,16 +5,33 @@ class FirestoreService {
   static final instance = FirestoreService._();
 
   /// Return the document `id` after adding the data to the collection. Otherwise, return `null`.
+  // Future<String?> createData<T>({
+  //   required String collectionPath,
+  //   required Map<String, dynamic> data,
+  // }) async {
+  //   final reference = FirebaseFirestore.instance.collection(collectionPath);
+  //   return await reference
+  //       .add(data)
+  //       .then<String?>((value) => value.id)
+  //       .catchError((_) => null);
+  // }
+
   Future<String?> createData<T>({
     required String collectionPath,
+    String? documentId,
     required Map<String, dynamic> data,
   }) async {
     final reference = FirebaseFirestore.instance.collection(collectionPath);
-    return await reference
-        .add(data)
-        .then<String?>((value) => value.id)
-        .catchError((_) => null);
+    DocumentReference docRef;
+    if (documentId != null) {
+      docRef = reference.doc(documentId);
+      await docRef.set(data);
+    } else {
+      docRef = await reference.add(data);
+    }
+    return docRef.id;
   }
+
 
   /// Return `true` if the data is updated successfully. Otherwise, return `false`.
   ///

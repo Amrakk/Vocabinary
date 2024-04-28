@@ -11,9 +11,10 @@ class UserRepo {
 
   Future<List<UserModel>> getUsers() => usersStream().first;
 
-  Future<String?> createUser(UserModel data) => _firestoreService.createData(
+  Future<String?> createUser(UserModel data, String userId) => _firestoreService.createData(
         collectionPath: collectionPath,
         data: data.toMap(),
+        documentId: userId,
       );
 
   Future<bool> updateUser(String id, UserModel data) =>
