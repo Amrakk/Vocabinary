@@ -15,7 +15,7 @@ class AppThemes {
         backgroundColor: const Color(0xFF222222),
       ),
       iconTheme: const IconThemeData().copyWith(
-        color: Colors.black,
+        color: Colors.white,
       ),
       inputDecorationTheme: const InputDecorationTheme().copyWith(
         focusedBorder: const OutlineInputBorder(
@@ -39,6 +39,9 @@ class AppThemes {
       tabBarTheme: const TabBarTheme().copyWith(
         labelColor: const Color(0xFF0061FF),
         unselectedLabelColor: Colors.grey,
+      ),
+      buttonTheme: const ButtonThemeData().copyWith(
+        buttonColor: const Color(0xFF0645BB),
       ),
     );
   }

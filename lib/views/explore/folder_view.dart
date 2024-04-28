@@ -1,33 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/utils/enums.dart';
+import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
 import '../../utils/dimensions.dart';
 
-class TopicView extends StatefulWidget {
-  const TopicView({super.key});
+class FolderView extends StatefulWidget {
+  const FolderView({Key? key, required this.folders, required this.userID})
+      : super(key: key);
+  final List<FolderModel> folders;
+  final String userID;
 
   @override
-  State<TopicView> createState() => _TopicViewState();
+  State<FolderView> createState() => _FolderViewState();
 }
 
-class _TopicViewState extends State<TopicView> {
-  final _recentTopic = [
-    {
-      'Title': 'Outdoor Activity',
-      'Description': 'Improve Vocabulary about Outdoor Activity',
-      'wordCount': '10',
-      'level': 'Easy',
-      'public': false
-    },
-    {
-      'Title': 'Water Sport',
-      'Description': 'Improve Vocabulary about Water Sport',
-      'wordCount': '10',
-      'level': 'Easy',
-      'public': true
-    },
-  ];
-
+class _FolderViewState extends State<FolderView> {
   @override
   Widget build(BuildContext context) {
     var screenWidth = Dimensions.screenWidth(context);
@@ -35,11 +23,12 @@ class _TopicViewState extends State<TopicView> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+          },
           child: const Icon(Icons.add_to_photos_outlined),
         ),
         appBar: AppBar(
-          title: Text("List Your Topic"),
+          title: const Text("List Your Folder"),
           actions: [
             IconButton(
               onPressed: () {
@@ -49,27 +38,33 @@ class _TopicViewState extends State<TopicView> {
             ),
           ],
         ),
-        body: GridView.builder(
-            itemCount: 20,
-            itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: _topicBuilder(context, _recentTopic),
+        body: widget.folders.isEmpty
+            ? _emptyFolder(context)
+            : Padding(
+                padding: const EdgeInsets.all(10),
+                child: GridView.builder(
+                  itemCount: widget.folders.length,
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: _folderBuilder(context, widget.folders[index]),
+                  ),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: itemNum,
+                      childAspectRatio: 2 / 1,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
                 ),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: itemNum,
-                childAspectRatio: 2 / 1,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10)),
+              ),
       ),
     );
   }
 
-  _topicBuilder(BuildContext context, List<Map<String, Object>> recentTopic) {
+  _folderBuilder(BuildContext context, FolderModel folder) {
     return Container(
       height: 75,
-      width: 200,
+      width: 180,
       decoration: BoxDecoration(
-        color: const Color.fromRGBO(1, 58, 99, 1),
+        color: const Color(0xFF023E8A),
         borderRadius: BorderRadius.circular(10),
         boxShadow: const [
           BoxShadow(
@@ -79,54 +74,43 @@ class _TopicViewState extends State<TopicView> {
         ],
       ),
       padding: const EdgeInsets.all(5),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Text(
-            'Outdoor Activity',
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+          Center(
+            child: Text(
+              folder.name!,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-          Text(
-            "Improve Vocabulary about Outdoor Activity but it's too long to show like this",
-            softWrap: true,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 9, color: Colors.white),
+          const Expanded(
+            flex: 1,
+            child: SizedBox(),
           ),
-          Expanded(flex: 1, child: SizedBox()),
-          Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.format_list_bulleted),
-                    Text("10",
-                        style: TextStyle(fontSize: 9, color: Colors.white)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.star),
-                    Text("Easy",
-                        style: TextStyle(fontSize: 9, color: Colors.white)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.bookmark),
-                    Text("12K",
-                        style: TextStyle(fontSize: 9, color: Colors.white)),
-                  ],
-                ),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.format_list_bulleted),
+                  Text(folder.topicIDs.length.toString(),
+                      style: const TextStyle(fontSize: 10, color: Colors.white)),
+                ],
+              ),
+              const SizedBox(width: 10),
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today),
+                  Text(folder.createdAtFormatted,
+                      style: const TextStyle(fontSize: 10, color: Colors.white)),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -138,86 +122,144 @@ class _TopicViewState extends State<TopicView> {
       context: context,
       builder: (context) {
         var level = WordLevel.Easy;
-        var wordNum = WordCount.MoreThan20;
+        var numFlashCard = AmountOfFlashCards.Default;
         return AlertDialog(
-          title: const Text("Filter Topic"),
           content: StatefulBuilder(
             builder: (context, setState) => Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Level"),
-                SizedBox(height: 10),
+                const Text("Level",
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    MyRadioListTile(
+                        value: WordLevel.Easy,
+                        groupValue: level,
+                        onChanged: (WordLevel? value) {
+                          setState(() {
+                            level = value!;
+                          });
+                        },
+                        leading: "Easy"),
+                    MyRadioListTile(
+                        value: WordLevel.Medium,
+                        groupValue: level,
+                        onChanged: (WordLevel? value) {
+                          setState(() {
+                            level = value!;
+                          });
+                        },
+                        leading: "Medium"),
+                    MyRadioListTile(
+                        value: WordLevel.Hard,
+                        groupValue: level,
+                        onChanged: (WordLevel? value) {
+                          setState(() {
+                            level = value!;
+                          });
+                        },
+                        leading: "Hard")
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Text("Number of Flash Cards",
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
                 Row(children: [
-                  RadioMenuButton(
-                      value: WordLevel.Easy,
-                      groupValue: level,
-                      onChanged: (WordLevel? value) {
+                  MyRadioListTile(
+                      value: AmountOfFlashCards.MoreThan20,
+                      groupValue: numFlashCard,
+                      onChanged: (AmountOfFlashCards? value) {
                         setState(() {
-                          level = value!;
+                          numFlashCard = value!;
                         });
                       },
-                      child: Text("Easy")),
-                  RadioMenuButton(
-                      value: WordLevel.Medium,
-                      groupValue: level,
-                      onChanged: (WordLevel? value) {
+                      leading: ">20"),
+                  MyRadioListTile(
+                      value: AmountOfFlashCards.MoreThan50,
+                      groupValue: numFlashCard,
+                      onChanged: (AmountOfFlashCards? value) {
                         setState(() {
-                          level = value!;
+                          numFlashCard = value!;
                         });
                       },
-                      child: Text("Medium")),
-                  RadioMenuButton(
-                      value: WordLevel.Hard,
-                      groupValue: level,
-                      onChanged: (WordLevel? value) {
+                      leading: ">50"),
+                  MyRadioListTile(
+                      value: AmountOfFlashCards.MoreThan100,
+                      groupValue: numFlashCard,
+                      onChanged: (AmountOfFlashCards? value) {
                         setState(() {
-                          level = value!;
+                          numFlashCard = value!;
                         });
                       },
-                      child: Text("Hard")),
+                      leading: ">100"),
                 ]),
-                SizedBox(height: 10),
-                Text("Number of Words"),
-                SizedBox(height: 10),
-                Row(children: [
-                  RadioMenuButton(
-                      value: WordCount.MoreThan20,
-                      groupValue: wordNum,
-                      onChanged: (WordCount? value) {
-                        setState(() {
-                          wordNum = value!;
-                        });
-                      },
-                      child: Text(">20")),
-                  RadioMenuButton(
-                      value: WordCount.MoreThan50,
-                      groupValue: wordNum,
-                      onChanged: (WordCount? value) {
-                        setState(() {
-                          wordNum = value!;
-                        });
-                      },
-                      child: Text(">50")),
-                  RadioMenuButton(
-                      value: WordCount.MoreThan100,
-                      groupValue: wordNum,
-                      onChanged: (WordCount? value) {
-                        setState(() {
-                          wordNum = value!;
-                        });
-                      },
-                      child: Text(">100")),
-                ]),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text("Apply")),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF0248C2)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)))),
+                        child: const Text(
+                          "Apply",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // reset all the filter to default
+                          level = WordLevel.Easy;
+                          numFlashCard = AmountOfFlashCards.Default;
+                          setState(() {});
+                        },
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF0248C2)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)))),
+                        child: const Text(
+                          "Reset",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  _emptyFolder(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image(
+            image: AssetImage('assets/images/empty_folder.png'),
+          ),
+          Text("No result were found"),
+        ],
+      ),
     );
   }
 }

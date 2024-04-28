@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
+import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
@@ -27,6 +28,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => QuizViewModel()),
         ChangeNotifierProvider(create: (context) => TypingViewModel()),
         ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
+        ChangeNotifierProvider(create: (context) => ExploreViewModel("4VtPfzFkETVqg29YJdpW")),
       ],
       child: Consumer<ThemeViewModel>(
         builder: (_, themeViewModel, __) => MaterialApp(
