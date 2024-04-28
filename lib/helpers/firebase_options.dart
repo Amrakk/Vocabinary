@@ -47,7 +47,6 @@ class DefaultFirebaseOptions {
     authDomain: 'vocabinary.firebaseapp.com',
     storageBucket: 'vocabinary.appspot.com',
     measurementId: 'G-KHJBKKCMS3',
-
   );
 
   static FirebaseOptions android = FirebaseOptions(

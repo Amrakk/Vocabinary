@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:vocabinary/views/authenticate/register_view.dart';
 import 'package:vocabinary/views/home/home_view.dart';
 import 'package:vocabinary/views/learnings/quiz_view.dart';
 import 'package:vocabinary/views/setting/setting_view.dart';
@@ -11,8 +10,6 @@ import 'package:vocabinary/views/community/community_view.dart';
 import 'package:vocabinary/views/learnings/select_type_view.dart';
 import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
-
-import '../views/authenticate/login_view.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -25,12 +22,6 @@ class AppRoutes {
     '/quiz',
     '/typing',
   ];
-  static final authenticationRoutes = [
-    '/login',
-    '/register',
-    '/forgot-password',
-  ];
-
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     var args = settings.arguments;
@@ -75,12 +66,6 @@ class AppRoutes {
           settings,
         );
 
-        // Authentication Routes
-      case '/login':
-        return _buildPageTransition(const LoginView(), settings, type: PageTransitionType.leftToRight);
-      case '/register':
-        return _buildPageTransition(SignUpView(), settings, );
-
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
@@ -95,13 +80,11 @@ class AppRoutes {
   static PageTransition<dynamic> _buildPageTransition(
     Widget page,
     RouteSettings settings,
-      {PageTransitionType? type}
   ) {
-    type = type ?? PageTransitionType.rightToLeft;
     return PageTransition(
       child: page,
       duration: const Duration(milliseconds: 275),
-      type: type,
+      type: PageTransitionType.rightToLeft,
       settings: settings,
     );
   }

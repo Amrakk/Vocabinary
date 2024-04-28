@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
-import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/app_themes.dart';
-import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
-import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
-import 'package:vocabinary/views/authenticate/login_view.dart';
+import 'package:vocabinary/views/explore/inside_topic_view.dart';
+import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
+// import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:vocabinary/views/authenticate/register_view.dart';
-import 'package:vocabinary/views/explore/create_new_card_view.dart';
-import 'package:vocabinary/views/explore/create_new_topic_view.dart';
-import 'package:vocabinary/views/explore/inside_topic_view.dart';
-
-import 'package:vocabinary/data/repositories/word_repo.dart';
-import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
-import 'package:vocabinary/widgets/explore/create_new_card/input_vocab_card.dart';
-import 'package:vocabinary/widgets/global/loading_indicator.dart';
-import 'package:vocabinary/widgets/global/my_app_bar.dart';
-
-import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -31,39 +17,24 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AuthenticationService _authenticationService = AuthenticationService.instance;
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
-        ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
-        ChangeNotifierProvider(create: (context) => TypingViewModel()),
-        ChangeNotifierProvider(create: (context) => QuizViewModel(),),
+        // ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
       ],
       child: Consumer<ThemeViewModel>(
         builder: (_, themeViewModel, __) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Vocabinary',
           darkTheme: AppThemes.darkTheme(),
-          // themeMode:
-          //     themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-          home: StreamBuilder(
-            stream: _authenticationService.authStateChanges,
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return const MyLoadingIndicator();
-              }
-              if(snapshot.hasData){
-                return MyHomePage();
-              }
-              return LoginView();
-            },
-          ),
+          themeMode:
+              themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+          home: const MyHomePage(),
           onGenerateRoute: AppRoutes.generateRoutes,
         ),
       ),
-
     );
   }
 }
@@ -130,31 +101,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: FutureBuilder(
-        future: WordRepo().getWords('wIEzPcEYaaCwzCrNghTh'),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
-          }
-          return FloatingActionButton(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-            ),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pushNamed(
-                '/level',
-                arguments: SelectWordsArgs(
-                  words: snapshot.data!,
-                  topicID: 'wIEzPcEYaaCwzCrNghTh',
-                ),
-              );
-            },
-            tooltip: 'Add new word',
-            child: const Icon(Icons.add),
-          );
-        },
+      floatingActionButton: FloatingActionButton(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+        onPressed: () {},
+        tooltip: 'Add new word',
+        child: const Icon(Icons.add),
       ),
-
     );
   }
 }
