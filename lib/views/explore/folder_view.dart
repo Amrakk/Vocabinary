@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/utils/enums.dart';
+import 'package:vocabinary/utils/filter/folder_list.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
 import '../../utils/dimensions.dart';
+import '../../utils/filter/decorator.dart';
 
 class FolderView extends StatefulWidget {
   const FolderView({Key? key, required this.folders, required this.userID})
@@ -16,6 +18,9 @@ class FolderView extends StatefulWidget {
 }
 
 class _FolderViewState extends State<FolderView> {
+  var topicNum = TopicNum.Default;
+  List<FolderModel> filteredFolders = [];
+
   @override
   Widget build(BuildContext context) {
     var screenWidth = Dimensions.screenWidth(context);
@@ -23,8 +28,7 @@ class _FolderViewState extends State<FolderView> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-          },
+          onPressed: () {},
           child: const Icon(Icons.add_to_photos_outlined),
         ),
         appBar: AppBar(
@@ -43,10 +47,17 @@ class _FolderViewState extends State<FolderView> {
             : Padding(
                 padding: const EdgeInsets.all(10),
                 child: GridView.builder(
-                  itemCount: widget.folders.length,
+                  itemCount: isDefaultFilter()
+                      ? filteredFolders.length
+                      : widget.folders.length,
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.only(right: 10),
-                    child: _folderBuilder(context, widget.folders[index]),
+                    child: _folderBuilder(
+                      context,
+                      isDefaultFilter()
+                          ? filteredFolders[index]
+                          : widget.folders[index],
+                    ),
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: itemNum,
@@ -73,7 +84,7 @@ class _FolderViewState extends State<FolderView> {
           ),
         ],
       ),
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
@@ -99,7 +110,8 @@ class _FolderViewState extends State<FolderView> {
                 children: [
                   const Icon(Icons.format_list_bulleted),
                   Text(folder.topicIDs.length.toString(),
-                      style: const TextStyle(fontSize: 10, color: Colors.white)),
+                      style:
+                          const TextStyle(fontSize: 10, color: Colors.white)),
                 ],
               ),
               const SizedBox(width: 10),
@@ -107,7 +119,8 @@ class _FolderViewState extends State<FolderView> {
                 children: [
                   const Icon(Icons.calendar_today),
                   Text(folder.createdAtFormatted,
-                      style: const TextStyle(fontSize: 10, color: Colors.white)),
+                      style:
+                          const TextStyle(fontSize: 10, color: Colors.white)),
                 ],
               ),
             ],
@@ -121,82 +134,44 @@ class _FolderViewState extends State<FolderView> {
     showDialog(
       context: context,
       builder: (context) {
-        var level = WordLevel.Easy;
-        var numFlashCard = AmountOfFlashCards.Default;
         return AlertDialog(
           content: StatefulBuilder(
             builder: (context, setState) => Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Level",
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    MyRadioListTile(
-                        value: WordLevel.Easy,
-                        groupValue: level,
-                        onChanged: (WordLevel? value) {
-                          setState(() {
-                            level = value!;
-                          });
-                        },
-                        leading: "Easy"),
-                    MyRadioListTile(
-                        value: WordLevel.Medium,
-                        groupValue: level,
-                        onChanged: (WordLevel? value) {
-                          setState(() {
-                            level = value!;
-                          });
-                        },
-                        leading: "Medium"),
-                    MyRadioListTile(
-                        value: WordLevel.Hard,
-                        groupValue: level,
-                        onChanged: (WordLevel? value) {
-                          setState(() {
-                            level = value!;
-                          });
-                        },
-                        leading: "Hard")
-                  ],
-                ),
-                const SizedBox(height: 10),
-                const Text("Number of Flash Cards",
+                const Text("Number of Topics",
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
                 Row(children: [
                   MyRadioListTile(
-                      value: AmountOfFlashCards.MoreThan20,
-                      groupValue: numFlashCard,
-                      onChanged: (AmountOfFlashCards? value) {
+                      value: TopicNum.MoreThan5,
+                      groupValue: topicNum,
+                      onChanged: (TopicNum? value) {
                         setState(() {
-                          numFlashCard = value!;
+                          topicNum = value!;
+                        });
+                      },
+                      leading: ">5"),
+                  MyRadioListTile(
+                      value: TopicNum.MoreThan10,
+                      groupValue: topicNum,
+                      onChanged: (TopicNum? value) {
+                        setState(() {
+                          topicNum = value!;
+                        });
+                      },
+                      leading: ">10"),
+                  MyRadioListTile(
+                      value: TopicNum.MoreThan20,
+                      groupValue: topicNum,
+                      onChanged: (TopicNum? value) {
+                        setState(() {
+                          topicNum = value!;
                         });
                       },
                       leading: ">20"),
-                  MyRadioListTile(
-                      value: AmountOfFlashCards.MoreThan50,
-                      groupValue: numFlashCard,
-                      onChanged: (AmountOfFlashCards? value) {
-                        setState(() {
-                          numFlashCard = value!;
-                        });
-                      },
-                      leading: ">50"),
-                  MyRadioListTile(
-                      value: AmountOfFlashCards.MoreThan100,
-                      groupValue: numFlashCard,
-                      onChanged: (AmountOfFlashCards? value) {
-                        setState(() {
-                          numFlashCard = value!;
-                        });
-                      },
-                      leading: ">100"),
                 ]),
                 Row(
                   children: [
@@ -204,7 +179,9 @@ class _FolderViewState extends State<FolderView> {
                       flex: 1,
                       child: ElevatedButton(
                         onPressed: () {
+                          applyFilter();
                           Navigator.pop(context);
+                          this.setState(() {});
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
@@ -223,9 +200,9 @@ class _FolderViewState extends State<FolderView> {
                       child: ElevatedButton(
                         onPressed: () {
                           // reset all the filter to default
-                          level = WordLevel.Easy;
-                          numFlashCard = AmountOfFlashCards.Default;
+                          topicNum = TopicNum.Default;
                           setState(() {});
+                          this.setState(() {});
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
@@ -261,5 +238,16 @@ class _FolderViewState extends State<FolderView> {
         ],
       ),
     );
+  }
+
+  void applyFilter() {
+    FolderList folderList = FolderList(widget.folders);
+    if (topicNum != TopicNum.Default) {
+      folderList = FolderTopicNumFilterDecorator(folderList, topicNum.index);
+    }
+  }
+
+  bool isDefaultFilter() {
+    return topicNum != TopicNum.Default;
   }
 }

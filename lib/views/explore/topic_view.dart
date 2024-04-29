@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/enums.dart';
+import 'package:vocabinary/utils/filter/decorator.dart';
+import 'package:vocabinary/utils/filter/topic_list.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
 import '../../models/data/topic.dart';
@@ -16,6 +18,10 @@ class TopicView extends StatefulWidget {
 }
 
 class _TopicViewState extends State<TopicView> {
+  var level = TopicLevel.Default;
+  var wordNum = WordNum.Default;
+  var publicity = Publicity.Private;
+  List<TopicModel> filteredTopics = [];
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +46,24 @@ class _TopicViewState extends State<TopicView> {
             ),
           ],
         ),
-        body: widget.topics.isEmpty
+        body: (widget.topics.isEmpty)
             ? _emptyTopic(context)
             : Padding(
                 padding: const EdgeInsets.all(10),
                 child: GridView.builder(
-                  itemCount: widget.topics.length,
+                  itemCount: filterIsDefault()
+                      ? widget.topics.length
+                      : filteredTopics.length,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: _topicBuilder(context, widget.topics[index]),
-                  ),
+                      padding: const EdgeInsets.only(right: 10),
+                      child: _topicBuilder(
+                          context,
+                          filterIsDefault()
+                              ? widget.topics[index]
+                              : filteredTopics[index])),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: itemNum,
-                      childAspectRatio: 2/1,
+                      childAspectRatio: 5 / 3,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10),
                 ),
@@ -61,7 +72,7 @@ class _TopicViewState extends State<TopicView> {
     );
   }
 
-  _topicBuilder(BuildContext context,TopicModel topic) {
+  _topicBuilder(BuildContext context, TopicModel topic) {
     return Container(
       height: 75,
       width: 180,
@@ -83,7 +94,7 @@ class _TopicViewState extends State<TopicView> {
           Text(
             topic.name!,
             style: const TextStyle(
-              fontSize: 15,
+              fontSize: 16,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
@@ -93,7 +104,7 @@ class _TopicViewState extends State<TopicView> {
             softWrap: true,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 9, color: Colors.white),
+            style: const TextStyle(fontSize: 10, color: Colors.white),
           ),
           const Expanded(flex: 1, child: SizedBox()),
           const Divider(
@@ -108,25 +119,27 @@ class _TopicViewState extends State<TopicView> {
                   children: [
                     const Icon(Icons.format_list_bulleted),
                     Text(topic.wordCount.toString(),
-                        style: const TextStyle(fontSize: 9, color: Colors.white)),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white)),
                   ],
                 ),
                 Row(
                   children: [
                     const Icon(Icons.star),
                     Text(intLevelToString(topic.level),
-                        style: const TextStyle(fontSize: 9, color: Colors.white)),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white)),
                   ],
                 ),
                 topic.isPublic
-                    ?
-                Row(
-                  children: [
-                    const Icon(Icons.bookmark),
-                    Text(topic.followers.length.toString(),
-                        style: const TextStyle(fontSize: 9, color: Colors.white)),
-                    ],
-                )
+                    ? Row(
+                        children: [
+                          const Icon(Icons.bookmark),
+                          Text(topic.followers.length.toString(),
+                              style: const TextStyle(
+                                  fontSize: 10, color: Colors.white)),
+                        ],
+                      )
                     : const SizedBox(),
               ],
             ),
@@ -140,9 +153,6 @@ class _TopicViewState extends State<TopicView> {
     showDialog(
       context: context,
       builder: (context) {
-        var level = TopicLevel.Default;
-        var wordNum = WordNum.Default;
-        var publicity = Publicity.Private;
         return AlertDialog(
           content: StatefulBuilder(
             builder: (context, setState) => Column(
@@ -184,21 +194,31 @@ class _TopicViewState extends State<TopicView> {
                       leading: "Hard"),
                 ]),
                 const SizedBox(height: 10),
-                Text("Owner", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                const Text("Owner",
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    MyRadioListTile(value: Publicity.Private, groupValue: publicity, onChanged: (Publicity? value){
-                      setState(() {
-                        publicity = value!;
-                      });
-                    }, leading: "Private"),
-                    MyRadioListTile(value: Publicity.Public, groupValue: publicity, onChanged: (Publicity? value){
-                      setState(() {
-                        publicity = value!;
-                      });
-                    }, leading: "Public"),
+                    MyRadioListTile(
+                        value: Publicity.Private,
+                        groupValue: publicity,
+                        onChanged: (Publicity? value) {
+                          setState(() {
+                            publicity = value!;
+                          });
+                        },
+                        leading: "Private"),
+                    MyRadioListTile(
+                        value: Publicity.Public,
+                        groupValue: publicity,
+                        onChanged: (Publicity? value) {
+                          setState(() {
+                            publicity = value!;
+                          });
+                        },
+                        leading: "Public"),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -246,13 +266,20 @@ class _TopicViewState extends State<TopicView> {
                       flex: 1,
                       child: ElevatedButton(
                         onPressed: () {
+                          applyFilters(TopicList(widget.topics));
                           Navigator.pop(context);
+                          this.setState(() {});
                         },
-                        child: const Text("Apply",style: TextStyle(color: Colors.white),),
                         style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(const Color(0xFF0248C2)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)))),
+                            backgroundColor: MaterialStateProperty.all(
+                                const Color(0xFF0248C2)),
+                            shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)))),
+                        child: const Text(
+                          "Apply",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -264,6 +291,7 @@ class _TopicViewState extends State<TopicView> {
                           wordNum = WordNum.Default;
                           publicity = Publicity.Private;
                           setState(() {});
+                          this.setState(() {});
                         },
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
@@ -299,5 +327,44 @@ class _TopicViewState extends State<TopicView> {
         ],
       ),
     );
+  }
+
+  void applyFilters(TopicList topicList) {
+    TopicList filteredList = TopicList(widget.topics);
+    if (level != TopicLevel.Default) {
+      filteredList = TopicLevelFilterDecorator(filteredList, wordLevelToInt(level));
+    }
+    if (wordNum != WordNum.Default) {
+      filteredList =
+          TopicWordNumFilterDecorator(filteredList, wordNumConverter(wordNum));
+    }
+    if (publicity != Publicity.Private) {
+      filteredList = TopicPublicFilterDecorator(filteredList, isPublic(publicity));
+    }
+    print(filteredList.topics);
+    filteredTopics = filteredList.topics;
+  }
+
+  int wordNumConverter(WordNum wordNum) {
+    switch (wordNum) {
+      case WordNum.MoreThan20:
+        return 20;
+      case WordNum.MoreThan50:
+        return 50;
+      case WordNum.MoreThan100:
+        return 100;
+      default:
+        return 0;
+    }
+  }
+
+  bool isPublic(Publicity publicity) {
+    return publicity == Publicity.Public;
+  }
+
+  bool filterIsDefault() {
+    return level == TopicLevel.Default &&
+        wordNum == WordNum.Default &&
+        publicity == Publicity.Private;
   }
 }

@@ -58,3 +58,5 @@ enum WordNum { Default, MoreThan20, MoreThan50, MoreThan100 }
 enum AmountOfFlashCards { Default, MoreThan20, MoreThan50, MoreThan100 }
 
 enum Publicity { Public, Private }
+
+enum TopicNum { Default, MoreThan5, MoreThan10, MoreThan20 }
