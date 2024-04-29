@@ -230,9 +230,16 @@ class _ExploreViewState extends State<ExploreView> {
                             itemCount: itemNum < topics.length
                                 ? itemNum
                                 : topics.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: _topicBuilder(context, topics[index]),
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: (){
+                                Navigator.of(context, rootNavigator: true).pushNamed(
+                                  '/inside-topic',
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _topicBuilder(context, topics[index]),
+                              ),
                             ),
                           ),
                         );
@@ -295,9 +302,12 @@ class _ExploreViewState extends State<ExploreView> {
                               itemCount: itemNum < folders.length
                                   ? itemNum
                                   : folders.length,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: _folderBuilder(context, folders[index]),
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: (){},
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: _folderBuilder(context, folders[index]),
+                                ),
                               ),
                             ),
                           );
