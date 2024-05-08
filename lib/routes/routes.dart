@@ -15,6 +15,7 @@ import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 
 import '../models/arguments/explore/folder_args.dart';
+import '../models/arguments/explore/inside_topic_args.dart';
 import '../views/explore/folder_view.dart';
 import '../views/explore/inside_topic_view.dart';
 
@@ -87,7 +88,14 @@ class AppRoutes {
           settings,
         );
       case '/inside-topic':
-        return _buildPageTransition(const InsideTopicView(), settings);
+        args = args as InsideTopicArgs;
+        var topicID = args.topicId;
+        var topicName = args.topicName;
+        var wordCount = args.wordCount;
+        return _buildPageTransition(
+            InsideTopicView(
+                topicID: topicID, topicName: topicName, wordCount: wordCount),
+            settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
