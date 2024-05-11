@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationService {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+   final FirebaseAuth  _firebaseAuth = FirebaseAuth.instance;
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
   User? get currentUser => _firebaseAuth.currentUser;
@@ -41,6 +41,29 @@ class AuthenticationService {
       } else {
         return e.message;
       }
+    }
+  }
+   Future<bool> isEmailRegistered(String email) async {
+     try {
+       final user = (await _firebaseAuth.signInWithEmailAndPassword(email: email, password: 'dummyPassword')).user;
+       return user != null;
+     } on FirebaseAuthException catch (e) {
+       if (e.code == 'wrong-password') {
+         return true; // The email is registered with a different password
+       } else if (e.code == 'user-not-found') {
+         return false; // The email is not registered
+       } else {
+         throw e; // Some other error occurred
+       }
+     }
+   }
+
+  Future<bool> sendEmailResetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } on FirebaseAuthException {
+      return false;
     }
   }
 

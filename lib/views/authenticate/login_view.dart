@@ -1,7 +1,5 @@
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vocabinary/utils/app_colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
@@ -10,8 +8,6 @@ import 'package:vocabinary/widgets/authenticate/with_google.dart';
 import 'package:vocabinary/widgets/global/button.dart';
 import 'package:vocabinary/widgets/global/loading_indicator.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
-import 'package:icons_plus/icons_plus.dart';
-
 import '../../services/firebase/authentication_service.dart';
 
 class LoginView extends StatefulWidget {
@@ -143,7 +139,9 @@ class _LoginViewState extends State<LoginView> {
                           SizedBox(
                               height: Dimensions.heightRatio(context, 0.7)),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(context, '/forgot-password');
+                            },
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: Text("Forgot password?",

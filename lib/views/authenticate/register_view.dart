@@ -1,21 +1,19 @@
-import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:vocabinary/data/repositories/user_repo.dart';
 import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/app_colors.dart';
-
 import 'package:vocabinary/widgets/authenticate/with_google.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:vocabinary/widgets/global/button.dart';
+import 'package:vocabinary/widgets/global/show_snack_bar.dart';
 import 'package:vocabinary/widgets/global/loading_indicator.dart';
-
-import '../../models/data/user.dart';
-import '../../utils/dimensions.dart';
-import '../../widgets/authenticate/input_text.dart';
+import 'package:vocabinary/models/data/user.dart';
+import 'package:vocabinary/utils/dimensions.dart';
+import 'package:vocabinary/widgets/authenticate/input_text.dart';
+import 'package:vocabinary/widgets/authenticate/forgot_password/dialog_otp.dart';
+import 'package:vocabinary/viewmodels/authenticate/auth_view_model.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});
@@ -25,40 +23,57 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
-  String password = '';
-  String confirmPassword = '';
-  String email = '';
-  String name = '';
+  late String password;
+  late String confirmPassword;
+  late String email;
+  late String name;
 
   final formKey = GlobalKey<FormState>();
   // Auth worker
   final AuthenticationService _authenticationService =
       AuthenticationService.instance;
   final UserRepo userRepo = UserRepo();
+  final ShowDialogTypingOtp showDialogTypingOtp = ShowDialogTypingOtp();
+  late AuthenticateViewModel authViewModel;
 
   void onSubmit() async {
     if (formKey.currentState!.validate()) {
       showLoadingIndicator(context);
       formKey.currentState!.save();
-      UserModel user = UserModel(
-        email: email,
-        name: name,
-      );
-      var credential =
-          await _authenticationService.signUp(email: email, password: password);
-      if (credential is String) {
+      // Verify otp before sign up
+      authViewModel.sendEmail(email).then((value) async {
         closeLoadingIndicator(context);
-        AnimatedSnackBar.material(
-          credential,
-          type: AnimatedSnackBarType.error,
-          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-          duration: const Duration(seconds: 5),
-        ).show(context);
-      } else {
-        userRepo.createUser(user, credential.user!.uid);
-        closeLoadingIndicator(context);
-      }
+        if (!value) {
+          ShowSnackBar.showError("Failed to send email", context);
+        } else {
+          bool result = await showDialogTypingOtp.showDialog(context, email);
+          if (result) {
+            showLoadingIndicator(context);
+            var user = UserModel(
+              name: name,
+              email: email,
+            );
+            var credential = await _authenticationService.signUp(
+                email: email, password: password);
+            if (credential is String) {
+              closeLoadingIndicator(context);
+              ShowSnackBar.showError(credential, context);
+            } else {
+              userRepo.createUser(user, credential.user!.uid);
+              closeLoadingIndicator(context);
+            }
+          } else {
+            ShowSnackBar.showError("Failed to verify email", context);
+          }
+        }
+      });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    authViewModel = Provider.of<AuthenticateViewModel>(context, listen: false);
   }
 
   @override
@@ -79,7 +94,7 @@ class _SignUpViewState extends State<SignUpView> {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.29,
                   child: SvgPicture.asset(
-                    'images/wave.svg',
+                    'assets/images/wave.svg',
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -99,7 +114,7 @@ class _SignUpViewState extends State<SignUpView> {
                       color: Theme.of(context).scaffoldBackgroundColor,
                     ),
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height ,
+                    height: MediaQuery.of(context).size.height,
                     child: Padding(
                       padding: EdgeInsets.all(Dimensions.padding(context, 40)),
                       child: Column(
@@ -140,7 +155,9 @@ class _SignUpViewState extends State<SignUpView> {
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Please enter your email';
-                                      } else if (EmailValidator.validate(value) == false) {
+                                      } else if (EmailValidator.validate(
+                                              value) ==
+                                          false) {
                                         return 'Please enter a valid email';
                                       }
                                       return null;

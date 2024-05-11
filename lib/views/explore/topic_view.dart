@@ -17,6 +17,7 @@ class TopicView extends StatefulWidget {
   State<TopicView> createState() => _TopicViewState();
 }
 
+
 class _TopicViewState extends State<TopicView> {
   var level = TopicLevel.Default;
   var wordNum = WordNum.Default;

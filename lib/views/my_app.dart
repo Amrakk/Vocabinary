@@ -3,18 +3,19 @@ import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/app_themes.dart';
+import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
-import 'package:vocabinary/views/authenticate/login_view.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
+import 'package:vocabinary/views/authenticate/login_view.dart';
 import 'package:vocabinary/widgets/global/loading_indicator.dart';
 import 'package:vocabinary/widgets/global/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
-
+import 'package:vocabinary/viewmodels/authenticate/auth_view_model.dart';
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -32,14 +33,16 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
         ChangeNotifierProvider(create: (context) => TypingViewModel()),
         ChangeNotifierProvider(create: (context) => QuizViewModel(),),
+        ChangeNotifierProvider(create: (ctx) => ExploreViewModel('4VtPfzFkETVqg29YJdpW')),
+        ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
       ],
       child: Consumer<ThemeViewModel>(
         builder: (_, themeViewModel, __) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Vocabinary',
           darkTheme: AppThemes.darkTheme(),
-          // themeMode:
-          //     themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+          themeMode:
+              themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: StreamBuilder(
             stream: _authenticationService.authStateChanges,
             builder: (context, snapshot) {
@@ -47,9 +50,9 @@ class _MyAppState extends State<MyApp> {
                 return const MyLoadingIndicator();
               }
               if(snapshot.hasData){
-                return MyHomePage();
+                return const MyHomePage();
               }
-              return LoginView();
+              return  const LoginView();
             },
           ),
           onGenerateRoute: AppRoutes.generateRoutes,

@@ -17,8 +17,9 @@ class AppThemes {
         backgroundColor: const Color(0xFF222222),
       ),
       iconTheme: const IconThemeData().copyWith(
-        color: Colors.black,
+        color: Colors.white,
       ),
+      dialogBackgroundColor: const Color(0xFF3B3B3B),
       inputDecorationTheme: const InputDecorationTheme().copyWith(
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 2.0),

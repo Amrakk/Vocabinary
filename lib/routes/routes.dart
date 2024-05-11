@@ -11,11 +11,15 @@ import 'package:vocabinary/views/learnings/select_type_view.dart';
 import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 
-import '../models/arguments/explore/folder_args.dart';
-import '../views/explore/folder_view.dart';
-import '../views/explore/inside_topic_view.dart';
+import 'package:vocabinary/models/arguments/explore/folder_args.dart';
+import 'package:vocabinary/models/arguments/explore/topic_args.dart';
+import 'package:vocabinary/views/authenticate/forgot_password_view.dart';
+import 'package:vocabinary/views/authenticate/register_view.dart';
+import 'package:vocabinary/views/explore/folder_view.dart';
+import 'package:vocabinary/views/explore/inside_topic_view.dart';
 
-import '../views/authenticate/login_view.dart';
+import 'package:vocabinary/views/authenticate/login_view.dart';
+import 'package:vocabinary/views/explore/topic_view.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -83,6 +87,9 @@ class AppRoutes {
           TypingView(words: words, topicID: topicID),
           settings,
         );
+
+
+      // Explore Routes
       case '/topic':
         args = args as TopicArguments;
         var userID = args.userID;
@@ -92,7 +99,7 @@ class AppRoutes {
           settings,
         );
       case '/inside-topic':
-        return _buildPageTransition(const InsideTopicView(), settings);
+        return _buildPageTransition(InsideTopicView(), settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
@@ -106,7 +113,9 @@ class AppRoutes {
       case '/login':
         return _buildPageTransition(const LoginView(), settings, type: PageTransitionType.leftToRight);
       case '/register':
-        return _buildPageTransition(SignUpView(), settings, );
+        return _buildPageTransition(const SignUpView(), settings, );
+      case '/forgot-password':
+        return _buildPageTransition( ForgotPasswordView(), settings);
 
       default:
         return MaterialPageRoute(
