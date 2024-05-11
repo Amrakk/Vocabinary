@@ -14,10 +14,22 @@ class LevelStarBar extends StatelessWidget {
       children: List.generate(3, (index) {
         return Icon(
           index + 1 <= level ? Icons.star_rounded : Icons.star_border_rounded,
-          color: AppColors.mainYellow,
+          color: levelToColor(level),
           size: Dimensions.iconSize(context, size),
         );
       }),
     );
+  }
+
+  Color levelToColor(int level) {
+    if (level == 1) {
+      return AppColors.mainGreen;
+    } else if (level == 2) {
+      return AppColors.mainBlue;
+    } else if (level == 3) {
+      return AppColors.mainYellow;
+    } else {
+      return AppColors.mainGreen;
+    }
   }
 }

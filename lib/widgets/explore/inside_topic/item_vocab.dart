@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/models/data/eng_word.dart';
 import 'package:vocabinary/utils/app_colors.dart';
 import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:vocabinary/widgets/level_star_bar.dart';
 
+import '../../../models/data/word.dart';
+
 class ItemVocab extends StatefulWidget {
-  const ItemVocab({super.key});
+  final EngWordModel engWord;
+  final WordModel word;
+
+  const ItemVocab({
+    Key? key,
+    required this.engWord,
+    required this.word,
+  }) : super(key: key);
 
   @override
   State<ItemVocab> createState() => _ItemVocabState();
@@ -15,6 +25,7 @@ class ItemVocab extends StatefulWidget {
 class _ItemVocabState extends State<ItemVocab> {
   @override
   Widget build(BuildContext context) {
+    print("Hello");
     final AppColorsThemeData appColors =
         Theme.of(context).extension<AppColorsThemeData>()!;
     return Slidable(
@@ -63,7 +74,7 @@ class _ItemVocabState extends State<ItemVocab> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        "Economic",
+                        widget.engWord.word!,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
@@ -72,7 +83,7 @@ class _ItemVocabState extends State<ItemVocab> {
                       ),
                       SizedBox(height: Dimensions.heightRatio(context, 1)),
                       Text(
-                        "/ēkəˈnämik/",
+                        widget.engWord.phonetic!,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: Dimensions.fontSize18(context),
@@ -91,13 +102,15 @@ class _ItemVocabState extends State<ItemVocab> {
                           // TODO: Favorite button
                         },
                         icon: Icon(
-                          Icons.favorite,
-                          color: AppColors.mainYellow,
+                          widget.word.isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: levelToColor(widget.word.level),
                           size: Dimensions.widthRatio(context, 7.25),
                         ),
                       ),
                       LevelStarBar(
-                        level: 3,
+                        level: widget.word.level,
                         size: Dimensions.widthRatio(context, 6.75),
                       ),
                     ],
@@ -109,12 +122,24 @@ class _ItemVocabState extends State<ItemVocab> {
           Container(
             height: Dimensions.heightRatio(context, 12),
             width: Dimensions.widthRatio(context, 1.25),
-            decoration: const BoxDecoration(
-              color: AppColors.mainYellow,
+            decoration: BoxDecoration(
+              color: levelToColor(widget.word.level),
             ),
           )
         ],
       ),
     );
+  }
+
+  Color levelToColor(int level) {
+    if (level == 1) {
+      return AppColors.mainGreen;
+    } else if (level == 2) {
+      return AppColors.mainBlue;
+    } else if (level == 3) {
+      return AppColors.mainYellow;
+    } else {
+      return AppColors.mainGreen;
+    }
   }
 }
