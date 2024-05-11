@@ -48,15 +48,15 @@ class _FolderViewState extends State<FolderView> {
                 padding: const EdgeInsets.all(10),
                 child: GridView.builder(
                   itemCount: isDefaultFilter()
-                      ? filteredFolders.length
-                      : widget.folders.length,
+                      ? widget.folders.length
+                      : filteredFolders.length,
                   itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.only(right: 10),
                     child: _folderBuilder(
                       context,
                       isDefaultFilter()
-                          ? filteredFolders[index]
-                          : widget.folders[index],
+                          ? widget.folders[index]
+                          : filteredFolders[index],
                     ),
                   ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

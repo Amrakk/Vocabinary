@@ -2,18 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/models/data/topic.dart';
-import 'package:vocabinary/routes/routes.dart';
-import 'package:vocabinary/utils/app_themes.dart';
+
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
-import 'package:vocabinary/views/explore/folder_view.dart';
-import 'package:vocabinary/views/explore/topic_view.dart';
+import 'package:vocabinary/viewmodels/explore/word_view_model.dart';
 
 import '../../models/arguments/explore/folder_args.dart';
+import '../../models/arguments/explore/inside_topic_args.dart';
 import '../../models/arguments/explore/topic_args.dart';
 
 class ExploreView extends StatefulWidget {
@@ -231,9 +229,15 @@ class _ExploreViewState extends State<ExploreView> {
                                 ? itemNum
                                 : topics.length,
                             itemBuilder: (context, index) => GestureDetector(
-                              onTap: (){
-                                Navigator.of(context, rootNavigator: true).pushNamed(
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pushNamed(
                                   '/inside-topic',
+                                  arguments: InsideTopicArgs(
+                                    topicId: topics[index].id!,
+                                    topicName: topics[index].name!,
+                                    wordCount: topics[index].wordCount,
+                                  ),
                                 );
                               },
                               child: Padding(
@@ -303,10 +307,11 @@ class _ExploreViewState extends State<ExploreView> {
                                   ? itemNum
                                   : folders.length,
                               itemBuilder: (context, index) => GestureDetector(
-                                onTap: (){},
+                                onTap: () {},
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 10),
-                                  child: _folderBuilder(context, folders[index]),
+                                  child:
+                                      _folderBuilder(context, folders[index]),
                                 ),
                               ),
                             ),
@@ -389,69 +394,78 @@ class _ExploreViewState extends State<ExploreView> {
   }
 
   _topicBuilder(BuildContext context, TopicModel topic) {
-    return Container(
-      height: 75,
-      width: 180,
-      decoration: BoxDecoration(
-        color: const Color(0xFF00324E),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black,
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-            topic.name ?? '',
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+            create: (context) => WordViewModel(topicID: topic.id!))
+      ],
+      child: Container(
+        height: 75,
+        width: 180,
+        decoration: BoxDecoration(
+          color: const Color(0xFF00324E),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 5,
             ),
-          ),
-          Text(
-            topic.description ?? '',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 10, color: Colors.white),
-          ),
-          const Expanded(flex: 1, child: SizedBox()),
-          const Divider(
-            color: Colors.white,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.format_list_bulleted),
-                  Text(topic.wordCount.toString(),
-                      style: const TextStyle(fontSize: 10, color: Colors.white)),
-                ],
+          ],
+        ),
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Text(
+              topic.name ?? '',
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              Row(
-                children: [
-                  const Icon(Icons.star),
-                  Text(intLevelToString(topic.level),
-                      style: const TextStyle(fontSize: 10, color: Colors.white)),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.bookmark),
-                  Text(followerCount(topic.followers.length),
-                      style: const TextStyle(fontSize: 10, color: Colors.white)),
-                ],
-              ),
-            ],
-          ),
-        ],
+            ),
+            Text(
+              topic.description ?? '',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 10, color: Colors.white),
+            ),
+            const Expanded(flex: 1, child: SizedBox()),
+            const Divider(
+              color: Colors.white,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.format_list_bulleted),
+                    Text(topic.wordCount.toString(),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.star),
+                    Text(intLevelToString(topic.level),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.bookmark),
+                    Text(followerCount(topic.followers.length),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -506,7 +520,8 @@ class _ExploreViewState extends State<ExploreView> {
                 children: [
                   const Icon(Icons.format_list_bulleted),
                   Text(folder.topicIDs.length.toString(),
-                      style: const TextStyle(fontSize: 10, color: Colors.white)),
+                      style:
+                          const TextStyle(fontSize: 10, color: Colors.white)),
                 ],
               ),
               const SizedBox(width: 10),
@@ -514,7 +529,8 @@ class _ExploreViewState extends State<ExploreView> {
                 children: [
                   const Icon(Icons.calendar_today),
                   Text(folder.createdAtFormatted,
-                      style: const TextStyle(fontSize: 10, color: Colors.white)),
+                      style:
+                          const TextStyle(fontSize: 10, color: Colors.white)),
                 ],
               ),
             ],

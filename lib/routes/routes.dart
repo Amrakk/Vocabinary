@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:vocabinary/models/arguments/explore/topic_args.dart';
+import 'package:vocabinary/models/data/folder.dart';
+import 'package:vocabinary/views/explore/topic_view.dart';
 import 'package:vocabinary/views/home/home_view.dart';
 import 'package:vocabinary/views/learnings/quiz_view.dart';
 import 'package:vocabinary/views/setting/setting_view.dart';
@@ -20,6 +23,10 @@ import 'package:vocabinary/views/explore/inside_topic_view.dart';
 
 import 'package:vocabinary/views/authenticate/login_view.dart';
 import 'package:vocabinary/views/explore/topic_view.dart';
+import '../models/arguments/explore/folder_args.dart';
+import '../models/arguments/explore/inside_topic_args.dart';
+import '../views/explore/folder_view.dart';
+import '../views/explore/inside_topic_view.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -32,12 +39,6 @@ class AppRoutes {
     '/quiz',
     '/typing',
   ];
-  static final authenticationRoutes = [
-    '/login',
-    '/register',
-    '/forgot-password',
-  ];
-
   static final exploreRoutes = [
     '/topic',
     '/inside-topic',
@@ -87,9 +88,6 @@ class AppRoutes {
           TypingView(words: words, topicID: topicID),
           settings,
         );
-
-
-      // Explore Routes
       case '/topic':
         args = args as TopicArguments;
         var userID = args.userID;
@@ -99,7 +97,14 @@ class AppRoutes {
           settings,
         );
       case '/inside-topic':
-        return _buildPageTransition(InsideTopicView(), settings);
+        args = args as InsideTopicArgs;
+        var topicID = args.topicId;
+        var topicName = args.topicName;
+        var wordCount = args.wordCount;
+        return _buildPageTransition(
+            InsideTopicView(
+                topicID: topicID, topicName: topicName, wordCount: wordCount),
+            settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
@@ -137,7 +142,7 @@ class AppRoutes {
     return PageTransition(
       child: page,
       duration: const Duration(milliseconds: 275),
-      type: type,
+      type: PageTransitionType.rightToLeft,
       settings: settings,
     );
   }
