@@ -11,6 +11,16 @@ import 'package:vocabinary/views/learnings/select_type_view.dart';
 import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 
+import 'package:vocabinary/models/arguments/explore/folder_args.dart';
+import 'package:vocabinary/models/arguments/explore/topic_args.dart';
+import 'package:vocabinary/views/authenticate/forgot_password_view.dart';
+import 'package:vocabinary/views/authenticate/register_view.dart';
+import 'package:vocabinary/views/explore/folder_view.dart';
+import 'package:vocabinary/views/explore/inside_topic_view.dart';
+
+import 'package:vocabinary/views/authenticate/login_view.dart';
+import 'package:vocabinary/views/explore/topic_view.dart';
+
 class AppRoutes {
   static const initialRoute = '/';
 
@@ -21,6 +31,18 @@ class AppRoutes {
     '/flashcard',
     '/quiz',
     '/typing',
+  ];
+  static final authenticationRoutes = [
+    '/login',
+    '/register',
+    '/forgot-password',
+  ];
+
+  static final exploreRoutes = [
+    '/topic',
+    '/inside-topic',
+    '/folder',
+    'inside-folder'
   ];
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
@@ -66,6 +88,35 @@ class AppRoutes {
           settings,
         );
 
+
+      // Explore Routes
+      case '/topic':
+        args = args as TopicArguments;
+        var userID = args.userID;
+        var topics = args.topics;
+        return _buildPageTransition(
+          TopicView(userID: userID, topics: topics),
+          settings,
+        );
+      case '/inside-topic':
+        return _buildPageTransition(InsideTopicView(), settings);
+      case '/folder':
+        args = args as FolderArguments;
+        var userID = args.userID;
+        var folders = args.folders;
+        return _buildPageTransition(
+          FolderView(userID: userID, folders: folders),
+          settings,
+        );
+
+        // Authentication Routes
+      case '/login':
+        return _buildPageTransition(const LoginView(), settings, type: PageTransitionType.leftToRight);
+      case '/register':
+        return _buildPageTransition(const SignUpView(), settings, );
+      case '/forgot-password':
+        return _buildPageTransition( ForgotPasswordView(), settings);
+
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(
@@ -80,11 +131,13 @@ class AppRoutes {
   static PageTransition<dynamic> _buildPageTransition(
     Widget page,
     RouteSettings settings,
+      {PageTransitionType? type}
   ) {
+    type = type ?? PageTransitionType.rightToLeft;
     return PageTransition(
       child: page,
       duration: const Duration(milliseconds: 275),
-      type: PageTransitionType.rightToLeft,
+      type: type,
       settings: settings,
     );
   }

@@ -13,6 +13,7 @@ class TopicModel {
   int wordCount;
   bool isPublic;
   String? ownerID;
+  String? description;
   Timestamp? createdAt;
   List<String> followers;
 
@@ -26,6 +27,7 @@ class TopicModel {
     this.level = 1,
     this.wordCount = 0,
     this.isPublic = false,
+    this.description,
     this.createdAt,
     this.words = const [],
     this.userLogs = const [],
@@ -68,6 +70,7 @@ class TopicModel {
       level: map['level'] ?? 1,
       wordCount: map['wordCount'] ?? 0,
       isPublic: map['isPublic'] ?? false,
+      description: map['description'],
       createdAt: map['createdAt'],
       followers: List<String>.from(map['followers'] ?? []),
     );
@@ -80,13 +83,20 @@ class TopicModel {
       'ownerID': ownerID,
       'isPublic': isPublic,
       'wordCount': wordCount,
+      'description': description,
       'createdAt': createdAt,
       'followers': followers,
     };
   }
 
+  //dd/mm/yyy format
+  String get createdAtString {
+    if (createdAt == null) return '';
+    return '${createdAt!.toDate().day}/${createdAt!.toDate().month}/${createdAt!.toDate().year}';
+  }
+
   @override
   String toString() {
-    return 'Topic{id: $id, name: $name, level: $level, wordCount: $wordCount, isPublic: $isPublic, ownerID: $ownerID, createdAt: $createdAt}';
+    return 'Topic{id: $id, name: $name, level: $level, wordCount: $wordCount, isPublic: $isPublic, ownerID: $ownerID, description: $description,createdAt: $createdAt}';
   }
 }

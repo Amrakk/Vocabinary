@@ -7,6 +7,8 @@ class AppThemes {
       extensions: [
         const AppColorsThemeData(
           containerColor: Color(0xFF46494C),
+          subTextColor: Color(0x99FFFFFF),
+          blueColor: Color(0xFF287AFF),
         ),
       ],
       primaryColor: Colors.black,
@@ -15,8 +17,9 @@ class AppThemes {
         backgroundColor: const Color(0xFF222222),
       ),
       iconTheme: const IconThemeData().copyWith(
-        color: Colors.black,
+        color: Colors.white,
       ),
+      dialogBackgroundColor: const Color(0xFF3B3B3B),
       inputDecorationTheme: const InputDecorationTheme().copyWith(
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.grey, width: 2.0),
@@ -26,7 +29,7 @@ class AppThemes {
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
         filled: true,
-        fillColor: Colors.black,
+        fillColor: const Color(0xFF616161),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData().copyWith(
         backgroundColor: const Color(0xFF0645BB),
@@ -39,6 +42,17 @@ class AppThemes {
       tabBarTheme: const TabBarTheme().copyWith(
         labelColor: const Color(0xFF0061FF),
         unselectedLabelColor: Colors.grey,
+      ),
+      sliderTheme: const SliderThemeData().copyWith(
+        activeTrackColor: const Color(0xFF0061FF),
+        inactiveTrackColor: Colors.grey,
+        trackHeight: 7.0,
+
+        thumbColor: const Color(0xFFFFFFFF),
+        overlayColor: const Color(0xFF0061FF).withOpacity(0.2),
+      ),
+      buttonTheme: const ButtonThemeData().copyWith(
+        buttonColor: const Color(0xFF0645BB),
       ),
     );
   }

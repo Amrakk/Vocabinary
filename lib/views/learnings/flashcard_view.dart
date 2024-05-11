@@ -29,7 +29,6 @@ class _FlashcardViewState extends State<FlashcardView> {
 
   void init() {
     widget.words.shuffle();
-
     _flashcardViewModel =
         Provider.of<FlashcardViewModel>(context, listen: false);
     _flashcardViewModel.init(widget.words, topicID: widget.topicID);
