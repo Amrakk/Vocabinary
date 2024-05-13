@@ -4,10 +4,11 @@ import '../../utils/dimensions.dart';
 
 
 class Button extends StatefulWidget {
-   Button({ Function()? onPressed ,required this.nameButton,super.key}) : onPressed = onPressed ?? ((){});
+   Button({ this.icon ,Function()? onPressed ,required this.nameButton,super.key}) : onPressed = onPressed ?? ((){});
 
    String nameButton;
     Function() onPressed;
+    Icon? icon;
 
   @override
   State<Button> createState() => _ButtonState();
@@ -28,11 +29,13 @@ class _ButtonState extends State<Button> {
             color: Color(0xFF023E8A),
           ),
           child: SizedBox(
-            height: Dimensions.heightRatio(context, 7),
+            height: Dimensions.heightRatio(context, 6),
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                widget.icon != null ? widget.icon! : const SizedBox(),
+                SizedBox(width: widget.icon != null ? 10 : 0),
                 Text(widget.nameButton,
                     style: TextStyle(
                       fontWeight: FontWeight.w500,

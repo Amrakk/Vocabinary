@@ -22,7 +22,6 @@ import 'package:vocabinary/views/explore/folder_view.dart';
 import 'package:vocabinary/views/explore/inside_topic_view.dart';
 
 import 'package:vocabinary/views/authenticate/login_view.dart';
-import 'package:vocabinary/views/explore/topic_view.dart';
 import '../models/arguments/explore/folder_args.dart';
 import '../models/arguments/explore/inside_topic_args.dart';
 import '../views/explore/folder_view.dart';

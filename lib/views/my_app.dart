@@ -3,14 +3,21 @@ import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
-import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
-import 'package:vocabinary/views/explore/inside_topic_view.dart';
 import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:vocabinary/views/community/inside_topic_community_view.dart';
+import '../data/repositories/word_repo.dart';
+import '../models/arguments/learnings/select_words_args.dart';
+import '../services/firebase/authentication_service.dart';
+import '../viewmodels/authenticate/auth_view_model.dart';
+import '../widgets/global/loading_indicator.dart';
+import '../widgets/global/my_app_bar.dart';
+import 'authenticate/login_view.dart';
+import 'community/community_view.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -22,6 +29,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    AuthenticationService _authenticationService = AuthenticationService.instance;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
@@ -36,8 +44,8 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Vocabinary',
           darkTheme: AppThemes.darkTheme(),
-          themeMode:
-              themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+          // themeMode:
+          //     themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: StreamBuilder(
             stream: _authenticationService.authStateChanges,
             builder: (context, snapshot) {
@@ -47,7 +55,7 @@ class _MyAppState extends State<MyApp> {
               if(snapshot.hasData){
                 return const MyHomePage();
               }
-              return  const LoginView();
+              return  const InsideTopicCommunityView();
             },
           ),
           onGenerateRoute: AppRoutes.generateRoutes,

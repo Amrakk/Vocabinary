@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:otp/otp.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AuthenticateViewModel extends ChangeNotifier {
   final String _secretKey = "JZUW42BAIRXW4ZY=";
@@ -48,7 +49,7 @@ class AuthenticateViewModel extends ChangeNotifier {
       url,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization' : 'Bearer mlsn.83c5fc840b971356a48b6540ef2b6c93916e6304e36c5854a43fb30f491c9fa7',
+        'Authorization' : 'Bearer ${dotenv.env['EMAIL_API_KEY']}',
       },
       body: json.encode({
         "from": {
