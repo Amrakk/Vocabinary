@@ -13,19 +13,15 @@ import 'package:vocabinary/views/community/community_view.dart';
 import 'package:vocabinary/views/learnings/select_type_view.dart';
 import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
-
 import 'package:vocabinary/models/arguments/explore/folder_args.dart';
-import 'package:vocabinary/models/arguments/explore/topic_args.dart';
 import 'package:vocabinary/views/authenticate/forgot_password_view.dart';
 import 'package:vocabinary/views/authenticate/register_view.dart';
 import 'package:vocabinary/views/explore/folder_view.dart';
 import 'package:vocabinary/views/explore/inside_topic_view.dart';
 
 import 'package:vocabinary/views/authenticate/login_view.dart';
-import '../models/arguments/explore/folder_args.dart';
 import '../models/arguments/explore/inside_topic_args.dart';
-import '../views/explore/folder_view.dart';
-import '../views/explore/inside_topic_view.dart';
+import '../views/community/inside_topic_community_view.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -44,6 +40,8 @@ class AppRoutes {
     '/folder',
     'inside-folder'
   ];
+  static final authRoutes = ['/login', '/register', '/forgot-password'];
+  static final communityRoutes = ['/community/inside-topic'];
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     var args = settings.arguments;
@@ -112,14 +110,29 @@ class AppRoutes {
           FolderView(userID: userID, folders: folders),
           settings,
         );
+      // Community Routes
+      case '/community/inside-topic':
+        args = args as InsideTopicArgs;
+        var topicID = args.topicId;
+        var topicName = args.topicName;
+        var wordCount = args.wordCount;
+        var topic = args.topicModel;
+        return _buildPageTransition(
+            InsideTopicCommunityView(
+                topicID: topicID, topicName: topicName, wordCount: wordCount, topicModel: topic!,),
+            settings);
 
-        // Authentication Routes
+      // Authentication Routes
       case '/login':
-        return _buildPageTransition(const LoginView(), settings, type: PageTransitionType.leftToRight);
+        return _buildPageTransition(const LoginView(), settings,
+            type: PageTransitionType.leftToRight);
       case '/register':
-        return _buildPageTransition(const SignUpView(), settings, );
+        return _buildPageTransition(
+          const SignUpView(),
+          settings,
+        );
       case '/forgot-password':
-        return _buildPageTransition( ForgotPasswordView(), settings);
+        return _buildPageTransition(const ForgotPasswordView(), settings);
 
       default:
         return MaterialPageRoute(
@@ -133,10 +146,8 @@ class AppRoutes {
   }
 
   static PageTransition<dynamic> _buildPageTransition(
-    Widget page,
-    RouteSettings settings,
-      {PageTransitionType? type}
-  ) {
+      Widget page, RouteSettings settings,
+      {PageTransitionType? type}) {
     type = type ?? PageTransitionType.rightToLeft;
     return PageTransition(
       child: page,

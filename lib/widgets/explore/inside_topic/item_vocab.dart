@@ -11,12 +11,14 @@ import '../../../models/data/word.dart';
 class ItemVocab extends StatefulWidget {
   final EngWordModel engWord;
   final WordModel word;
+   bool? isEditable= true;
 
-  const ItemVocab({
-    Key? key,
+   ItemVocab({
+    super.key,
+    this.isEditable,
     required this.engWord,
     required this.word,
-  }) : super(key: key);
+  });
 
   @override
   State<ItemVocab> createState() => _ItemVocabState();
@@ -25,28 +27,32 @@ class ItemVocab extends StatefulWidget {
 class _ItemVocabState extends State<ItemVocab> {
   @override
   Widget build(BuildContext context) {
-    print("Hello");
     final AppColorsThemeData appColors =
         Theme.of(context).extension<AppColorsThemeData>()!;
     return Slidable(
-      startActionPane: ActionPane(motion: const DrawerMotion(), children: [
-        SlidableAction(
-          onPressed: (ctx) {
-            // TODO: imeplement delete word
-          },
-          icon: Icons.delete,
-          backgroundColor: AppColors.mainRed,
-          foregroundColor: Colors.white,
-        ),
-        SlidableAction(
-          onPressed: (ctx) {
-            // TODO: imeplement edit word
-          },
-          icon: Icons.edit,
-          backgroundColor: AppColors.mainYellow,
-          foregroundColor: Colors.white,
-        ),
-      ]),
+      startActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        children: widget.isEditable!
+            ? [
+                SlidableAction(
+                  onPressed: (ctx) {
+                    // TODO: imeplement delete word
+                  },
+                  icon: Icons.delete,
+                  backgroundColor: AppColors.mainRed,
+                  foregroundColor: Colors.white,
+                ),
+                SlidableAction(
+                  onPressed: (ctx) {
+                    // TODO: imeplement edit word
+                  },
+                  icon: Icons.edit,
+                  backgroundColor: levelToColor(widget.word.level),
+                  foregroundColor: Colors.white,
+                ),
+              ]
+            : [],
+      ),
       child: Stack(
         children: [
           Container(

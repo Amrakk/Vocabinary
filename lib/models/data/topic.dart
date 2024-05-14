@@ -16,6 +16,7 @@ class TopicModel {
   String? description;
   Timestamp? createdAt;
   List<String> followers;
+  String? imageTopic;
 
   List<WordModel> words;
   List<UserTopicLogModel> userLogs;
@@ -29,6 +30,7 @@ class TopicModel {
     this.isPublic = false,
     this.description,
     this.createdAt,
+    this.imageTopic,
     this.words = const [],
     this.userLogs = const [],
     this.followers = const [],
@@ -72,6 +74,7 @@ class TopicModel {
       isPublic: map['isPublic'] ?? false,
       description: map['description'],
       createdAt: map['createdAt'],
+      imageTopic: map['imageTopic'],
       followers: List<String>.from(map['followers'] ?? []),
     );
   }

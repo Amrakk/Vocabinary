@@ -4,11 +4,12 @@ import '../../utils/dimensions.dart';
 
 
 class Button extends StatefulWidget {
-   Button({ this.icon ,Function()? onPressed ,required this.nameButton,super.key}) : onPressed = onPressed ?? ((){});
+   Button({ this.isLoading ,this.icon ,Function()? onPressed ,required this.nameButton,super.key}) : onPressed = onPressed ?? ((){});
 
    String nameButton;
     Function() onPressed;
     Icon? icon;
+    bool? isLoading = false;
 
   @override
   State<Button> createState() => _ButtonState();
@@ -19,14 +20,12 @@ class _ButtonState extends State<Button> {
   Widget build(BuildContext context) {
     return  Material(
       child: InkWell(
-        onTap: () {
-          widget.onPressed();
-        },
+        onTap: widget.isLoading! ? null : widget.onPressed,
         borderRadius: BorderRadius.circular(15),
         child: Ink(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            color: Color(0xFF023E8A),
+          decoration:  BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            color: widget.isLoading! ? Colors.grey[800]  : const Color(0xFF023E8A) ,
           ),
           child: SizedBox(
             height: Dimensions.heightRatio(context, 6),

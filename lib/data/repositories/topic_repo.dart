@@ -11,6 +11,7 @@ class TopicRepo {
   static String documentPath(String id) => 'topics/$id';
   static String collectionPath = 'topics';
 
+
   Future<bool> isTopicOwner(String id, String userID) async =>
       (await getTopic(id))?.ownerID == userID;
 
