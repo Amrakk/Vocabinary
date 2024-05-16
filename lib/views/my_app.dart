@@ -3,14 +3,18 @@ import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
-import 'package:vocabinary/widgets/my_app_bar.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
-import 'package:vocabinary/views/explore/inside_topic_view.dart';
 import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+
+import '../services/firebase/authentication_service.dart';
+import '../viewmodels/authenticate/auth_view_model.dart';
+import '../widgets/global/loading_indicator.dart';
+import '../widgets/global/my_app_bar.dart';
+import 'authenticate/login_view.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -22,6 +26,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    AuthenticationService _authenticationService = AuthenticationService.instance;
+    String uid = _authenticationService.currentUser?.uid ?? '';
+    print(uid);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
@@ -119,30 +126,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: FutureBuilder(
-        future: WordRepo().getWords('wIEzPcEYaaCwzCrNghTh'),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
-          }
-          return FloatingActionButton(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-            ),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pushNamed(
-                '/level',
-                arguments: SelectWordsArgs(
-                  words: snapshot.data!,
-                  topicID: 'wIEzPcEYaaCwzCrNghTh',
-                ),
-              );
-            },
-            tooltip: 'Add new word',
-            child: const Icon(Icons.add),
-          );
+      floatingActionButton: FloatingActionButton(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+        onPressed: () {
         },
-      ),
+        tooltip: 'Add new word',
+        child: const Icon(Icons.add),
+      )
     );
   }
 }

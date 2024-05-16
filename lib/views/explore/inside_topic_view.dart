@@ -12,7 +12,12 @@ import '../../models/data/eng_word.dart';
 import '../../models/data/word.dart';
 
 class InsideTopicView extends StatefulWidget {
-  const InsideTopicView({Key ? key,required this.topicID,required this.topicName, required this.wordCount}) : super(key: key);
+  const InsideTopicView(
+      {Key? key,
+      required this.topicID,
+      required this.topicName,
+      required this.wordCount})
+      : super(key: key);
   final String topicID;
   final String topicName;
   final int wordCount;
@@ -26,14 +31,15 @@ class _InsideTopicViewState extends State<InsideTopicView> {
   late Future<void> _loadEngWordFuture;
   List<WordModel> words = [];
   List<EngWordModel> engWords = [];
+  late int wordCount;
 
   @override
   void initState() {
-    _wordViewModel = WordViewModel(topicID: widget.topicID);
+    _wordViewModel = WordViewModel(widget.topicID);
     _loadEngWordFuture = _wordViewModel.getEngWords();
+    wordCount = widget.wordCount;
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,21 +71,40 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                   height: Dimensions.heightRatio(context, 10),
                   width: double.infinity,
                 ),
-                BackgroundContainer(
-                  heightRatio: 5,
-                  widthRatio: 70,
-                  borderRadius: 10,
-                  color: Colors.white,
-                  child: Center(
-                    child: Text(
-                      'Total Words was added: ${widget.wordCount}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
-                        fontSize: Dimensions.fontSize16(context),
-                      ),
-                    ),
-                  ),
+                StreamBuilder(
+                  stream: _wordViewModel.getWordsStream(widget.topicID),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const BackgroundContainer(
+                          heightRatio: 5,
+                          widthRatio: 70,
+                          borderRadius: 10,
+                          color: Colors.white,
+                          child: Center(child: CircularProgressIndicator()));
+                    } else {
+                      if (snapshot.data == null) {
+                        return const Center(child: Text('No data found!'));
+                      }
+                      words = snapshot.data!;
+                      wordCount = words.length;
+                      return BackgroundContainer(
+                        heightRatio: 5,
+                        widthRatio: 70,
+                        borderRadius: 10,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            'Total Words was added: ${wordCount}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: Dimensions.fontSize16(context),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
                 SizedBox(height: Dimensions.heightRatio(context, 2.5)),
                 Row(
@@ -98,8 +123,13 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                         ),
                         SizedBox(width: Dimensions.widthRatio(context, 5)),
                         FloatingActionButton.small(
-                          onPressed: () {
-                            // TODO: Add new word
+                          onPressed: () async {
+                            Navigator.of(context, rootNavigator: true)
+                                .pushNamed('/new-card')
+                                .then((value) async {
+                              _loadEngWordFuture = _wordViewModel.getEngWords();
+                              setState(() {});
+                            });
                           },
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
@@ -120,16 +150,20 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                 SizedBox(height: Dimensions.heightRatio(context, 0.5)),
                 SizedBox(
                   height: Dimensions.heightRatio(context, 54),
-                  child: FutureBuilder(
-                    future: _loadEngWordFuture,
+                  child: StreamBuilder(
+                    stream: _wordViewModel.getWordsStream(widget.topicID),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
                       } else {
-                        words = _wordViewModel.words;
-                        engWords = _wordViewModel.engWords;
+                        // words = _wordViewModel.words;
+                        if (snapshot.data == null) {
+                          return const Center(child: Text('No data found!'));
+                        }
+                        words = snapshot.data!;
+                        wordCount = words.length;
                         return ListView.separated(
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, index) => GestureDetector(
@@ -138,11 +172,12 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                             },
                             child: ItemVocab(
                               word: words[index],
-                              engWord: engWords[index],
+                              engWord: words[index].engWord!,
+                              topicID: widget.topicID,
                             ),
                           ),
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: Dimensions.heightRatio(context, 1.75)),
+                          separatorBuilder: (context, index) => SizedBox(
+                              height: Dimensions.heightRatio(context, 1.75)),
                           itemCount: words.length,
                         );
                       }
@@ -164,7 +199,6 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                         topicID: widget.topicID,
                       ),
                     );
-
                   },
                 ),
               ],

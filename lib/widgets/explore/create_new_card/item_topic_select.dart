@@ -3,28 +3,36 @@ import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 
 class ItemTopicSelect extends StatefulWidget {
-   ItemTopicSelect({ required this.name ,void Function()? onTap ,super.key}) : onTap = onTap ?? ((){});
+  ItemTopicSelect({required this.name, required this.onTap, Key? key, required this.id}) : super(key: key);
 
-  void Function()? onTap ;
-  String name;
+  final void Function(String id)? onTap;
+
+  final String name;
+  final String id;
 
   @override
   State<ItemTopicSelect> createState() => _ItemTopicSelectState();
 }
 
 class _ItemTopicSelectState extends State<ItemTopicSelect> {
+  bool isSelected = false;
+
   @override
   Widget build(BuildContext context) {
-    AppColorsThemeData myColors = Theme.of(context).extension<AppColorsThemeData>()!;
+    AppColorsThemeData myColors =
+        Theme.of(context).extension<AppColorsThemeData>()!;
     return InkWell(
-      onTap: (){
-        widget.onTap!();
+      onTap: () {
+        setState(() {
+          isSelected = !isSelected;
+        });
+        widget.onTap!(widget.id);
       },
       borderRadius: BorderRadius.circular(17),
       child: Ink(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(17),
-          color: myColors.containerColor,
+          color: isSelected ? myColors.blueColor : myColors.containerColor,
         ),
         child: Container(
           height: 42,
@@ -39,7 +47,7 @@ class _ItemTopicSelectState extends State<ItemTopicSelect> {
               ),
             ],
           ),
-          child:  Center(
+          child: Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: Text(

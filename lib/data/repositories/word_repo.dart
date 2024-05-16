@@ -1,8 +1,11 @@
+import 'package:vocabinary/models/data/eng_word.dart';
 import 'package:vocabinary/models/data/word.dart';
+import 'package:vocabinary/services/api/dict_api.dart';
 import 'package:vocabinary/services/firebase/firestore_service.dart';
 
 class WordRepo {
   final _firestoreService = FirestoreService.instance;
+  final DictApi _dictApi = DictApi();
 
   static String collectionPath(String topicID) => 'topics/$topicID/words';
   static String documentPath(String topicID, String id) =>
@@ -19,6 +22,10 @@ class WordRepo {
         collectionPath: collectionPath(topicID),
         data: data.toMap(),
       );
+
+  Future<EngWordModel> getDataFromAPI(String word) {
+    return _dictApi.getApiData(word);
+  }
 
   Future<bool> updateWord(
     String topicID,

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:vocabinary/models/arguments/explore/topic_args.dart';
+import 'package:vocabinary/models/arguments/explore/update_card_args.dart';
 import 'package:vocabinary/models/data/folder.dart';
+import 'package:vocabinary/views/explore/create_new_card_view.dart';
 import 'package:vocabinary/views/explore/topic_view.dart';
+import 'package:vocabinary/views/explore/update_card_view.dart';
 import 'package:vocabinary/views/home/home_view.dart';
 import 'package:vocabinary/views/learnings/quiz_view.dart';
 import 'package:vocabinary/views/setting/setting_view.dart';
@@ -105,6 +108,13 @@ class AppRoutes {
             InsideTopicView(
                 topicID: topicID, topicName: topicName, wordCount: wordCount),
             settings);
+      case '/new-card':
+        return _buildPageTransition(const CreateNewCardView(), settings);
+      case '/update-card':
+        args = args as UpdateCardArgs;
+        var topicID = args.topicID;
+        var word = args.word;
+        return _buildPageTransition(UpdateCardView(topicID: topicID, word: word), settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
@@ -114,13 +124,17 @@ class AppRoutes {
           settings,
         );
 
-        // Authentication Routes
+      // Authentication Routes
       case '/login':
-        return _buildPageTransition(const LoginView(), settings, type: PageTransitionType.leftToRight);
+        return _buildPageTransition(const LoginView(), settings,
+            type: PageTransitionType.leftToRight);
       case '/register':
-        return _buildPageTransition(const SignUpView(), settings, );
+        return _buildPageTransition(
+          const SignUpView(),
+          settings,
+        );
       case '/forgot-password':
-        return _buildPageTransition( ForgotPasswordView(), settings);
+        return _buildPageTransition(ForgotPasswordView(), settings);
 
       default:
         return MaterialPageRoute(
@@ -134,10 +148,8 @@ class AppRoutes {
   }
 
   static PageTransition<dynamic> _buildPageTransition(
-    Widget page,
-    RouteSettings settings,
-      {PageTransitionType? type}
-  ) {
+      Widget page, RouteSettings settings,
+      {PageTransitionType? type}) {
     type = type ?? PageTransitionType.rightToLeft;
     return PageTransition(
       child: page,
