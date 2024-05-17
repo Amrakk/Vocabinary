@@ -28,14 +28,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     AuthenticationService _authenticationService = AuthenticationService.instance;
     String uid = _authenticationService.currentUser?.uid ?? '';
-    print(uid);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
         ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
         ChangeNotifierProvider(create: (context) => TypingViewModel()),
         ChangeNotifierProvider(create: (context) => QuizViewModel(),),
-        ChangeNotifierProvider(create: (ctx) => ExploreViewModel('4VtPfzFkETVqg29YJdpW')),
+        ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
         ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
       ],
       child: Consumer<ThemeViewModel>(

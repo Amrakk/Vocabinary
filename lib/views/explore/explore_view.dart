@@ -222,9 +222,11 @@ class _ExploreViewState extends State<ExploreView>{
                     } else {
                       var topics = _viewModel.topics;
                       if (topics.isEmpty) {
-                        return const Center(
-                          child: SizedBox(
-                              height: 100, child: Text('No topics found.')),
+                        return const SizedBox(
+                          height: 100,
+                          child: Center(
+                            child: Text('No topics found.'),
+                          ),
                         );
                       } else {
                         return Container(
@@ -300,9 +302,11 @@ class _ExploreViewState extends State<ExploreView>{
                       } else {
                         var folders = _viewModel.folders;
                         if (folders.isEmpty) {
-                          return const Center(
-                            child: SizedBox(
-                                height: 100, child: Text('No folders found.')),
+                          return const SizedBox(
+                            height: 100,
+                            child: Center(
+                              child: Text('No folder found.'),
+                            ),
                           );
                         } else {
                           return Container(
