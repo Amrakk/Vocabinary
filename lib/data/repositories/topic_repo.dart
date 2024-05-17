@@ -22,6 +22,14 @@ class TopicRepo {
 
   Future<List> getRecentTopics(String ownerID) => getRecentTopicsForUser(ownerID, 5);
 
+  Future<void> decreaseWordCount(String id) async {
+    TopicModel? topic = await getTopic(id);
+    if (topic != null) {
+      topic.wordCount--;
+      await updateTopic(id, topic);
+    }
+  }
+
   Future<String?> createTopic(TopicModel data) => _firestoreService.createData(
         collectionPath: collectionPath,
         data: data.toMap(),
@@ -46,6 +54,7 @@ class TopicRepo {
 
 
   Future<List> getRecentTopicsForUser(String userID,int limit) async {
+    print('getRecentTopicsForUser');
     UserTopicLogRepo userTopicLogRepo = UserTopicLogRepo();
     // Initialize a list to hold the combined data of topics and user logs
     List<Map<String, dynamic>> recentTopicsWithLogs = [];
@@ -73,6 +82,8 @@ class TopicRepo {
 
     // Limit the list to the specified number of recent topics (e.g. 5)
     recentTopicsWithLogs = recentTopicsWithLogs.take(limit).toList();
+    print('recentTopicsWithLogs');
+    print(recentTopicsWithLogs);
 
     // Extract the topics from the list and return them
     return recentTopicsWithLogs.map((e) => e['topic']).toList();
@@ -85,7 +96,6 @@ class TopicRepo {
       );
 
   Query ownerIDFilter(Query query, String ownerID) {
-    print('Filtering topics for userID: $ownerID');
     return query.where('ownerID', isEqualTo: ownerID);
   }
 

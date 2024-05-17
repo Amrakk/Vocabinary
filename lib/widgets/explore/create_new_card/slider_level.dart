@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 
 class SliderLevel extends StatefulWidget {
-   SliderLevel({required this.currentLevel ,super.key});
+   SliderLevel({required this.currentLevel ,super.key, required this.onLevelChanged});
 
   int currentLevel;
-
+   final ValueChanged<int> onLevelChanged;
 
   @override
   State<SliderLevel> createState() => _SliderLevelState();
@@ -27,7 +27,7 @@ class _SliderLevelState extends State<SliderLevel> {
             min: 1,
             onChanged: (value) {
               setState(() {
-                widget.currentLevel = value.toInt();
+                widget.onLevelChanged(value.toInt());
               });
             },),
         ),

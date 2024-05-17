@@ -32,4 +32,10 @@ class EngWordModel {
   String toString() {
     return 'EngWordModel{id: $id, word: $word, phonetic: $phonetic, audio: $audio}';
   }
+
+  void clearApiData() {
+    word = null;
+    phonetic = null;
+    audio = null;
+  }
 }

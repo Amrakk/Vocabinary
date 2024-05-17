@@ -18,8 +18,6 @@ class ExploreViewModel extends ChangeNotifier {
   List recentTopicsDestination = [];
   List<FolderModel> get folders => _folders;
 
-  Future<List<Map<String, dynamic>>> get recentActivities => fetchRecentlyAccessedTopicsForUser();
-
   // Store the list of topics
   List<TopicModel> _topics = [];
 
@@ -56,41 +54,6 @@ class ExploreViewModel extends ChangeNotifier {
     notifyListeners(); // Notify the UI to update
   }
 
-  Future<List<Map<String, dynamic>>> fetchRecentlyAccessedTopicsForUser() async {
-    // Initialize a list to hold the combined data of topics and user logs
-    List<Map<String, dynamic>> recentTopics = [];
-
-    // Fetch all topics from the repository
-    List<TopicModel> topics = await _topicRepo.getTopics();
-
-    // Iterate through each topic and fetch the most recent user log for the specific user
-    for (TopicModel topic in topics) {
-      // Fetch the most recent user log for the specific topic and user
-      UserTopicLogModel? recentUserLog = await _userTopicLogRepo.getMostRecentUserLog(topic.id!, userID);
-
-      // Check if a recent user log was found
-      if (recentUserLog != null) {
-        // Combine the topic data and the recent user log data
-        recentTopics.add({
-          'topic': topic,
-          'recentUserLog': recentUserLog
-        });
-      }
-    }
-
-    // Sort the list of recent topics by the lastAccess field of the recent user log in descending order
-    recentTopics.sort((a, b) => b['recentUserLog'].lastAccess.compareTo(a['recentUserLog'].lastAccess));
-
-    // Limit the list to the number of recent topics you want to display (e.g. 5)
-    int limit = 5;
-    if (recentTopics.length > limit) {
-      recentTopics = recentTopics.sublist(0, limit);
-    }
-
-    // Return the sorted and limited list of recent topics
-    return recentTopics;
-  }
-
   Future<List> getTopicSaveDestination() async{
     //return folder destination name of the topics
     await loadRecentActivities();
@@ -98,7 +61,12 @@ class ExploreViewModel extends ChangeNotifier {
     for (var topic in recentTopics) {
       var topicID = topic.id;
       var folder = await _folderRepo.getFolderByTopicID(userID, topicID);
-      destination.add(folder.name!);
+      if(folder.name != null)
+      {
+        destination.add(folder.name!);
+      }else{
+        destination.add('No Folder');
+      }
     }
     return destination;
   }
@@ -134,11 +102,5 @@ class ExploreViewModel extends ChangeNotifier {
       // Reload topics to remove the deleted topic
       await loadTopics();
     }
-  }
-
-  void init() async{
-    await loadTopics();
-    await loadFolders();
-    await fetchRecentlyAccessedTopicsForUser();
   }
 }

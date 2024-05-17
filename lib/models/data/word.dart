@@ -30,6 +30,10 @@ class WordModel {
   Future<void> get loadEngWord async =>
       engWord = await EngWordRepo().getEngWord(_engWordID);
 
+  void updateEngWordID(String newEngWordID) {
+    _engWordID = newEngWordID;
+  }
+
   factory WordModel.fromMap(Map<String, dynamic> map, String id) {
     return WordModel(
       id: id,

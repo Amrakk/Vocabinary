@@ -4,8 +4,8 @@ import 'package:vocabinary/models/data/eng_word.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/viewmodels/explore/word_view_model.dart';
 
-class InputVocabCard extends StatefulWidget {
-  InputVocabCard(
+class VocabCard extends StatefulWidget {
+  VocabCard(
       {required this.saveButtonFunction,
       required this.vocabDefinitionController,
       required this.vocabNameController,
@@ -15,13 +15,14 @@ class InputVocabCard extends StatefulWidget {
 
   TextEditingController vocabDefinitionController;
 
-  final Function(String vocabName, String vocabDefinition, EngWordModel engWord) saveButtonFunction;
+  final Function(String vocabName, String vocabDefinition, EngWordModel engWord)
+      saveButtonFunction;
 
   @override
-  State<InputVocabCard> createState() => _InputVocabCardState();
+  State<VocabCard> createState() => _VocabCardState();
 }
 
-class _InputVocabCardState extends State<InputVocabCard> {
+class _VocabCardState extends State<VocabCard> {
   bool savePressed = false;
   late WordViewModel _wordViewModel;
   late Future<void> _loadPhoneticFuture;
@@ -62,78 +63,66 @@ class _InputVocabCardState extends State<InputVocabCard> {
           borderRadius: BorderRadius.circular(25),
         ),
         child: Center(
-          child: savePressed
-              ? FutureBuilder(
-                  future: _loadPhoneticFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      var phonetic = _wordViewModel.apiData.phonetic;
-                      engWord = _wordViewModel.apiData;
-                      widget.saveButtonFunction(widget.vocabNameController.text,
-                          widget.vocabDefinitionController.text, engWord);
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(widget.vocabNameController.text,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              )),
-                          const SizedBox(height: 5),
-                          Text(
-                            phonetic ?? "",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w200,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const Divider(
-                            color: Colors.grey,
-                            thickness: 1,
-                            indent: 10,
-                            endIndent: 10,
-                          ),
-                          Text(
-                            widget.vocabDefinitionController.text,
-                            maxLines: 3,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF00509D),
-                            ),
-                          ),
-                        ],
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else {
-                      return Text(
-                        "Something went wrong!",
-                        style: TextStyle(
-                          fontSize: Dimensions.fontSize(context, 22),
-                          fontWeight: FontWeight.w500,
-                          color: Colors.grey,
-                        ),
-                      );
-                    }
-                  },
-                )
-              : Text(
-                  textAlign: TextAlign.center,
-                  "Click here to start!",
-                  style: TextStyle(
-                    fontSize: Dimensions.fontSize(context, 22),
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
+            child: FutureBuilder(
+          future: _loadPhoneticFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              var phonetic = _wordViewModel.apiData.phonetic;
+              engWord = _wordViewModel.apiData;
+              widget.saveButtonFunction(widget.vocabNameController.text,
+                  widget.vocabDefinitionController.text, engWord);
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(widget.vocabNameController.text,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                      )),
+                  const SizedBox(height: 5),
+                  Text(
+                    phonetic ?? "",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w200,
+                      color: Colors.black,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
+                  const Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  Text(
+                    widget.vocabDefinitionController.text,
+                    maxLines: 3,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF00509D),
+                    ),
+                  ),
+                ],
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else {
+              return Text(
+                "Something went wrong!",
+                style: TextStyle(
+                  fontSize: Dimensions.fontSize(context, 22),
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey,
                 ),
-        ),
+              );
+            }
+          },
+        )),
       ),
     );
   }

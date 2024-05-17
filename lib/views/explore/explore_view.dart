@@ -21,7 +21,7 @@ class ExploreView extends StatefulWidget {
   State<ExploreView> createState() => _ExploreViewState();
 }
 
-class _ExploreViewState extends State<ExploreView> {
+class _ExploreViewState extends State<ExploreView>{
   late ExploreViewModel _viewModel;
   late Future<void> _loadTopicsFuture;
   late Future<void> _loadFoldersFuture;
@@ -32,7 +32,7 @@ class _ExploreViewState extends State<ExploreView> {
     _viewModel = Provider.of<ExploreViewModel>(context, listen: false);
     _loadTopicsFuture = _viewModel.loadTopics();
     _loadFoldersFuture = _viewModel.loadFolders();
-    _loadRecentActivitiesFuture = _viewModel.loadRecentActivities();
+    // _loadRecentActivitiesFuture = _viewModel.loadRecentActivities();
     _loadRecentActivitiesDestinationFuture =
         _viewModel.loadRecentActivitiesDestination();
   }
@@ -127,7 +127,7 @@ class _ExploreViewState extends State<ExploreView> {
                 const SizedBox(height: 10),
                 FutureBuilder(
                   future: Future.wait([
-                    _loadRecentActivitiesFuture,
+                    // _loadRecentActivitiesFuture,
                     _loadRecentActivitiesDestinationFuture
                   ]),
                   builder: (context, snapshot) {
@@ -185,13 +185,19 @@ class _ExploreViewState extends State<ExploreView> {
                     IconButton(
                         onPressed: () {
                           //navigate to topic and send topics data
-                          Navigator.of(context, rootNavigator: true).pushNamed(
+                          Navigator.of(context, rootNavigator: true)
+                              .pushNamed(
                             '/topic',
                             arguments: TopicArguments(
                               userID: 'userID',
                               topics: _viewModel.topics,
                             ),
-                          );
+                          )
+                              .then((value) {
+                            setState(() {
+                              init();
+                            });
+                          });
                         },
                         icon: const Icon(
                           Icons.arrow_forward_ios,
@@ -216,9 +222,11 @@ class _ExploreViewState extends State<ExploreView> {
                     } else {
                       var topics = _viewModel.topics;
                       if (topics.isEmpty) {
-                        return const Center(
-                          child: SizedBox(
-                              height: 100, child: Text('No topics found.')),
+                        return const SizedBox(
+                          height: 100,
+                          child: Center(
+                            child: Text('No topics found.'),
+                          ),
                         );
                       } else {
                         return Container(
@@ -294,9 +302,11 @@ class _ExploreViewState extends State<ExploreView> {
                       } else {
                         var folders = _viewModel.folders;
                         if (folders.isEmpty) {
-                          return const Center(
-                            child: SizedBox(
-                                height: 100, child: Text('No folders found.')),
+                          return const SizedBox(
+                            height: 100,
+                            child: Center(
+                              child: Text('No folder found.'),
+                            ),
                           );
                         } else {
                           return Container(
@@ -396,8 +406,7 @@ class _ExploreViewState extends State<ExploreView> {
   _topicBuilder(BuildContext context, TopicModel topic) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (context) => WordViewModel(topicID: topic.id!))
+        ChangeNotifierProvider(create: (context) => WordViewModel(topic.id!))
       ],
       child: Container(
         height: 75,
