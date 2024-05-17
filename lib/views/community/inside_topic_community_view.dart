@@ -9,6 +9,7 @@ import 'package:vocabinary/widgets/global/button.dart';
 import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/widgets/shimmer/item_vocab_loading.dart';
 import 'package:vocabinary/widgets/explore/inside_topic/item_vocab.dart';
+import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
 
 class InsideTopicCommunityView extends StatefulWidget {
   InsideTopicCommunityView(
@@ -134,7 +135,9 @@ class _InsideTopicCommunityViewState extends State<InsideTopicCommunityView> {
                                             isLoading = true;
                                           });
                                            await _communityViewModel.unfollowTopic(
-                                              widget.topicModel, "userID");
+                                              widget.topicModel,
+                                               AuthenticationService.instance.currentUser!.uid
+                                           );
                                           setState(() {
                                             isLoading = false;
                                             isFollowing = false;
@@ -152,7 +155,7 @@ class _InsideTopicCommunityViewState extends State<InsideTopicCommunityView> {
                                           });
                                           await _communityViewModel
                                               .followTopic(widget.topicModel,
-                                                  "userID");
+                                                  AuthenticationService.instance.currentUser!.uid);
                                           setState(() {
                                             isLoading = false;
                                             isFollowing = true;
@@ -253,7 +256,15 @@ class _InsideTopicCommunityViewState extends State<InsideTopicCommunityView> {
                         ),
                         Button(
                             nameButton: "Play!",
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context, rootNavigator: true).pushNamed(
+                                '/level',
+                                arguments: SelectWordsArgs(
+                                  words: listWords,
+                                  topicID: widget.topicID,
+                                ),
+                              );
+                            },
                             isLoading: listWords.isEmpty ? true : false,
                             icon: const Icon(
                               Icons.play_circle_outline,

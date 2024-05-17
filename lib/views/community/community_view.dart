@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:vocabinary/viewmodels/community/community_view_model.dart';
 import 'package:vocabinary/widgets/community/card_item.dart';
 import 'package:vocabinary/widgets/shimmer/topic_loading.dart';
-
-import '../../models/data/topic.dart';
 
 class CommunityView extends StatefulWidget {
   const CommunityView({super.key});
@@ -28,7 +25,6 @@ class _CommunityViewState extends State<CommunityView> {
     }
 
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -83,11 +79,6 @@ class _CommunityViewState extends State<CommunityView> {
                   _topicViewModel.topicsPublic.isEmpty
                       ? getLoadingShimmer()
                       : const SizedBox(),
-                  // CommunityCard(),
-                  // SizedBox(width: 20,),
-                  // CommunityCard(),
-                  // SizedBox(width: 20,),
-                  // CommunityCard(),
                 ],
               ),
             ),

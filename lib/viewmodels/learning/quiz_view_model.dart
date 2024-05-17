@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/constants.dart';
 import 'package:vocabinary/models/data/word.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -99,8 +100,7 @@ class QuizViewModel extends ChangeNotifier {
       finish: _endTime,
     );
 
-    // TODO: get userID from auth view model
-    String userID = '4VtPfzFkETVqg29YJdpWx';
+    String userID = AuthenticationService.instance.currentUser!.uid;
     var futures = <Future<dynamic>>[];
 
     if (await TopicRepo().isTopicOwner(_topicID!, userID)) {

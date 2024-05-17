@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/utils/constants.dart';
 import 'package:vocabinary/models/data/word.dart';
@@ -102,8 +103,7 @@ class FlashcardViewModel extends ChangeNotifier {
   }
 
   Future<List<bool>> save() async {
-    // TODO: get userID from auth view model
-    String userID = '4VtPfzFkETVqg29YJdpW';
+    String userID = AuthenticationService.instance.currentUser!.uid;
     if (!await TopicRepo().isTopicOwner(_topicID!, userID)) return [];
 
     final repo = WordRepo();

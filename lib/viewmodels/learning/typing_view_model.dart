@@ -14,6 +14,7 @@ import 'package:vocabinary/models/data/word.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vocabinary/utils/constants.dart';
 import 'package:vocabinary/views/learnings/typing_view.dart';
+import 'package:vocabinary/services/firebase/authentication_service.dart';
 
 class TypingViewModel extends ChangeNotifier {
   String? _topicID;
@@ -131,8 +132,7 @@ class TypingViewModel extends ChangeNotifier {
       finish: _endTime,
     );
 
-    // TODO: get userID from auth view model
-    String userID = '4VtPfzFkETVqg29YJdpWx';
+    String userID = AuthenticationService.instance.currentUser!.uid;
     var futures = <Future<dynamic>>[];
 
     if (await TopicRepo().isTopicOwner(_topicID!, userID)) {
