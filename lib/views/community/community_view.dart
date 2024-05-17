@@ -6,7 +6,6 @@ import 'package:vocabinary/widgets/community/card_item.dart';
 import 'package:vocabinary/widgets/shimmer/topic_loading.dart';
 
 import '../../models/data/topic.dart';
-import '../../viewmodels/app_bar_view_model.dart';
 
 class CommunityView extends StatefulWidget {
   const CommunityView({super.key});

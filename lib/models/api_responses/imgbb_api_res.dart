@@ -11,5 +11,6 @@ class ImgbbResponse {
       thumb: map['thumb']['url'] ?? '',
       medium: map['medium']['url'] ?? '',
     );
+
   }
 }

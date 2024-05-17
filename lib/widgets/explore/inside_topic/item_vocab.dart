@@ -6,6 +6,7 @@ import 'package:vocabinary/utils/dimensions.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:vocabinary/widgets/level_star_bar.dart';
 
+import '../../../models/arguments/explore/update_card_args.dart';
 import '../../../models/data/word.dart';
 import '../../../viewmodels/explore/word_view_model.dart';
 
@@ -13,10 +14,12 @@ class ItemVocab extends StatefulWidget {
   final EngWordModel engWord;
   final WordModel word;
    bool? isEditable= true;
+  final String topicID;
 
    ItemVocab({
     super.key,
     this.isEditable,
+    required this.topicID,
     required this.engWord,
     required this.word,
   });
@@ -36,11 +39,10 @@ class _ItemVocabState extends State<ItemVocab> {
 
   @override
   Widget build(BuildContext context) {
-    print("Hello");
     final AppColorsThemeData appColors =
         Theme.of(context).extension<AppColorsThemeData>()!;
     return Slidable(
-      startActionPane: ActionPane(motion: const DrawerMotion(), children: [
+      startActionPane: widget.isEditable ?? true ? ActionPane(motion: const DrawerMotion(), children: [
         SlidableAction(
           onPressed: (ctx) {
             //confirm dialog
@@ -48,21 +50,21 @@ class _ItemVocabState extends State<ItemVocab> {
                 context: context,
                 builder: (ctx) {
                   return AlertDialog(
-                    title: Text('Delete Word'),
-                    content: Text('Are you sure you want to delete this word?'),
+                    title: const Text('Delete Word'),
+                    content: const Text('Are you sure you want to delete this word?'),
                     actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
                       TextButton(
                         onPressed: () async {
                           await _wordViewModel.deleteWord(widget.word.id!);
                           Navigator.of(context).pop();
                         },
-                        child: Text('Delete'),
+                        child: const Text('Delete'),
                       ),
                     ],
                   );
@@ -87,7 +89,7 @@ class _ItemVocabState extends State<ItemVocab> {
           backgroundColor: AppColors.mainYellow,
           foregroundColor: Colors.white,
         ),
-      ]),
+      ]) : null ,
       child: Stack(
         children: [
           Container(

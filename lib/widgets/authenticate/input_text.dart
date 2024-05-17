@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class InputTextAuth extends StatefulWidget {
-  InputTextAuth({ this.label ,String? Function(String?)? validator, void Function(String?)? onSaved, bool? isPassword ,required this.icon,
+  InputTextAuth({ this.isEnable ,this.label
+    ,String? Function(String?)? validator,
+    this.onChanged,
+    void Function(String?)? onSaved, bool? isPassword ,required this.icon,
     required this.hintText , this.controller,super.key}):
         isPassword = isPassword ?? false,
         validator = validator ?? ((value) { return null;}),
-        onSaved = onSaved ?? ((value) { return;})
-  ;
+        onSaved = onSaved ?? ((value) { return;}) ;
 
   TextEditingController? controller;
   String hintText;
@@ -15,6 +17,8 @@ class InputTextAuth extends StatefulWidget {
   String? label;
   String? Function(String?)? validator;
   void Function(String?)? onSaved;
+  bool? isEnable;
+  void Function(String)? onChanged;
 
   @override
   State<InputTextAuth> createState() => _InputTextAuthState();
@@ -31,7 +35,6 @@ class _InputTextAuthState extends State<InputTextAuth> {
 
   @override
   void dispose() {
-    widget.controller?.dispose();
     super.dispose();
   }
 
@@ -43,11 +46,13 @@ class _InputTextAuthState extends State<InputTextAuth> {
       borderRadius: BorderRadius.circular(10),
       child: TextFormField(
         controller: widget.controller,
-        enabled: true,
+        enabled: widget.isEnable ?? true,
         obscureText: widget.isPassword! ? _obscureText : false,
+        onChanged: widget.onChanged,
         decoration:  InputDecoration(
           labelText: widget.label,
           hintText: widget.hintText,
+          enabled: widget.isEnable ?? true,
           prefixIcon: Padding(padding: const EdgeInsets.only(left: 22, right: 10), child: Icon(widget.icon)),
           suffixIcon: widget.isPassword! ? Padding(
             padding: const EdgeInsets.only(right: 10),

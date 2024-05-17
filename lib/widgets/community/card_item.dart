@@ -25,7 +25,7 @@ class _CommunityCardState extends State<CommunityCard> {
         Theme.of(context).extension<AppColorsThemeData>()!;
     return GestureDetector(
       onTap: () async {
-        Navigator.pushNamed(context, AppRoutes.communityRoutes[0],
+        Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.communityRoutes[0],
             arguments: InsideTopicArgs(
                 topicId: widget.topic.id!,
                 topicName: widget.topic.name!,

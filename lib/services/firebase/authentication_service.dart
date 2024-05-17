@@ -26,6 +26,36 @@ class AuthenticationService {
     }
   }
 
+  Future<bool> checkCurrentPassword(String password) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      final credential = EmailAuthProvider.credential(email: user!.email!, password: password);
+      await user.reauthenticateWithCredential(credential);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if(e.code == 'wrong-password') {
+        return false;
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  Future<bool> changePassword (String newPassword) async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      await user!.updatePassword(newPassword);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if(e.code == 'weak-password') {
+        return false;
+      } else {
+        throw e;
+      }
+    }
+  }
+
+
   Future<dynamic> signUp({required String email, required String password}) async {
     try {
       var userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
