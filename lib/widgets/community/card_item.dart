@@ -4,8 +4,10 @@ import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/models/arguments/explore/inside_topic_args.dart';
 import 'package:vocabinary/models/data/topic.dart';
+import 'package:vocabinary/models/data/user.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_colors.dart';
+import 'package:vocabinary/viewmodels/community/community_view_model.dart';
 import 'package:vocabinary/widgets/global/category.dart';
 import 'package:vocabinary/widgets/global/avatar_mini.dart';
 
@@ -14,11 +16,38 @@ class CommunityCard extends StatefulWidget {
 
   TopicModel topic;
 
+
+
   @override
   State<CommunityCard> createState() => _CommunityCardState();
 }
 
 class _CommunityCardState extends State<CommunityCard> {
+  late UserModel ownerCard;
+  late CommunityViewModel _communityViewModel;
+  bool isLoading = true;
+
+ void init() async {
+   _communityViewModel = Provider.of<CommunityViewModel>(context, listen: false);
+      ownerCard = await _communityViewModel.getOwner(widget.topic.ownerID!) ?? UserModel(
+          name: "Unknown",
+          email: "Unknown",
+          avatar: "",
+      );
+      setState(() {
+        isLoading = false;
+      });
+ }
+
+ @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      init();
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     AppColorsThemeData myColors =
@@ -120,7 +149,16 @@ class _CommunityCardState extends State<CommunityCard> {
                     const SizedBox(
                       height: 15,
                     ),
-                    AvatarMini(),
+                    isLoading
+                        ? const SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: LoadingIndicator(
+                              indicatorType: Indicator.squareSpin,
+                              colors: [Colors.blue],
+                            ),
+                          )
+                        : AvatarMini(user: ownerCard),
                   ],
                 ),
               )

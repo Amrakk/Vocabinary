@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/models/data/topic.dart';
+import 'package:vocabinary/models/data/user.dart';
 import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/app_colors.dart';
 import 'package:vocabinary/viewmodels/community/community_view_model.dart';
@@ -24,6 +25,7 @@ class InsideTopicCommunityView extends StatefulWidget {
   int wordCount;
   TopicModel topicModel;
 
+
   @override
   State<InsideTopicCommunityView> createState() =>
       _InsideTopicCommunityViewState();
@@ -35,9 +37,14 @@ class _InsideTopicCommunityViewState extends State<InsideTopicCommunityView> {
   bool isLoading = true;
   late bool? isOwner;
   late bool isFollowing;
-
+  UserModel ownerCard = UserModel(
+    name: "Unknown",
+    email: "Unknown",
+    avatar: "",
+  );
   @override
   void initState() {
+
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _communityViewModel =
@@ -47,6 +54,11 @@ class _InsideTopicCommunityViewState extends State<InsideTopicCommunityView> {
           await _communityViewModel.isTopicOwner(widget.topicID, AuthenticationService.instance.currentUser!.uid);
       isFollowing =
           await _communityViewModel.isFollowing(widget.topicModel, AuthenticationService.instance.currentUser!.uid);
+      ownerCard = await _communityViewModel.getOwner(widget.topicModel.ownerID!) ?? UserModel(
+          name: "Unknown",
+          email: "Unknown",
+          avatar: "",
+      );
       setState(() {
         isLoading = false;
       });
@@ -186,7 +198,7 @@ class _InsideTopicCommunityViewState extends State<InsideTopicCommunityView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AvatarMini(),
+                      AvatarMini(user: ownerCard,),
                       Container(
                         height: 55,
                         width: 55,
