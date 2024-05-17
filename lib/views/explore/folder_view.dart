@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:vocabinary/models/arguments/explore/inside_folder_args.dart';
 import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/folder_list.dart';
@@ -92,6 +95,51 @@ class _FolderViewState extends State<FolderView> {
 
   _folderBuilder(BuildContext context, FolderModel folder) {
     return GestureDetector(
+      onTap: () {
+        //show options: details or edit
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("Action", textAlign: TextAlign.center),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                Row(
+                  children: [Expanded(
+                    flex: 1,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed("/inside-folder",
+                            arguments: InsideFolderArgs(folder));
+                      },
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.all(const Color(0xFF0248C2)),
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)))),
+                      child: const Text("Details",style: TextStyle(color: Colors.white),),
+                    ),
+                  ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed("/update-folder", arguments: InsideFolderArgs(folder));
+                        },
+                        style: ButtonStyle(
+                            backgroundColor:
+                            MaterialStateProperty.all(const Color(0xFF0248C2)),
+                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)))),
+                        child: const Text("Edit",style: TextStyle(color: Colors.white),),
+                      ),
+                    ),],
+                )
+              ],
+            );
+          },
+        );
+      },
       onLongPress: () {
         // show dialog to delete the folder
         showDialog(

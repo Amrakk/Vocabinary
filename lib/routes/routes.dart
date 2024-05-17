@@ -28,10 +28,12 @@ import 'package:vocabinary/views/authenticate/login_view.dart';
 import 'package:vocabinary/views/explore/topic_view.dart';
 import '../models/arguments/explore/card_details_args.dart';
 import '../models/arguments/explore/folder_args.dart';
+import '../models/arguments/explore/inside_folder_args.dart';
 import '../models/arguments/explore/inside_topic_args.dart';
 import '../views/explore/card_details_view.dart';
 import '../views/explore/create_new_folder_view.dart';
 import '../views/explore/folder_view.dart';
+import '../views/explore/inside_folder.dart';
 import '../views/explore/inside_topic_view.dart';
 import 'package:vocabinary/widgets/setting/about_page.dart';
 import 'package:vocabinary/models/arguments/explore/inside_topic_args.dart';
@@ -41,6 +43,8 @@ import 'package:vocabinary/views/explore/create_new_card_view.dart';
 import 'package:vocabinary/views/explore/update_card_view.dart';
 import 'package:vocabinary/widgets/setting/change_password.dart';
 import 'package:vocabinary/widgets/setting/my_account_page.dart';
+
+import '../views/explore/update_folder_view.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -138,7 +142,8 @@ class AppRoutes {
         args = args as UpdateCardArgs;
         var topicID = args.topicID;
         var word = args.word;
-        return _buildPageTransition(UpdateCardView(topicID: topicID, word: word), settings);
+        return _buildPageTransition(
+            UpdateCardView(topicID: topicID, word: word), settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
@@ -147,8 +152,26 @@ class AppRoutes {
           FolderView(userID: userID, folders: folders),
           settings,
         );
+      case '/inside-folder':
+        args = args as InsideFolderArgs;
+        var folder = args.folder;
+        return _buildPageTransition(
+          InsideFolderView(
+            folder: folder,
+          ),
+          settings,
+        );
       case '/create-folder':
         return _buildPageTransition(const CreateNewFolderView(), settings);
+        case '/update-folder':
+        args = args as InsideFolderArgs;
+        var folder = args.folder;
+        return _buildPageTransition(
+          UpdateFolderView(
+            folder: folder,
+          ),
+          settings,
+        );
       // Community Routes
       case '/community/inside-topic':
         args = args as InsideTopicArgs;
