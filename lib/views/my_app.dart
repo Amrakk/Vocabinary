@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
         ChangeNotifierProvider(create: (context) => TypingViewModel()),
         ChangeNotifierProvider(create: (context) => QuizViewModel(),),
-        ChangeNotifierProvider(create: (context) => ExploreViewModel("4VtPfzFkETVqg29YJdpW")),
+        ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
         ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
         ChangeNotifierProvider(create: (context) => CommunityViewModel()),
         ChangeNotifierProvider(create: (context) => SettingViewModel()),

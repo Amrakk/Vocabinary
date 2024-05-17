@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/folder_list.dart';
@@ -26,7 +27,7 @@ class _FolderViewState extends State<FolderView> {
 
   @override
   void initState() {
-    _exploreViewModel = ExploreViewModel("4VtPfzFkETVqg29YJdpW");
+    _exploreViewModel = Provider.of<ExploreViewModel>(context, listen: false);
     super.initState();
   }
 
