@@ -38,7 +38,6 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
   @override
   void initState() {
     String userID = AuthenticationService.instance.currentUser?.uid ?? '';
-    // userID = '4VtPfzFkETVqg29YJdpW';
     exploreViewModel = ExploreViewModel(userID);
     wordViewModel = WordViewModel();
     _loadTopicsFuture = exploreViewModel.loadTopics();

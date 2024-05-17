@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/widgets/home/indicator.dart';
@@ -7,13 +8,21 @@ import 'package:vocabinary/widgets/home/indicator.dart';
 int touchedIndex = -1;
 
 class MyPieChart extends StatefulWidget {
-  const MyPieChart({super.key});
+  final words;
+
+  const MyPieChart({super.key, this.words});
 
   @override
   State<MyPieChart> createState() => _MyPieChartState();
 }
 
 class _MyPieChartState extends State<MyPieChart> {
+  @override
+  void initState() {
+    calculateDataPercentage(widget.words);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -68,12 +77,6 @@ class _MyPieChartState extends State<MyPieChart> {
               isSquare: true,
             ),
             SizedBox(height: Dimensions.height(context, 4)),
-            Indicator(
-              color: AppColors.pieChartIndicator['Ultimate']!,
-              text: 'Ultimate',
-              isSquare: true,
-            ),
-            SizedBox(height: Dimensions.height(context, 18)),
           ],
         ),
       ],
@@ -81,31 +84,43 @@ class _MyPieChartState extends State<MyPieChart> {
   }
 }
 
-List<Map<String, dynamic>> data = [
-  {
-    'color': AppColors.pieChartIndicator['Easy']!,
-    'value': 40,
-    'title': '40%',
-  },
-  {
-    'color': AppColors.pieChartIndicator['Normal']!,
-    'value': 30,
-    'title': '30%',
-  },
-  {
-    'color': AppColors.pieChartIndicator['Hard']!,
-    'value': 15,
-    'title': '15%',
-  },
-  {
-    'color': AppColors.pieChartIndicator['Ultimate']!,
-    'value': 15,
-    'title': '15%',
-  },
-];
+void calculateDataPercentage(List<WordModel> words) {
+  //iterating over the words and calculating the percentage of each level
+  var easy = 0;
+  var normal = 0;
+  var hard = 0;
+  for (var word in words) {
+    if (word.level == 1) {
+      easy++;
+    } else if (word.level == 2) {
+      normal++;
+    } else if (word.level == 3) {
+      hard++;
+    }
+  }
+  data = [
+    {
+      'color': AppColors.pieChartIndicator['Easy']!,
+      'value': easy,
+      'title': '${(easy / words.length * 100).toStringAsFixed(0)}%',
+    },
+    {
+      'color': AppColors.pieChartIndicator['Normal']!,
+      'value': normal,
+      'title': '${(normal / words.length * 100).toStringAsFixed(0)}%',
+    },
+    {
+      'color': AppColors.pieChartIndicator['Hard']!,
+      'value': hard,
+      'title': '${(hard / words.length * 100).toStringAsFixed(0)}%',
+    },
+  ];
+}
+
+List<Map<String, dynamic>> data = [];
 
 List<PieChartSectionData> showingSections() {
-  return List.generate(4, (i) {
+  return List.generate(3, (i) {
     final isTouched = i == touchedIndex;
     final fontSize = isTouched ? 25.0 : 16.0;
     final radius = isTouched ? 60.0 : 50.0;

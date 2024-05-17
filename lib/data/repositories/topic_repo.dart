@@ -55,7 +55,6 @@ class TopicRepo {
 
 
   Future<List> getRecentTopicsForUser(String userID,int limit) async {
-    print('getRecentTopicsForUser');
     UserTopicLogRepo userTopicLogRepo = UserTopicLogRepo();
     // Initialize a list to hold the combined data of topics and user logs
     List<Map<String, dynamic>> recentTopicsWithLogs = [];
@@ -83,8 +82,6 @@ class TopicRepo {
 
     // Limit the list to the specified number of recent topics (e.g. 5)
     recentTopicsWithLogs = recentTopicsWithLogs.take(limit).toList();
-    print('recentTopicsWithLogs');
-    print(recentTopicsWithLogs);
 
     // Extract the topics from the list and return them
     return recentTopicsWithLogs.map((e) => e['topic']).toList();

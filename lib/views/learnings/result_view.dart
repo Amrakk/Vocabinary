@@ -29,7 +29,6 @@ class _ResultViewState extends State<ResultView> {
 
   @override
   Widget build(BuildContext context) {
-    print(1);
     return FutureBuilder(
       future: widget.quizViewModel != null
           ? widget.quizViewModel!.save()

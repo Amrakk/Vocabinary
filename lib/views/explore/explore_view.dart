@@ -340,7 +340,16 @@ class _ExploreViewState extends State<ExploreView> {
                                   ? itemNum
                                   : folders.length,
                               itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushNamed(
+                                    '/folder',
+                                    arguments: FolderArguments(
+                                      userID: 'userID',
+                                      folders: _viewModel.folders,
+                                    ),
+                                  );
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child:

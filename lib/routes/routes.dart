@@ -59,6 +59,13 @@ class AppRoutes {
     '/folder',
     'inside-folder'
   ];
+  static final authRoutes = ['/login', '/register', '/forgot-password'];
+  static final communityRoutes = ['/community/inside-topic'];
+  static final settingRoutes = [
+    '/setting/about',
+    '/setting/my-account',
+    '/setting/my-account/change-password',
+  ];
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     var args = settings.arguments;

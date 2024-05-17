@@ -342,7 +342,6 @@ class _TopicViewState extends State<TopicView> {
     if (publicity != Publicity.Private) {
       filteredList = TopicPublicFilterDecorator(filteredList, isPublic(publicity));
     }
-    print(filteredList.topics);
     filteredTopics = filteredList.topics;
   }
 

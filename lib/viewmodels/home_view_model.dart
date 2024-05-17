@@ -30,6 +30,5 @@ class HomePageViewModel extends ChangeNotifier {
       }
     }
     _words = _allWords;
-    print(_words);
   }
 }
