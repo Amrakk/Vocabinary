@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/app_themes.dart';
+import 'package:vocabinary/viewmodels/Setting/setting_view_model.dart';
+import 'package:vocabinary/viewmodels/community/community_view_model.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/viewmodels/theme_view_model.dart';
 import 'package:vocabinary/data/caches/audio_cache_manager.dart';
@@ -36,6 +38,8 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => QuizViewModel(),),
         ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
         ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
+        ChangeNotifierProvider(create: (context) => CommunityViewModel()),
+        ChangeNotifierProvider(create: (context) => SettingViewModel()),
       ],
       child: Consumer<ThemeViewModel>(
         builder: (_, themeViewModel, __) => MaterialApp(

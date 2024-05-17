@@ -5,10 +5,13 @@ import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/models/data/user.dart';
 import 'package:vocabinary/data/repositories/user_repo.dart';
 import 'package:vocabinary/models/data/word.dart';
+import 'package:vocabinary/services/firebase/authentication_service.dart';
 
 class CommunityViewModel extends ChangeNotifier {
   List<TopicModel> _topicsPublic = [];
+  List<TopicModel> _topicsFollowing = [];
   List<TopicModel> get topicsPublic => _topicsPublic;
+  List<TopicModel> get topicsFollowing => _topicsFollowing;
   final TopicRepo _topicRepo = TopicRepo();
   final WordRepo _wordRepo = WordRepo();
   final UserRepo _userRepo = UserRepo();
@@ -24,6 +27,16 @@ class CommunityViewModel extends ChangeNotifier {
         }
       }
     });
+    notifyListeners();
+  }
+
+  Future<void> getAllTopicFollowing() async {
+    _topicsFollowing.clear();
+    for(var topic in _topicsPublic) {
+      if(topic.followers.contains(AuthenticationService.instance.currentUser!.uid)) {
+        _topicsFollowing.add(topic);
+      }
+    }
     notifyListeners();
   }
 

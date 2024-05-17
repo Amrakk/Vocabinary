@@ -9,6 +9,7 @@ import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/viewmodels/explore/word_view_model.dart';
+import 'package:vocabinary/widgets/community/item_community_card.dart';
 
 import '../../models/arguments/explore/folder_args.dart';
 import '../../models/arguments/explore/inside_topic_args.dart';
@@ -60,7 +61,7 @@ class _ExploreViewState extends State<ExploreView> {
               children: [
                 const Row(
                   children: [
-                    SizedBox(height: 10),
+                    SizedBox(height: 30),
                     Text(
                       'Explore',
                       style:
@@ -68,7 +69,7 @@ class _ExploreViewState extends State<ExploreView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 20),
                 Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -83,19 +84,19 @@ class _ExploreViewState extends State<ExploreView> {
                   ),
                   padding: const EdgeInsets.all(10),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SizedBox(
-                        width: 150,
+                        width: 130,
                         child: Wrap(
                           children: [
                             RichText(
-                              text: const TextSpan(
+                              text:  TextSpan(
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: Dimensions.fontSize(context, 22),
                                   color: Colors.white,
                                 ),
-                                children: <TextSpan>[
+                                children: const <TextSpan>[
                                   TextSpan(
                                     text: 'Boost Your Vocabulary In ',
                                   ),
@@ -111,17 +112,18 @@ class _ExploreViewState extends State<ExploreView> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        width: 100,
-                        height: 100,
+                        const SizedBox(
+                        width: 140,
+                        height: 110,
                         child: Image(
-                          image: AssetImage('assets/images/explore.png'),
+                          image: AssetImage('assets/images/explore.png',),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 20),
                 const Row(
                   children: [
                     Text(
@@ -134,7 +136,7 @@ class _ExploreViewState extends State<ExploreView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 20),
                 FutureBuilder(
                   future: Future.wait([
                     // _loadRecentActivitiesFuture,
@@ -418,74 +420,77 @@ class _ExploreViewState extends State<ExploreView> {
       providers: [
         ChangeNotifierProvider(create: (context) => WordViewModel(topic.id!))
       ],
-      child: Container(
-        height: 75,
-        width: 180,
-        decoration: BoxDecoration(
-          color: const Color(0xFF00324E),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Text(
-              topic.name ?? '',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              topic.description ?? '',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 10, color: Colors.white),
-            ),
-            const Expanded(flex: 1, child: SizedBox()),
-            const Divider(
-              color: Colors.white,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.format_list_bulleted),
-                    Text(topic.wordCount.toString(),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.star),
-                    Text(intLevelToString(topic.level),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.bookmark),
-                    Text(followerCount(topic.followers.length),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+      child: CommunityCard(
+        topic: topic,
       ),
+      // child: Container(
+      //   height: 75,
+      //   width: 180,
+      //   decoration: BoxDecoration(
+      //     color: const Color(0xFF00324E),
+      //     borderRadius: BorderRadius.circular(10),
+      //     boxShadow: const [
+      //       BoxShadow(
+      //         color: Colors.black,
+      //         blurRadius: 5,
+      //       ),
+      //     ],
+      //   ),
+      //   padding: const EdgeInsets.all(5),
+      //   child: Column(
+      //     crossAxisAlignment: CrossAxisAlignment.start,
+      //     mainAxisSize: MainAxisSize.max,
+      //     children: [
+      //       Text(
+      //         topic.name ?? '',
+      //         style: const TextStyle(
+      //           fontSize: 16,
+      //           color: Colors.white,
+      //           fontWeight: FontWeight.bold,
+      //         ),
+      //       ),
+      //       Text(
+      //         topic.description ?? '',
+      //         maxLines: 2,
+      //         overflow: TextOverflow.ellipsis,
+      //         style: const TextStyle(fontSize: 10, color: Colors.white),
+      //       ),
+      //       const Expanded(flex: 1, child: SizedBox()),
+      //       const Divider(
+      //         color: Colors.white,
+      //       ),
+      //       Row(
+      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //         children: [
+      //           Row(
+      //             children: [
+      //               const Icon(Icons.format_list_bulleted),
+      //               Text(topic.wordCount.toString(),
+      //                   style:
+      //                       const TextStyle(fontSize: 10, color: Colors.white)),
+      //             ],
+      //           ),
+      //           Row(
+      //             children: [
+      //               const Icon(Icons.star),
+      //               Text(intLevelToString(topic.level),
+      //                   style:
+      //                       const TextStyle(fontSize: 10, color: Colors.white)),
+      //             ],
+      //           ),
+      //           Row(
+      //             children: [
+      //               const Icon(Icons.bookmark),
+      //               Text(followerCount(topic.followers.length),
+      //                   style:
+      //                       const TextStyle(fontSize: 10, color: Colors.white)),
+      //             ],
+      //           ),
+      //         ],
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 

@@ -55,7 +55,6 @@ class TopicRepo {
 
 
   Future<List> getRecentTopicsForUser(String userID,int limit) async {
-    print('getRecentTopicsForUser');
     UserTopicLogRepo userTopicLogRepo = UserTopicLogRepo();
     // Initialize a list to hold the combined data of topics and user logs
     List<Map<String, dynamic>> recentTopicsWithLogs = [];

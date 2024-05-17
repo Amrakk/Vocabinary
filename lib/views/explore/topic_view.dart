@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/decorator.dart';
 import 'package:vocabinary/utils/filter/topic_list.dart';
+import 'package:vocabinary/widgets/community/item_community_card.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
 import '../../models/data/topic.dart';
@@ -37,7 +38,7 @@ class _TopicViewState extends State<TopicView> {
           child: const Icon(Icons.add_to_photos_outlined),
         ),
         appBar: AppBar(
-          title: const Text("List Your Topic"),
+          title: const Text("List Topic"),
           actions: [
             IconButton(
               onPressed: () {
@@ -51,103 +52,39 @@ class _TopicViewState extends State<TopicView> {
             ? _emptyTopic(context)
             : Padding(
                 padding: const EdgeInsets.all(10),
-                child: GridView.builder(
-                  itemCount: filterIsDefault()
-                      ? widget.topics.length
-                      : filteredTopics.length,
+                child: filterIsDefault() ?  GridView.builder(
+                  itemCount:  widget.topics.length,
                   itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: _topicBuilder(
                           context,
-                          filterIsDefault()
-                              ? widget.topics[index]
-                              : filteredTopics[index])),
+                      widget.topics[index])),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: itemNum,
-                      childAspectRatio: 5 / 3,
+                      childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.5,
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 10),
+                      mainAxisSpacing: 20
+                  ),
+                ) : filteredTopics.isEmpty
+                    ? _emptyTopic(context)
+                    : GridView.builder(
+                        itemCount: filteredTopics.length,
+                        itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: _topicBuilder(context, filteredTopics[index])),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: itemNum,
+                            childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.5,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 20
+                        )
                 ),
               ),
       ),
     );
   }
-
   _topicBuilder(BuildContext context, TopicModel topic) {
-    return Container(
-      height: 75,
-      width: 180,
-      decoration: BoxDecoration(
-        color: const Color(0xFF00324E),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black,
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-            topic.name!,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            topic.description!,
-            softWrap: true,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 10, color: Colors.white),
-          ),
-          const Expanded(flex: 1, child: SizedBox()),
-          const Divider(
-            color: Colors.white,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.format_list_bulleted),
-                    Text(topic.wordCount.toString(),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.star),
-                    Text(intLevelToString(topic.level),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-                topic.isPublic
-                    ? Row(
-                        children: [
-                          const Icon(Icons.bookmark),
-                          Text(topic.followers.length.toString(),
-                              style: const TextStyle(
-                                  fontSize: 10, color: Colors.white)),
-                        ],
-                      )
-                    : const SizedBox(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+    return CommunityCard(topic: topic);
   }
 
   _showfilter(BuildContext context) {
@@ -260,7 +197,7 @@ class _TopicViewState extends State<TopicView> {
                           },
                           leading: ">100"),
                     ]),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Expanded(
@@ -342,7 +279,6 @@ class _TopicViewState extends State<TopicView> {
     if (publicity != Publicity.Private) {
       filteredList = TopicPublicFilterDecorator(filteredList, isPublic(publicity));
     }
-    print(filteredList.topics);
     filteredTopics = filteredList.topics;
   }
 
