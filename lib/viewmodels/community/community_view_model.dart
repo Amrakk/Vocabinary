@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:vocabinary/models/data/topic.dart';
 import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/data/repositories/word_repo.dart';
-import '../../models/data/word.dart';
+import 'package:vocabinary/models/data/user.dart';
+import 'package:vocabinary/data/repositories/user_repo.dart';
+import 'package:vocabinary/models/data/word.dart';
 
 class CommunityViewModel extends ChangeNotifier {
   List<TopicModel> _topicsPublic = [];
   List<TopicModel> get topicsPublic => _topicsPublic;
   final TopicRepo _topicRepo = TopicRepo();
   final WordRepo _wordRepo = WordRepo();
+  final UserRepo _userRepo = UserRepo();
 
   CommunityViewModel();
 
@@ -40,6 +43,10 @@ class CommunityViewModel extends ChangeNotifier {
     topic.followers.add(userID);
     await _topicRepo.updateTopic(topic.id!, topic);
     notifyListeners();
+  }
+
+  Future<UserModel?> getOwner(String ownerID) async {
+    return await _userRepo.getUser(ownerID);
   }
   Future<void> unfollowTopic(TopicModel topic, String userID) async {
     topic.followers.remove(userID);

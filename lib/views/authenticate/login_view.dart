@@ -63,7 +63,7 @@ class _LoginViewState extends State<LoginView> {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.4,
                   child: SvgPicture.asset(
-                    'images/wave.svg',
+                    'assets/images/wave.svg',
                     fit: BoxFit.fill,
                   ),
                 ),

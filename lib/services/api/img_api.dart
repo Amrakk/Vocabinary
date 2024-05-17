@@ -21,7 +21,15 @@ class ImageService {
         return null;
       }
     }
-    return null;
+    // Android/ Ios
+    else {
+      XFile? pickedFile = await ImagePicker().pickImage(
+          source: ImageSource.gallery);
+      if (pickedFile != null) {
+        var bytesImage = await pickedFile.readAsBytes();
+        return bytesImage;
+      }
+    }
   }
 
   static Future<dynamic> uploadImage(Uint8List image) async {
