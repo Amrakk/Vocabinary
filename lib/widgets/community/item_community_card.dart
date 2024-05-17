@@ -16,16 +16,17 @@ class CommunityCard extends StatefulWidget {
 
   TopicModel topic;
 
-
-
   @override
   State<CommunityCard> createState() => _CommunityCardState();
 }
 
 class _CommunityCardState extends State<CommunityCard> {
-  late UserModel ownerCard;
+  late UserModel ownerCard = UserModel(
+    name: "Unknown",
+    email: "Unknown",
+    avatar: "",
+  );
   late CommunityViewModel _communityViewModel;
-  bool isLoading = true;
 
  void init() async {
    _communityViewModel = Provider.of<CommunityViewModel>(context, listen: false);
@@ -35,7 +36,6 @@ class _CommunityCardState extends State<CommunityCard> {
           avatar: "",
       );
       setState(() {
-        isLoading = false;
       });
  }
 
@@ -63,7 +63,7 @@ class _CommunityCardState extends State<CommunityCard> {
             ));
       },
       child: Container(
-        width: 200,
+        width: 180,
         decoration: BoxDecoration(
           color: myColors.containerColor,
           borderRadius: BorderRadius.circular(15),
@@ -149,16 +149,7 @@ class _CommunityCardState extends State<CommunityCard> {
                     const SizedBox(
                       height: 15,
                     ),
-                    isLoading
-                        ? const SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: LoadingIndicator(
-                              indicatorType: Indicator.squareSpin,
-                              colors: [Colors.blue],
-                            ),
-                          )
-                        : AvatarMini(user: ownerCard),
+                    AvatarMini(user: ownerCard),
                   ],
                 ),
               )
