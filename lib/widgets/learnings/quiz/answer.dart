@@ -92,6 +92,7 @@ class AnswerState extends State<Answer> {
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

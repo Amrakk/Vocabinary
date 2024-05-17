@@ -28,14 +28,17 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    AuthenticationService _authenticationService = AuthenticationService.instance;
+    AuthenticationService _authenticationService =
+        AuthenticationService.instance;
     String uid = _authenticationService.currentUser?.uid ?? '';
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
         ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
         ChangeNotifierProvider(create: (context) => TypingViewModel()),
-        ChangeNotifierProvider(create: (context) => QuizViewModel(),),
+        ChangeNotifierProvider(
+          create: (context) => QuizViewModel(),
+        ),
         ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
         ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
         ChangeNotifierProvider(create: (context) => CommunityViewModel()),
@@ -51,13 +54,13 @@ class _MyAppState extends State<MyApp> {
           home: StreamBuilder(
             stream: _authenticationService.authStateChanges,
             builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const MyLoadingIndicator();
               }
-              if(snapshot.hasData){
+              if (snapshot.hasData) {
                 return const MyHomePage();
               }
-              return  const LoginView();
+              return const LoginView();
             },
           ),
           onGenerateRoute: AppRoutes.generateRoutes,
@@ -80,7 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    AudioCacheManager.dispose();
     _mainNavigatorKey.currentState!.dispose();
     super.dispose();
   }
@@ -88,56 +90,54 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(70),
-        child: MyAppBar(),
-      ),
-      body: Navigator(
-        key: _mainNavigatorKey,
-        initialRoute: AppRoutes.initialRoute,
-        onGenerateRoute: AppRoutes.generateRoutes,
-      ),
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        iconSize: 25,
-        inactiveColor:
-            Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
-        icons: const [
-          Icons.home,
-          Icons.folder_copy_rounded,
-          Icons.people_alt_rounded,
-          Icons.settings,
-        ],
-        shadow: const BoxShadow(
-          color: Colors.black,
-          blurRadius: 5,
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(70),
+          child: MyAppBar(),
         ),
-        backgroundColor:
-            Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-        activeColor:
-            Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
-        activeIndex: _bottomBarIndex,
-        gapLocation: GapLocation.center,
-        notchSmoothness: NotchSmoothness.smoothEdge,
-        leftCornerRadius: 20,
-        rightCornerRadius: 20,
-        onTap: (index) {
-          if (index == _bottomBarIndex) return;
-          setState(() => _bottomBarIndex = index);
-          _mainNavigatorKey.currentState!
-              .pushReplacementNamed(AppRoutes.homeRoutes[index]);
-        },
-      ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: FloatingActionButton(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(30)),
+        body: Navigator(
+          key: _mainNavigatorKey,
+          initialRoute: AppRoutes.initialRoute,
+          onGenerateRoute: AppRoutes.generateRoutes,
         ),
-        onPressed: () {
-        },
-        tooltip: 'Add new word',
-        child: const Icon(Icons.add),
-      )
-    );
+        bottomNavigationBar: AnimatedBottomNavigationBar(
+          iconSize: 25,
+          inactiveColor:
+              Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
+          icons: const [
+            Icons.home,
+            Icons.folder_copy_rounded,
+            Icons.people_alt_rounded,
+            Icons.settings,
+          ],
+          shadow: const BoxShadow(
+            color: Colors.black,
+            blurRadius: 5,
+          ),
+          backgroundColor:
+              Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+          activeColor:
+              Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
+          activeIndex: _bottomBarIndex,
+          gapLocation: GapLocation.center,
+          notchSmoothness: NotchSmoothness.smoothEdge,
+          leftCornerRadius: 20,
+          rightCornerRadius: 20,
+          onTap: (index) {
+            if (index == _bottomBarIndex) return;
+            setState(() => _bottomBarIndex = index);
+            _mainNavigatorKey.currentState!
+                .pushReplacementNamed(AppRoutes.homeRoutes[index]);
+          },
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: FloatingActionButton(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+          ),
+          onPressed: () {},
+          tooltip: 'Add new word',
+          child: const Icon(Icons.add),
+        ));
   }
 }

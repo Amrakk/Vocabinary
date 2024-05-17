@@ -78,72 +78,74 @@ class TypingViewState extends State<TypingView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: handle disable/dialog for back button
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        scrolledUnderElevation: 0.0,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          margin: EdgeInsets.only(
-            left: Dimensions.widthRatio(context, 5),
-            top: Dimensions.heightRatio(context, 2),
-          ),
-          height: Dimensions.heightRatio(context, 7),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Typing Mode',
-                style: TextStyle(
-                  fontSize: Dimensions.fontSize18(context),
-                  fontWeight: FontWeight.w500,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          scrolledUnderElevation: 0.0,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          title: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: EdgeInsets.only(
+              left: Dimensions.widthRatio(context, 5),
+              top: Dimensions.heightRatio(context, 2),
+            ),
+            height: Dimensions.heightRatio(context, 7),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Typing Mode',
+                  style: TextStyle(
+                    fontSize: Dimensions.fontSize18(context),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              SizedBox(height: Dimensions.height(context, 2)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Consumer<TypingViewModel>(
-                    builder: (_, typingViewModel, __) => Text(
-                      typingViewModel.progress < 1
-                          ? '${typingViewModel.count} words'
-                          : 'Done',
-                      style: TextStyle(
-                        fontSize: Dimensions.fontSize(context, 15),
-                        color: Colors.white60,
+                SizedBox(height: Dimensions.height(context, 2)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Consumer<TypingViewModel>(
+                      builder: (_, typingViewModel, __) => Text(
+                        typingViewModel.progress < 1
+                            ? '${typingViewModel.count} words'
+                            : 'Done',
+                        style: TextStyle(
+                          fontSize: Dimensions.fontSize(context, 15),
+                          color: Colors.white60,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: Dimensions.width(context, 14)),
-                  Consumer<TypingViewModel>(
-                    builder: (_, typingViewModel, __) {
-                      return SizedBox(
-                        width: Dimensions.widthRatio(context, 40),
-                        child: ProgressBar(
-                          height: Dimensions.height(context, 10),
-                          duration: 300,
-                          value: typingViewModel.progress,
-                          color: const Color(0xFFCCFF33),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(width: Dimensions.width(context, 14)),
+                    Consumer<TypingViewModel>(
+                      builder: (_, typingViewModel, __) {
+                        return SizedBox(
+                          width: Dimensions.widthRatio(context, 40),
+                          child: ProgressBar(
+                            height: Dimensions.height(context, 10),
+                            duration: 300,
+                            value: typingViewModel.progress,
+                            color: const Color(0xFFCCFF33),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Stack(
-        children: [
-          const BackgroundLayer(ratio: 28),
-          _isDone
-              ? ResultView(typingViewModel: _typingViewModel)
-              : _buildTypingScreen(),
-        ],
+        body: Stack(
+          children: [
+            const BackgroundLayer(ratio: 28),
+            _isDone
+                ? ResultView(typingViewModel: _typingViewModel)
+                : _buildTypingScreen(),
+          ],
+        ),
       ),
     );
   }

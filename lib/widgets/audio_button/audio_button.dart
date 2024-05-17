@@ -51,7 +51,24 @@ class AudioButtonState extends State<AudioButton> {
           });
         },
       ).catchError((_) {
-        // TODO: handle 404 from google tts (web platform)
+        url = dotenv.get('AUDIO_ALT_API') + widget.word;
+
+        _player
+            .setAudioSource(AudioSource.uri(
+          Uri.parse('https://cp.tdung.co/?url=${Uri.encodeFull(url)}'),
+        ))
+            .then(
+          (value) async {
+            _player.playerStateStream.listen((event) async {
+              if (event.processingState == ProcessingState.completed) {
+                setState(() {
+                  _isProcessing = false;
+                });
+                await _player.stop();
+              }
+            });
+          },
+        ).catchError((_) {});
       });
       return;
     }
