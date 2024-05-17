@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:vocabinary/models/arguments/explore/topic_args.dart';
-import 'package:vocabinary/models/arguments/explore/update_card_args.dart';
-import 'package:vocabinary/models/data/folder.dart';
-import 'package:vocabinary/views/explore/create_new_card_view.dart';
 import 'package:vocabinary/views/explore/topic_view.dart';
-import 'package:vocabinary/views/explore/update_card_view.dart';
 import 'package:vocabinary/views/home/home_view.dart';
 import 'package:vocabinary/views/learnings/quiz_view.dart';
 import 'package:vocabinary/views/setting/setting_view.dart';
@@ -16,20 +12,20 @@ import 'package:vocabinary/views/community/community_view.dart';
 import 'package:vocabinary/views/learnings/select_type_view.dart';
 import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
-
 import 'package:vocabinary/models/arguments/explore/folder_args.dart';
-import 'package:vocabinary/models/arguments/explore/topic_args.dart';
 import 'package:vocabinary/views/authenticate/forgot_password_view.dart';
 import 'package:vocabinary/views/authenticate/register_view.dart';
 import 'package:vocabinary/views/explore/folder_view.dart';
 import 'package:vocabinary/views/explore/inside_topic_view.dart';
-
 import 'package:vocabinary/views/authenticate/login_view.dart';
-import 'package:vocabinary/views/explore/topic_view.dart';
-import '../models/arguments/explore/folder_args.dart';
-import '../models/arguments/explore/inside_topic_args.dart';
-import '../views/explore/folder_view.dart';
-import '../views/explore/inside_topic_view.dart';
+import 'package:vocabinary/widgets/setting/about_page.dart';
+import 'package:vocabinary/models/arguments/explore/inside_topic_args.dart';
+import 'package:vocabinary/models/arguments/explore/update_card_args.dart';
+import 'package:vocabinary/views/community/inside_topic_community_view.dart';
+import 'package:vocabinary/views/explore/create_new_card_view.dart';
+import 'package:vocabinary/views/explore/update_card_view.dart';
+import 'package:vocabinary/widgets/setting/change_password.dart';
+import 'package:vocabinary/widgets/setting/my_account_page.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -47,6 +43,13 @@ class AppRoutes {
     '/inside-topic',
     '/folder',
     'inside-folder'
+  ];
+  static final authRoutes = ['/login', '/register', '/forgot-password'];
+  static final communityRoutes = ['/community/inside-topic'];
+  static final settingRoutes = [
+    '/setting/about',
+    '/setting/my-account',
+    '/setting/my-account/change-password',
   ];
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
@@ -114,7 +117,8 @@ class AppRoutes {
         args = args as UpdateCardArgs;
         var topicID = args.topicID;
         var word = args.word;
-        return _buildPageTransition(UpdateCardView(topicID: topicID, word: word), settings);
+        return _buildPageTransition(
+            UpdateCardView(topicID: topicID, word: word), settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
@@ -123,6 +127,21 @@ class AppRoutes {
           FolderView(userID: userID, folders: folders),
           settings,
         );
+      // Community Routes
+      case '/community/inside-topic':
+        args = args as InsideTopicArgs;
+        var topicID = args.topicId;
+        var topicName = args.topicName;
+        var wordCount = args.wordCount;
+        var topic = args.topicModel;
+        return _buildPageTransition(
+            InsideTopicCommunityView(
+              topicID: topicID,
+              topicName: topicName,
+              wordCount: wordCount,
+              topicModel: topic!,
+            ),
+            settings);
 
       // Authentication Routes
       case '/login':
@@ -134,7 +153,15 @@ class AppRoutes {
           settings,
         );
       case '/forgot-password':
-        return _buildPageTransition(ForgotPasswordView(), settings);
+        return _buildPageTransition(const ForgotPasswordView(), settings);
+
+      // Setting Routes
+      case '/setting/about':
+        return _buildPageTransition(const AboutPage(), settings);
+      case '/setting/my-account':
+        return _buildPageTransition(const MyAccountPage(), settings);
+      case '/setting/my-account/change-password':
+        return _buildPageTransition(const ChangePasswordPage(), settings);
 
       default:
         return MaterialPageRoute(
@@ -154,7 +181,7 @@ class AppRoutes {
     return PageTransition(
       child: page,
       duration: const Duration(milliseconds: 275),
-      type: PageTransitionType.rightToLeft,
+      type: type,
       settings: settings,
     );
   }
