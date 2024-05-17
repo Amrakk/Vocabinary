@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/colors.dart';
 import 'package:vocabinary/utils/constants.dart';
 import 'package:vocabinary/models/data/word.dart';
@@ -6,8 +7,6 @@ import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/widgets/learnings/flashcard/flashcard_controller.dart';
-
-import '../../services/firebase/authentication_service.dart';
 
 class FlashcardViewModel extends ChangeNotifier {
   String? _topicID;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/services/firebase/authentication_service.dart';
 import 'package:vocabinary/utils/constants.dart';
 import 'package:vocabinary/models/data/word.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,8 +10,6 @@ import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/data/repositories/learning_repo.dart';
 import 'package:vocabinary/data/repositories/user_topic_log_repo.dart';
-
-import '../../services/firebase/authentication_service.dart';
 
 class QuizViewModel extends ChangeNotifier {
   String? _topicID;
@@ -101,8 +100,7 @@ class QuizViewModel extends ChangeNotifier {
       finish: _endTime,
     );
 
-    AuthenticationService _authenticationService = AuthenticationService.instance;
-    String userID = _authenticationService.currentUser?.uid ?? '';
+    String userID = AuthenticationService.instance.currentUser!.uid;
     var futures = <Future<dynamic>>[];
 
     if (await TopicRepo().isTopicOwner(_topicID!, userID)) {

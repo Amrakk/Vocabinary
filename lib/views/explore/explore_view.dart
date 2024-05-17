@@ -21,7 +21,7 @@ class ExploreView extends StatefulWidget {
   State<ExploreView> createState() => _ExploreViewState();
 }
 
-class _ExploreViewState extends State<ExploreView>{
+class _ExploreViewState extends State<ExploreView> {
   late ExploreViewModel _viewModel;
   late Future<void> _loadTopicsFuture;
   late Future<void> _loadFoldersFuture;
@@ -32,7 +32,6 @@ class _ExploreViewState extends State<ExploreView>{
     _viewModel = Provider.of<ExploreViewModel>(context, listen: false);
     _loadTopicsFuture = _viewModel.loadTopics();
     _loadFoldersFuture = _viewModel.loadFolders();
-    // _loadRecentActivitiesFuture = _viewModel.loadRecentActivities();
     _loadRecentActivitiesDestinationFuture =
         _viewModel.loadRecentActivitiesDestination();
   }
@@ -56,7 +55,7 @@ class _ExploreViewState extends State<ExploreView>{
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
             child: Column(
               children: [
                 const Row(
@@ -69,37 +68,48 @@ class _ExploreViewState extends State<ExploreView>{
                     ),
                   ],
                 ),
+                const SizedBox(height: 25),
                 Container(
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0248C2),
-                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0xFF03045E),
+                    borderRadius: BorderRadius.circular(48),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 10,
+                      ),
+                    ],
                   ),
                   padding: const EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Wrap(
-                        children: [
-                          RichText(
-                            text: const TextSpan(
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Boost Your Vocabulary In ',
+                      SizedBox(
+                        width: 150,
+                        child: Wrap(
+                          children: [
+                            RichText(
+                              text: const TextSpan(
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
                                 ),
-                                TextSpan(
-                                  text: 'Today',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: 'Boost Your Vocabulary In ',
                                   ),
-                                ),
-                              ],
+                                  TextSpan(
+                                    text: 'Today',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         width: 100,
@@ -111,7 +121,7 @@ class _ExploreViewState extends State<ExploreView>{
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 25),
                 const Row(
                   children: [
                     Text(
@@ -124,7 +134,7 @@ class _ExploreViewState extends State<ExploreView>{
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 25),
                 FutureBuilder(
                   future: Future.wait([
                     // _loadRecentActivitiesFuture,

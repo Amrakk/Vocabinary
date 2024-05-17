@@ -3,8 +3,7 @@ import 'package:vocabinary/data/repositories/eng_word_repo.dart';
 import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/models/data/eng_word.dart';
-
-import '../../models/data/word.dart';
+import 'package:vocabinary/models/data/word.dart';
 
 class WordViewModel extends ChangeNotifier{
   final WordRepo _wordRepo = WordRepo();
