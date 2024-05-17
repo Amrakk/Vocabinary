@@ -26,8 +26,11 @@ import 'package:vocabinary/views/explore/inside_topic_view.dart';
 
 import 'package:vocabinary/views/authenticate/login_view.dart';
 import 'package:vocabinary/views/explore/topic_view.dart';
+import '../models/arguments/explore/card_details_args.dart';
 import '../models/arguments/explore/folder_args.dart';
 import '../models/arguments/explore/inside_topic_args.dart';
+import '../views/explore/card_details_view.dart';
+import '../views/explore/create_new_folder_view.dart';
 import '../views/explore/folder_view.dart';
 import '../views/explore/inside_topic_view.dart';
 
@@ -108,13 +111,20 @@ class AppRoutes {
             InsideTopicView(
                 topicID: topicID, topicName: topicName, wordCount: wordCount),
             settings);
+      case '/card-details':
+        args = args as CardDetailsArgs;
+        var topicID = args.topicID;
+        var word = args.word;
+        return _buildPageTransition(
+            CardDetailsView(topicID: topicID, word: word), settings);
       case '/new-card':
         return _buildPageTransition(const CreateNewCardView(), settings);
       case '/update-card':
         args = args as UpdateCardArgs;
         var topicID = args.topicID;
         var word = args.word;
-        return _buildPageTransition(UpdateCardView(topicID: topicID, word: word), settings);
+        return _buildPageTransition(
+            UpdateCardView(topicID: topicID, word: word), settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
@@ -123,6 +133,8 @@ class AppRoutes {
           FolderView(userID: userID, folders: folders),
           settings,
         );
+      case '/create-folder':
+        return _buildPageTransition(const CreateNewFolderView(), settings);
 
       // Authentication Routes
       case '/login':

@@ -58,6 +58,6 @@ class FolderModel {
 
   @override
   String toString() {
-    return 'FolderModel{id: $id, name: $name, ownerID: $ownerID, createdAr: $createdAt,topics: $topicIDs}';
+    return 'FolderModel{id: $id, name: $name, ownerID: $ownerID, createdAt: $createdAt,topics: $topicIDs}';
   }
 }

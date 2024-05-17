@@ -7,6 +7,8 @@ import 'package:vocabinary/data/repositories/word_repo.dart';
 import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/widgets/learnings/flashcard/flashcard_controller.dart';
 
+import '../../services/firebase/authentication_service.dart';
+
 class FlashcardViewModel extends ChangeNotifier {
   String? _topicID;
   int _currentIndex = -1;
@@ -102,8 +104,8 @@ class FlashcardViewModel extends ChangeNotifier {
   }
 
   Future<List<bool>> save() async {
-    // TODO: get userID from auth view model
-    String userID = '4VtPfzFkETVqg29YJdpW';
+    AuthenticationService _authenticationService = AuthenticationService.instance;
+    String userID = _authenticationService.currentUser?.uid ?? '';
     if (!await TopicRepo().isTopicOwner(_topicID!, userID)) return [];
 
     final repo = WordRepo();

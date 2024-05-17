@@ -10,6 +10,8 @@ import 'package:vocabinary/data/repositories/topic_repo.dart';
 import 'package:vocabinary/data/repositories/learning_repo.dart';
 import 'package:vocabinary/data/repositories/user_topic_log_repo.dart';
 
+import '../../services/firebase/authentication_service.dart';
+
 class QuizViewModel extends ChangeNotifier {
   String? _topicID;
   int _score = 0;
@@ -99,8 +101,8 @@ class QuizViewModel extends ChangeNotifier {
       finish: _endTime,
     );
 
-    // TODO: get userID from auth view model
-    String userID = '4VtPfzFkETVqg29YJdpWx';
+    AuthenticationService _authenticationService = AuthenticationService.instance;
+    String userID = _authenticationService.currentUser?.uid ?? '';
     var futures = <Future<dynamic>>[];
 
     if (await TopicRepo().isTopicOwner(_topicID!, userID)) {

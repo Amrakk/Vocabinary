@@ -7,6 +7,7 @@ import 'package:vocabinary/widgets/explore/inside_topic/item_vocab.dart';
 import 'package:vocabinary/widgets/learnings/background_container.dart';
 import 'package:vocabinary/widgets/learnings/confirm_button.dart';
 
+import '../../models/arguments/explore/card_details_args.dart';
 import '../../models/arguments/learnings/select_words_args.dart';
 import '../../models/data/eng_word.dart';
 import '../../models/data/word.dart';
@@ -68,7 +69,7 @@ class _InsideTopicViewState extends State<InsideTopicView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: Dimensions.heightRatio(context, 10),
+                  height: Dimensions.heightRatio(context, 12),
                   width: double.infinity,
                 ),
                 StreamBuilder(
@@ -168,7 +169,13 @@ class _InsideTopicViewState extends State<InsideTopicView> {
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () {
-                              // TODO: Navigate to card details
+                              Navigator.of(context, rootNavigator: true).pushNamed(
+                                '/card-details',
+                                arguments: CardDetailsArgs(
+                                  topicID: widget.topicID,
+                                  word: words[index],
+                                ),
+                              );
                             },
                             child: ItemVocab(
                               word: words[index],

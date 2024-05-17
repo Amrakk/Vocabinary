@@ -161,10 +161,23 @@ class _ExploreViewState extends State<ExploreView>{
                             itemCount: itemNum < recentActivity.length
                                 ? itemNum
                                 : recentActivity.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: _activityBuilder(context,
-                                  recentActivity[index], destination[index]),
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pushNamed(
+                                  '/inside-topic',
+                                  arguments: InsideTopicArgs(
+                                    topicId: recentActivity[index].id!,
+                                    topicName: recentActivity[index].name!,
+                                    wordCount: recentActivity[index].wordCount,
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _activityBuilder(context,
+                                    recentActivity[index], destination[index]),
+                              ),
                             ),
                           ),
                         );
