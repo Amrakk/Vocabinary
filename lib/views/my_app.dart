@@ -9,15 +9,12 @@ import 'package:vocabinary/viewmodels/learning/quiz_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/typing_view_model.dart';
 import 'package:vocabinary/viewmodels/learning/flashcard_view_model.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:vocabinary/views/community/inside_topic_community_view.dart';
-import '../data/repositories/word_repo.dart';
-import '../models/arguments/learnings/select_words_args.dart';
+
 import '../services/firebase/authentication_service.dart';
 import '../viewmodels/authenticate/auth_view_model.dart';
 import '../widgets/global/loading_indicator.dart';
 import '../widgets/global/my_app_bar.dart';
 import 'authenticate/login_view.dart';
-import 'community/community_view.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -30,6 +27,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     AuthenticationService _authenticationService = AuthenticationService.instance;
+    String uid = _authenticationService.currentUser?.uid ?? '';
+    print(uid);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeViewModel()),
@@ -44,8 +43,8 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: 'Vocabinary',
           darkTheme: AppThemes.darkTheme(),
-          // themeMode:
-          //     themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+          themeMode:
+              themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
           home: StreamBuilder(
             stream: _authenticationService.authStateChanges,
             builder: (context, snapshot) {
@@ -55,7 +54,7 @@ class _MyAppState extends State<MyApp> {
               if(snapshot.hasData){
                 return const MyHomePage();
               }
-              return  const InsideTopicCommunityView();
+              return  const LoginView();
             },
           ),
           onGenerateRoute: AppRoutes.generateRoutes,
@@ -127,30 +126,15 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: FutureBuilder(
-        future: WordRepo().getWords('wIEzPcEYaaCwzCrNghTh'),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
-          }
-          return FloatingActionButton(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30)),
-            ),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pushNamed(
-                '/level',
-                arguments: SelectWordsArgs(
-                  words: snapshot.data!,
-                  topicID: 'wIEzPcEYaaCwzCrNghTh',
-                ),
-              );
-            },
-            tooltip: 'Add new word',
-            child: const Icon(Icons.add),
-          );
+      floatingActionButton: FloatingActionButton(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+        onPressed: () {
         },
-      ),
+        tooltip: 'Add new word',
+        child: const Icon(Icons.add),
+      )
     );
   }
 }

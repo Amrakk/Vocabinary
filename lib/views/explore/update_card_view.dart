@@ -15,24 +15,25 @@ import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/widgets/explore/create_new_card/input_vocab_card.dart';
 
 import '../../services/firebase/authentication_service.dart';
+import '../../widgets/explore/update_card/vocab_card.dart';
 
-class CreateNewCardView extends StatefulWidget {
-  const CreateNewCardView({super.key});
+class UpdateCardView extends StatefulWidget {
+  const UpdateCardView({super.key, this.topicID, required this.word});
+
+  final topicID;
+  final WordModel word;
 
   @override
-  State<CreateNewCardView> createState() => _CreateNewCardViewState();
+  State<UpdateCardView> createState() => _UpdateCardViewState();
 }
 
-class _CreateNewCardViewState extends State<CreateNewCardView> {
-  late Future<void> _loadTopicsFuture;
+class _UpdateCardViewState extends State<UpdateCardView> {
   late ExploreViewModel exploreViewModel;
   late WordViewModel wordViewModel;
-  late CreateWordViewModel createWordViewModel;
-  int _currentLevel = 1;
+  late int _currentLevel;
   final exampleTextController = TextEditingController();
   final vocabNameController = TextEditingController();
   final vocabDefinitionController = TextEditingController();
-  List<String> selectedTopics = [];
   EngWordModel engWord = EngWordModel();
 
   @override
@@ -40,9 +41,11 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
     String userID = AuthenticationService.instance.currentUser?.uid ?? '';
     userID = '4VtPfzFkETVqg29YJdpW';
     exploreViewModel = ExploreViewModel(userID);
-    wordViewModel = WordViewModel();
-    _loadTopicsFuture = exploreViewModel.loadTopics();
-
+    wordViewModel = WordViewModel(widget.topicID);
+    vocabNameController.text = widget.word.engWord?.word ?? '';
+    vocabDefinitionController.text = widget.word.userDefinition ?? '';
+    exampleTextController.text = widget.word.description ?? '';
+    _currentLevel = widget.word.level ?? 1;
     super.initState();
   }
 
@@ -88,7 +91,7 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
                         bottom: Dimensions.heightRatio(context, -5),
                         left: MediaQuery.of(context).size.width / 2 -
                             Dimensions.widthRatio(context, 30),
-                        child: InputVocabCard(
+                        child: VocabCard(
                           vocabNameController: vocabNameController,
                           vocabDefinitionController: vocabDefinitionController,
                           saveButtonFunction:
@@ -114,14 +117,11 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
                   const SizedBox(
                     height: 50,
                   ),
-                  SliderLevel(
-                    currentLevel: _currentLevel,
-                    onLevelChanged: (v) {
-                      setState(() {
-                        _currentLevel = v;
-                      });
-                    },
-                  ),
+                  SliderLevel(currentLevel: _currentLevel,onLevelChanged: (v){
+                    setState(() {
+                      _currentLevel = v;
+                    });
+                  },),
                   const SizedBox(
                     height: 20,
                   ),
@@ -160,87 +160,32 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
                     ),
                   ),
                   const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    "Add to your topic",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(
                     height: 15,
-                  ),
-                  SizedBox(
-                    height: 42,
-                    child: FutureBuilder(
-                      future: _loadTopicsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else {
-                          var topics = exploreViewModel.topics;
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: topics.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: ItemTopicSelect(
-                                  name: topics[index].name ?? '',
-                                  id: topics[index].id ?? '',
-                                  onTap: (topicID) {
-                                    setState(() {
-                                      if (selectedTopics.contains(topicID)) {
-                                        selectedTopics.remove(topicID);
-                                      } else {
-                                        selectedTopics.add(topicID);
-                                      }
-                                    });
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      },
-                    ),
                   ),
                   const SizedBox(
                     height: 40,
                   ),
                   Button(
-                      nameButton: "Create",
-                      onPressed: () async {
-                        showLoadingDialog(context);
-                        createWordViewModel =
-                            CreateWordViewModel(topics: selectedTopics);
-                        if (selectedTopics.isNotEmpty) {
-                          WordModel word = WordModel(
-                            userDefinition: vocabDefinitionController.text,
-                            engWordID: '',
-                            description: exampleTextController.text,
-                            illustration: '',
-                            level: _currentLevel,
-                            isFavorite: false,
-                            point: 0,
-                            engWord: engWord,
-                          );
-                          //show a CircularProgressIndicator and add the word to the database
-                          await createWordViewModel.addWord(word);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }else{
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please select a topic'),
-                            ),
-                          );
-                        }
-                        //pop the dialog and current screen
-                      }),
+                    nameButton: "Update",
+                    onPressed: () async {
+                      showLoadingDialog(context);
+                      WordModel word = WordModel(
+                        id: widget.word.id,
+                        userDefinition: vocabDefinitionController.text,
+                        engWordID: '',
+                        description: exampleTextController.text,
+                        illustration: '',
+                        level: _currentLevel,
+                        isFavorite: false,
+                        point: 0,
+                        engWord: engWord,
+                      );
+                      //show a CircularProgressIndicator and add the word to the database
+                      await wordViewModel.updateWord(word);
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  ),
                 ],
               ),
             ),

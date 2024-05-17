@@ -7,6 +7,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:vocabinary/widgets/level_star_bar.dart';
 
 import '../../../models/data/word.dart';
+import '../../../viewmodels/explore/word_view_model.dart';
 
 class ItemVocab extends StatefulWidget {
   final EngWordModel engWord;
@@ -25,34 +26,68 @@ class ItemVocab extends StatefulWidget {
 }
 
 class _ItemVocabState extends State<ItemVocab> {
+  late WordViewModel _wordViewModel;
+
+  @override
+  void initState() {
+    _wordViewModel = WordViewModel(widget.topicID);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("Hello");
     final AppColorsThemeData appColors =
         Theme.of(context).extension<AppColorsThemeData>()!;
     return Slidable(
-      startActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        children: widget.isEditable!
-            ? [
-                SlidableAction(
-                  onPressed: (ctx) {
-                    // TODO: imeplement delete word
-                  },
-                  icon: Icons.delete,
-                  backgroundColor: AppColors.mainRed,
-                  foregroundColor: Colors.white,
-                ),
-                SlidableAction(
-                  onPressed: (ctx) {
-                    // TODO: imeplement edit word
-                  },
-                  icon: Icons.edit,
-                  backgroundColor: levelToColor(widget.word.level),
-                  foregroundColor: Colors.white,
-                ),
-              ]
-            : [],
-      ),
+      startActionPane: ActionPane(motion: const DrawerMotion(), children: [
+        SlidableAction(
+          onPressed: (ctx) {
+            //confirm dialog
+            showDialog(
+                context: context,
+                builder: (ctx) {
+                  return AlertDialog(
+                    title: Text('Delete Word'),
+                    content: Text('Are you sure you want to delete this word?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await _wordViewModel.deleteWord(widget.word.id!);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Delete'),
+                      ),
+                    ],
+                  );
+                });
+          },
+          icon: Icons.delete,
+          backgroundColor: AppColors.mainRed,
+          foregroundColor: Colors.white,
+        ),
+        SlidableAction(
+          onPressed: (ctx) {
+            //navigate to edit word
+            Navigator.of(context).pushNamed(
+              '/update-card',
+              arguments: UpdateCardArgs(
+                topicID: widget.topicID,
+                word: widget.word,
+              ),
+            );
+          },
+          icon: Icons.edit,
+          backgroundColor: AppColors.mainYellow,
+          foregroundColor: Colors.white,
+        ),
+      ]),
       child: Stack(
         children: [
           Container(
@@ -80,7 +115,7 @@ class _ItemVocabState extends State<ItemVocab> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        widget.engWord.word!,
+                        widget.engWord.word ?? '',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w700,
@@ -105,7 +140,10 @@ class _ItemVocabState extends State<ItemVocab> {
                       IconButton(
                         padding: EdgeInsets.zero,
                         onPressed: () {
-                          // TODO: Favorite button
+                          setState(() {
+                            widget.word.isFavorite = !widget.word.isFavorite;
+                            _wordViewModel.updateWord(widget.word);
+                          });
                         },
                         icon: Icon(
                           widget.word.isFavorite
