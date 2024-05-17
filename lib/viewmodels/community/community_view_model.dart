@@ -24,9 +24,6 @@ class CommunityViewModel extends ChangeNotifier {
       for (var topic in value) {
         if(topic.isPublic == true) {
           _topicsPublic.add(topic);
-          _topicsPublic.add(topic);
-          _topicsPublic.add(topic);
-
         }
       }
     });
