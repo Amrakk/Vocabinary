@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/widgets/audio_button/audio_button.dart';
 
 class CardVocabulary extends StatefulWidget {
-  const CardVocabulary({super.key});
+  final WordModel word;
+  const CardVocabulary({super.key, required this.word});
 
   @override
   State<CardVocabulary> createState() => _CardVocabularyState();
@@ -42,23 +44,23 @@ class _CardVocabularyState extends State<CardVocabulary> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "rendezvous",
+                      widget.word.engWord?.word ?? "",
                       style: TextStyle(
                           fontSize: Dimensions.fontSize30(context),
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "English Dictionary",
+                      "English Definition",
                       style: TextStyle(
                           fontSize: Dimensions.fontSize(context, 13),
                           fontWeight: FontWeight.w100),
                     ),
                   ],
                 ),
-                const AudioButton(
-                  word: 'rendezvous',
+                AudioButton(
+                  word: widget.word.engWord?.word ?? "",
                   url:
-                      'https://api.dictionaryapi.dev/media/pronunciations/en/rendezvous-us.mp3',
+                      widget.word.engWord?.audio ?? "",
                 ),
               ],
             ),
@@ -77,7 +79,7 @@ class _CardVocabularyState extends State<CardVocabulary> {
                   ),
                   SizedBox(width: Dimensions.width(context, 7)),
                   Text(
-                    "TODAY",
+                    "Details",
                     style: TextStyle(
                       fontSize: Dimensions.fontSize(context, 15),
                       color: Colors.greenAccent,
@@ -111,17 +113,9 @@ class _CardVocabularyState extends State<CardVocabulary> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "ren·dez·vous (/ˈrɑːn.deɪ.vuː/)",
+                          widget.word.engWord?.phonetic ?? "",
                           style: TextStyle(
                               fontSize: Dimensions.fontSize(context, 15)),
-                        ),
-                        Text(
-                          "noun [C]",
-                          style: TextStyle(
-                            fontSize: Dimensions.fontSize(context, 13),
-                            fontStyle: FontStyle.italic,
-                            color: Colors.grey,
-                          ),
                         ),
                         SizedBox(height: Dimensions.height10(context)),
                         Divider(
@@ -131,7 +125,7 @@ class _CardVocabularyState extends State<CardVocabulary> {
                         ),
                         SizedBox(height: Dimensions.height10(context)),
                         Text(
-                          "an arrangement to meet someone, especially one made secretly by lovers",
+                          widget.word.userDefinition ?? "",
                           style: TextStyle(
                               fontSize: Dimensions.fontSize(context, 15)),
                         ),
@@ -146,7 +140,7 @@ class _CardVocabularyState extends State<CardVocabulary> {
                         ),
                         SizedBox(height: Dimensions.height(context, 5)),
                         Text(
-                          "We have a rendezvous with destiny.",
+                          widget.word.description ?? "",
                           style: TextStyle(
                             fontSize: Dimensions.fontSize(context, 15),
                             fontStyle: FontStyle.italic,

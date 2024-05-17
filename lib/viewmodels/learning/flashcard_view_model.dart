@@ -103,7 +103,8 @@ class FlashcardViewModel extends ChangeNotifier {
   }
 
   Future<List<bool>> save() async {
-    String userID = AuthenticationService.instance.currentUser!.uid;
+    AuthenticationService _authenticationService = AuthenticationService.instance;
+    String userID = _authenticationService.currentUser?.uid ?? '';
     if (!await TopicRepo().isTopicOwner(_topicID!, userID)) return [];
 
     final repo = WordRepo();

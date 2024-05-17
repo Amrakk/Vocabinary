@@ -71,6 +71,28 @@ class ExploreViewModel extends ChangeNotifier {
     return destination;
   }
 
+  Stream<List<FolderModel>> getFoldersStream() {
+    return _folderRepo.foldersStream(userID);
+  }
+
+  Stream<List<FolderModel>> getFoldersStreamByTopicNum(int numberOfTopics) {
+    return _folderRepo.foldersStream(userID).map((folders) {
+      return folders.where((folder) => folder.topicIDs.length > numberOfTopics).toList();
+    });
+  }
+
+  Future<void> createFolder(FolderModel data) async {
+    await _folderRepo.createFolder(userID, data);
+  }
+
+  Future<void> updateFolder(String id, FolderModel data) async {
+    await _folderRepo.updateFolder(userID, id, data);
+  }
+
+  Future<void> deleteFolder(String id) async {
+    await _folderRepo.deleteFolder(userID, id);
+  }
+
   // Load a specific topic from the repository and notify listeners
   Future<void> loadTopic(String id) async {
     _currentTopic = await _topicRepo.getTopic(id);

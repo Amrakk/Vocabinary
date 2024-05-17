@@ -134,6 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
           borderRadius: BorderRadius.all(Radius.circular(30)),
         ),
         onPressed: () {
+          Navigator.of(context, rootNavigator: true)
+              .pushNamed('/new-card');
         },
         tooltip: 'Add new word',
         child: const Icon(Icons.add),
