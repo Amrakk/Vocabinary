@@ -25,7 +25,7 @@ class _AnalysisViewState extends State<AnalysisView> {
     AuthenticationService _authenticationService =
         AuthenticationService.instance;
     String uid = _authenticationService.currentUser?.uid ?? '';
-    _homePageViewModel = HomePageViewModel("4VtPfzFkETVqg29YJdpW");
+    _homePageViewModel = HomePageViewModel(uid);
     _loadVocabularyFuture = _homePageViewModel.getWords();
     super.initState();
   }
@@ -93,8 +93,12 @@ class _AnalysisViewState extends State<AnalysisView> {
                             } else if (snapshot.hasError) {
                               return const Text('Error');
                             } else {
-                              return MyPieChart(
-                                  words: _homePageViewModel.words);
+                              if(_homePageViewModel.words.isEmpty){
+                                return const Text('No word added yet.');
+                              }else{
+                                return MyPieChart(
+                                    words: _homePageViewModel.words);
+                              }
                             }
                           }),
                     ),

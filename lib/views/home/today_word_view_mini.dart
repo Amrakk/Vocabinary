@@ -25,7 +25,7 @@ class _TodayWorldViewState extends State<TodayWorldView> {
     AuthenticationService _authenticationService =
         AuthenticationService.instance;
     String uid = _authenticationService.currentUser?.uid ?? '';
-    _homePageViewModel = HomePageViewModel("4VtPfzFkETVqg29YJdpW");
+    _homePageViewModel = HomePageViewModel(uid);
     _loadVocabularyFuture = _homePageViewModel.getWords();
     super.initState();
   }
@@ -60,20 +60,33 @@ class _TodayWorldViewState extends State<TodayWorldView> {
                 return const Text('Error');
               } else {
                 List<WordModel> words = _homePageViewModel.words;
-                if(words.length == 0){
+                if (words.length == 0) {
                   return const Text('No word added yet.');
-                }else{
-                  List<WordModel> randomWords = getRandomWords(words, 3);
-                  return Column(
-                    children: [
-                      CardVocabulary(word: randomWords[0]),
-                      const SizedBox(height: 20),
-                      CardVocabulary(word: randomWords[1]),
-                      const SizedBox(height: 20),
-                      CardVocabulary(word: randomWords[2]),
-                      const SizedBox(height: 20),
-                    ],
-                  );
+                } else {
+                  if (words.length >= 3) {
+                    List<WordModel> randomWords = getRandomWords(words, 3);
+                    return Column(
+                      children: [
+                        CardVocabulary(word: randomWords[0]),
+                        const SizedBox(height: 20),
+                        CardVocabulary(word: randomWords[1]),
+                        const SizedBox(height: 20),
+                        CardVocabulary(word: randomWords[2]),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: words
+                          .map(
+                            (word) => Column(children: [
+                              CardVocabulary(word: word),
+                              const SizedBox(height: 20)
+                            ]),
+                          )
+                          .toList(),
+                    );
+                  }
                 }
               }
             },
