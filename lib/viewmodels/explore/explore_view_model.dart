@@ -86,6 +86,8 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   Future<void> updateFolder(String id, FolderModel data) async {
+    print('updateFolder');
+    print(data);
     await _folderRepo.updateFolder(userID, id, data);
   }
 
