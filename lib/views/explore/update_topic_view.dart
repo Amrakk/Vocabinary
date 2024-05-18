@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/models/api_responses/imgbb_api_res.dart';
 import 'package:vocabinary/models/data/topic.dart';
@@ -43,13 +44,6 @@ class _UpdateTopicViewState extends State<UpdateTopicView> {
     descriptionController.text = widget.topic.description!;
     currentLevel = widget.topic.level;
     isPublic = widget.topic.isPublic;
-    Future.microtask(() async {
-      // Your async code here
-      Uint8List imageBytes = (await NetworkAssetBundle(Uri.parse(widget.topic.imageTopic!))
-          .load(widget.topic.imageTopic!))
-          .buffer
-          .asUint8List();
-    });
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _exploreViewModel = Provider.of<ExploreViewModel>(context, listen: false);
     });
@@ -74,7 +68,7 @@ class _UpdateTopicViewState extends State<UpdateTopicView> {
                 snap: true,
                 flexibleSpace: PreferredSize(
                     preferredSize:
-                    Size.fromHeight(Dimensions.heightRatio(context, 35)),
+                        Size.fromHeight(Dimensions.heightRatio(context, 35)),
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -125,8 +119,7 @@ class _UpdateTopicViewState extends State<UpdateTopicView> {
                         setState(() {
                           currentLevel = value;
                         });
-                      }
-                  ),
+                      }),
                   SizedBox(height: Dimensions.heightRatio(context, 3)),
                   Text(
                     'Add to description',
@@ -152,26 +145,34 @@ class _UpdateTopicViewState extends State<UpdateTopicView> {
                       child: GestureDetector(
                         onTap: () async {
                           await ImageService.pickImage().then((value) {
-                            setState(()  {
+                            setState(() {
                               imageBytes = value;
                             });
                           });
                         },
-                        child: imageBytes == null ? SvgPicture.asset(
-                          'assets/images/upload.svg',
-                          fit: BoxFit.contain,
-                        ) : Image.memory(
-                            imageBytes!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              ShowSnackBar.showError("Error loading image", context);
-                              imageBytes = null;
-                              return Image.network(
-                                widget.topic.imageTopic!,
-                                fit: BoxFit.contain,
-                              );
-                            }
-                        ),
+                        child: imageBytes == null
+                            ? Image.network(widget.topic.imageTopic!,
+                                fit: BoxFit.contain, loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: LoadingIndicator(
+                                      indicatorType: Indicator.squareSpin,
+                                      colors: [Colors.blue],
+                                    ));
+                              })
+                            : Image.memory(imageBytes!, fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                ShowSnackBar.showError(
+                                    "Error loading image", context);
+                                imageBytes = null;
+                                return Image.network(
+                                  widget.topic.imageTopic!,
+                                  fit: BoxFit.contain,
+                                );
+                              }),
                       ),
                     ),
                   ),
@@ -199,34 +200,41 @@ class _UpdateTopicViewState extends State<UpdateTopicView> {
                   Button(
                       nameButton: 'Apply',
                       onPressed: () async {
-                        if(nameController.text.isEmpty || descriptionController.text.isEmpty || imageBytes == null) {
-                          ShowSnackBar.showInfo("Please fill all fields", context);
+                        if (nameController.text.isEmpty ||
+                            descriptionController.text.isEmpty ) {
+                          ShowSnackBar.showInfo(
+                              "Some filed are empty!", context);
                           return;
                         }
+                        var myImage;
                         showLoadingIndicator(context);
-                        final myImage = await ImageService.uploadImage(imageBytes!);
-                        if(myImage == null) {
-                          ShowSnackBar.showError("Error uploading image", context);
-                          closeLoadingIndicator(context);
-                          return;
+                        if (imageBytes != null) {
+                           myImage =
+                              await ImageService.uploadImage(imageBytes!);
+                          if (myImage == null) {
+                            ShowSnackBar.showError(
+                                "Error uploading image", context);
+                            closeLoadingIndicator(context);
+                            return;
+                          }
                         }
                         topic = TopicModel(
                           name: nameController.text,
                           description: descriptionController.text,
                           isPublic: isPublic,
                           createdAt: Timestamp.now(),
-                          ownerID: AuthenticationService.instance.currentUser!.uid,
+                          ownerID:
+                              AuthenticationService.instance.currentUser!.uid,
                           level: currentLevel,
-                          imageTopic: myImage.image,
+                          imageTopic: imageBytes != null ? myImage.image : widget.topic.imageTopic,
                         );
 
-                        await _exploreViewModel.createTopic(topic);
-                        ShowSnackBar.showSuccess("Topic updated successfully", context);
+                        await _exploreViewModel.updateTopic( widget.topic.id! ,topic);
+                        ShowSnackBar.showSuccess(
+                            "Topic updated successfully", context);
                         closeLoadingIndicator(context);
                         Navigator.pop(context);
-                      }
-
-                  ),
+                      }),
                 ],
               ),
             ),

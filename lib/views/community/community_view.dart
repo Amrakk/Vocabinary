@@ -47,7 +47,7 @@ class _CommunityViewState extends State<CommunityView> {
                 IconButton(
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true)
-                        .pushNamed(AppRoutes.exploreRoutes[0],
+                        .pushNamed(AppRoutes.communityRoutes[1],
                             arguments: TopicArguments(
                               topics: _topicViewModel.topicsPublic,
                               userID: "",
@@ -96,7 +96,7 @@ class _CommunityViewState extends State<CommunityView> {
                 IconButton(
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true)
-                        .pushNamed(AppRoutes.exploreRoutes[0],
+                        .pushNamed(AppRoutes.communityRoutes[1],
                             arguments: TopicArguments(
                               topics: _topicViewModel.topicsFollowing,
                               userID: "",

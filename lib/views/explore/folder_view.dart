@@ -83,7 +83,10 @@ class _FolderViewState extends State<FolderView> {
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: itemNum,
-                            childAspectRatio: Dimensions.screenType(context) == ScreenType.Medium ? 1 / 1.9 : 1 / 1.5,
+                            childAspectRatio: Dimensions.screenType(context) ==
+                                    ScreenType.Medium
+                                ? 1 / 1.9
+                                : 1 / 1.5,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10),
                       ),
@@ -97,76 +100,65 @@ class _FolderViewState extends State<FolderView> {
   _folderBuilder(BuildContext context, FolderModel folder) {
     return GestureDetector(
       onTap: () {
-        //show options: details or edit
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Action", textAlign: TextAlign.center),
-              actionsAlignment: MainAxisAlignment.center,
-              actions: [
-                Row(
-                  children: [Expanded(
-                    flex: 1,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed("/inside-folder",
-                            arguments: InsideFolderArgs(folder));
-                      },
-                      style: ButtonStyle(
-                          backgroundColor:
-                          MaterialStateProperty.all(const Color(0xFF0248C2)),
-                          shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)))),
-                      child: const Text("Details",style: TextStyle(color: Colors.white),),
-                    ),
-                  ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamed("/update-folder", arguments: InsideFolderArgs(folder));
-                        },
-                        style: ButtonStyle(
-                            backgroundColor:
-                            MaterialStateProperty.all(const Color(0xFF0248C2)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)))),
-                        child: const Text("Edit",style: TextStyle(color: Colors.white),),
-                      ),
-                    ),],
-                )
-              ],
-            );
-          },
-        );
+        Navigator.of(context)
+            .pushNamed("/inside-folder", arguments: InsideFolderArgs(folder));
       },
-      onLongPress: () {
-        // show dialog to delete the folder
-        showDialog(
+      onLongPressStart: (details) {
+        final offset = details.globalPosition;
+        showMenu(
+          items: <PopupMenuEntry>[
+            PopupMenuItem(
+              child: ListTile(
+                title: const Text("Delete"),
+                leading: const Icon(Icons.delete),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text("Delete Folder"),
+                        content: const Text(
+                            "Are you sure you want to delete this folder?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _exploreViewModel.deleteFolder(folder.id!);
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Delete"),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            PopupMenuItem(
+              child: ListTile(
+                title: const Text("Edit"),
+                leading: const Icon(Icons.edit),
+                onTap: () {
+                  Navigator.of(context).pushNamed("/update-folder",
+                      arguments: InsideFolderArgs(folder));
+                },
+              ),
+            ),
+          ],
           context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Delete Folder"),
-              content:
-                  const Text("Are you sure you want to delete this folder?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _exploreViewModel.deleteFolder(folder.id!);
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Delete"),
-                ),
-              ],
-            );
-          },
+          // right bottom
+          position: RelativeRect.fromLTRB(
+            offset.dx,
+            offset.dy,
+            MediaQuery.of(context).size.width - offset.dx,
+            MediaQuery.of(context).size.height - offset.dy,
+          ),
         );
       },
       child: FolderCard(

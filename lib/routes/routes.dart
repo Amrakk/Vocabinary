@@ -37,6 +37,8 @@ import 'package:vocabinary/views/explore/update_folder_view.dart';
 
 import '../views/explore/update_topic_view.dart';
 
+import '../views/community/topic_community_view.dart';
+
 class AppRoutes {
   static const initialRoute = '/';
 
@@ -57,7 +59,7 @@ class AppRoutes {
     '/create-topic',
   ];
   static final authRoutes = ['/login', '/register', '/forgot-password'];
-  static final communityRoutes = ['/community/inside-topic'];
+  static final communityRoutes = ['/community/inside-topic', '/community/list-topic'];
   static final settingRoutes = [
     '/setting/about',
     '/setting/my-account',
@@ -191,6 +193,18 @@ class AppRoutes {
               topicModel: topic!,
             ),
             settings);
+
+      case '/community/list-topic':
+        args = args as TopicArguments;
+        var userID = args.userID;
+        var topics = args.topics;
+        var enableButtonAdd = args.enableButtonAdd ?? true;
+        var isCommunity = args.isCommunity ?? false;
+        return _buildPageTransition(
+          ListTopicCommunityView(
+            userID: userID, topics: topics, buttonAddTopic: enableButtonAdd, isCommunity: isCommunity,),
+          settings,
+        );
 
       // Authentication Routes
       case '/login':

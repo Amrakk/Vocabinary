@@ -91,108 +91,61 @@ class _TopicViewState extends State<TopicView> {
                       ? GridView.builder(
                           itemCount: topics.length,
                           itemBuilder: (context, index) => GestureDetector(
-                            onLongPress: () {
-                              showDialog(
+                            onLongPressStart: (details) {
+                              final offset = details.globalPosition;
+                              showMenu(
+                                items: <PopupMenuEntry>[
+                                  PopupMenuItem(
+                                      child: ListTile(
+                                    title: const Text("Delete"),
+                                    leading: const Icon(Icons.delete),
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Delete Topic"),
+                                            content: const Text(
+                                                "Are you sure you want to delete this topic?"),
+                                            actions: [
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text("Cancel")),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    _exploreViewModel
+                                                        .deleteTopic(topics[index].id!);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text("Delete"))
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  )),
+                                  PopupMenuItem(
+                                      child: ListTile(
+                                    title: const Text("Edit"),
+                                    leading: const Icon(Icons.edit),
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed(
+                                          "/update-topic",
+                                          arguments: UpdateTopicArgs(
+                                              data: topics[index]));
+                                    },
+                                  )),
+                                ],
                                 context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Action",
-                                        textAlign: TextAlign.center),
-                                    actionsAlignment: MainAxisAlignment.center,
-                                    actions: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                //confirm delete
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return AlertDialog(
-                                                        title: const Text(
-                                                            "Delete Topic"),
-                                                        content: const Text(
-                                                            "Are you sure you want to delete this topic?"),
-                                                        actions: [
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: const Text(
-                                                                  "Cancel")),
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                _exploreViewModel
-                                                                    .deleteTopic(
-                                                                        topics[index]
-                                                                            .id!);
-                                                                Navigator.pop(
-                                                                    context);
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: const Text(
-                                                                  "Delete"))
-                                                        ],
-                                                      );
-                                                    });
-                                              },
-                                              style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          const Color(
-                                                              0xFF0248C2)),
-                                                  shape:
-                                                      MaterialStateProperty.all(
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)))),
-                                              child: const Text(
-                                                "Delete",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pushNamed(
-                                                    "/update-topic",
-                                                    arguments: UpdateTopicArgs(
-                                                        data: widget
-                                                            .topics[index]));
-                                              },
-                                              style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                          const Color(
-                                                              0xFF0248C2)),
-                                                  shape:
-                                                      MaterialStateProperty.all(
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)))),
-                                              child: const Text(
-                                                "Edit",
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  );
-                                },
+                                position: RelativeRect.fromLTRB(
+                                  offset.dx,
+                                  offset.dy,
+                                  MediaQuery.of(context).size.width - offset.dx,
+                                  MediaQuery.of(context).size.height - offset.dy,
+                                ),
                               );
                             },
                             onTap: () {
@@ -216,7 +169,11 @@ class _TopicViewState extends State<TopicView> {
                                   childAspectRatio:
                                       Dimensions.screenType(context) ==
                                               ScreenType.Small
-                                          ? 1 / 1.6
+                                          ? MediaQuery.of(context).size.width /
+                                              (MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  1.3)
                                           : 1 / 1.5,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 20),
@@ -226,110 +183,166 @@ class _TopicViewState extends State<TopicView> {
                           : GridView.builder(
                               itemCount: filteredTopics.length,
                               itemBuilder: (context, index) => GestureDetector(
-                                    onLongPress: () {
-                                      showDialog(
+                                    onLongPressStart: (details) {
+                                      final offset = details.globalPosition;
+                                      showMenu(
+                                        items: <PopupMenuEntry>[
+                                           PopupMenuItem(
+                                              child: ListTile(
+                                            title: const Text("Delete"),
+                                            leading: const Icon(Icons.delete),
+                                                onTap: (){
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text("Delete Topic"),
+                                                        content: const Text("Are you sure you want to delete this topic?"),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(context);
+                                                              },
+                                                              child: const Text("Cancel")),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                _exploreViewModel.deleteTopic(filteredTopics[index].id!);
+                                                                Navigator.pop(context);
+                                                                Navigator.pop(context);
+                                                              },
+                                                              child: const Text("Delete"))
+                                                        ],
+                                                      );
+                                                    });
+                                                },
+                                          )),
+                                          PopupMenuItem(
+                                              child: ListTile(
+                                            title: const Text("Edit"),
+                                            leading: const Icon(Icons.edit),
+                                            onTap: (){
+                                              Navigator.of(context).pushNamed(
+                                                  "/update-topic",
+                                                  arguments: UpdateTopicArgs(
+                                                      data: filteredTopics[
+                                                      index]));
+                                            },
+                                          )),
+                                        ],
                                         context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: const Text("Action",
-                                                textAlign: TextAlign.center),
-                                            actionsAlignment:
-                                                MainAxisAlignment.center,
-                                            actions: [
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: ElevatedButton(
-                                                      onPressed: () {
-                                                        //confirm delete
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return AlertDialog(
-                                                                title: const Text(
-                                                                    "Delete Topic"),
-                                                                content: const Text(
-                                                                    "Are you sure you want to delete this topic?"),
-                                                                actions: [
-                                                                  TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      child: const Text(
-                                                                          "Cancel")),
-                                                                  TextButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        _exploreViewModel
-                                                                            .deleteTopic(filteredTopics[index].id!);
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                      },
-                                                                      child: const Text(
-                                                                          "Delete"))
-                                                                ],
-                                                              );
-                                                            });
-                                                      },
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all(const Color(
-                                                                      0xFF0248C2)),
-                                                          shape: MaterialStateProperty.all(
-                                                              RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20)))),
-                                                      child: const Text(
-                                                        "Delete",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Expanded(
-                                                    child: ElevatedButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context).pushNamed(
-                                                            "/update-topic",
-                                                            arguments:
-                                                                UpdateTopicArgs(
-                                                                    data: filteredTopics[index]));
-                                                      },
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all(const Color(
-                                                                      0xFF0248C2)),
-                                                          shape: MaterialStateProperty.all(
-                                                              RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20)))),
-                                                      child: const Text(
-                                                        "Edit",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          );
-                                        },
+                                        position: RelativeRect.fromLTRB(
+                                          offset.dx,
+                                          offset.dy,
+                                          MediaQuery.of(context).size.width -
+                                              offset.dx,
+                                          MediaQuery.of(context).size.height -
+                                              offset.dy,
+                                        ),
                                       );
+                                      // showDialog(
+                                      //   context: context,
+                                      //   builder: (context) {
+                                      //     return AlertDialog(
+                                      //       title: const Text("Action",
+                                      //           textAlign: TextAlign.center),
+                                      //       actionsAlignment:
+                                      //           MainAxisAlignment.center,
+                                      //       actions: [
+                                      //         Row(
+                                      //           children: [
+                                      //             Expanded(
+                                      //               flex: 1,
+                                      //               child: ElevatedButton(
+                                      //                 onPressed: () {
+                                      //                   //confirm delete
+                                      //                   showDialog(
+                                      //                       context: context,
+                                      //                       builder: (context) {
+                                      //                         return AlertDialog(
+                                      //                           title: const Text(
+                                      //                               "Delete Topic"),
+                                      //                           content: const Text(
+                                      //                               "Are you sure you want to delete this topic?"),
+                                      //                           actions: [
+                                      //                             TextButton(
+                                      //                                 onPressed:
+                                      //                                     () {
+                                      //                                   Navigator.pop(
+                                      //                                       context);
+                                      //                                 },
+                                      //                                 child: const Text(
+                                      //                                     "Cancel")),
+                                      //                             TextButton(
+                                      //                                 onPressed:
+                                      //                                     () {
+                                      //                                   _exploreViewModel
+                                      //                                       .deleteTopic(filteredTopics[index].id!);
+                                      //                                   Navigator.pop(
+                                      //                                       context);
+                                      //                                   Navigator.pop(
+                                      //                                       context);
+                                      //                                 },
+                                      //                                 child: const Text(
+                                      //                                     "Delete"))
+                                      //                           ],
+                                      //                         );
+                                      //                       });
+                                      //                 },
+                                      //                 style: ButtonStyle(
+                                      //                     backgroundColor:
+                                      //                         MaterialStateProperty
+                                      //                             .all(const Color(
+                                      //                                 0xFF0248C2)),
+                                      //                     shape: MaterialStateProperty.all(
+                                      //                         RoundedRectangleBorder(
+                                      //                             borderRadius:
+                                      //                                 BorderRadius
+                                      //                                     .circular(
+                                      //                                         20)))),
+                                      //                 child: const Text(
+                                      //                   "Delete",
+                                      //                   style: TextStyle(
+                                      //                       color:
+                                      //                           Colors.white),
+                                      //                 ),
+                                      //               ),
+                                      //             ),
+                                      //             const SizedBox(width: 10),
+                                      //             Expanded(
+                                      //               child: ElevatedButton(
+                                      //                 onPressed: () {
+                                      //                   Navigator.of(context).pushNamed(
+                                      //                       "/update-topic",
+                                      //                       arguments:
+                                      //                           UpdateTopicArgs(
+                                      //                               data: filteredTopics[
+                                      //                                   index]));
+                                      //                 },
+                                      //                 style: ButtonStyle(
+                                      //                     backgroundColor:
+                                      //                         MaterialStateProperty
+                                      //                             .all(const Color(
+                                      //                                 0xFF0248C2)),
+                                      //                     shape: MaterialStateProperty.all(
+                                      //                         RoundedRectangleBorder(
+                                      //                             borderRadius:
+                                      //                                 BorderRadius
+                                      //                                     .circular(
+                                      //                                         20)))),
+                                      //                 child: const Text(
+                                      //                   "Edit",
+                                      //                   style: TextStyle(
+                                      //                       color:
+                                      //                           Colors.white),
+                                      //                 ),
+                                      //               ),
+                                      //             ),
+                                      //           ],
+                                      //         )
+                                      //       ],
+                                      //     );
+                                      //   },
+                                      // );
                                     },
                                     onTap: () {
                                       Navigator.of(context, rootNavigator: true)
