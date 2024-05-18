@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:vocabinary/models/arguments/explore/topic_args.dart';
 import 'package:vocabinary/models/arguments/explore/update_card_args.dart';
+import 'package:vocabinary/models/arguments/explore/update_topic_args.dart';
 import 'package:vocabinary/views/explore/create_new_card_view.dart';
 import 'package:vocabinary/views/explore/topic_view.dart';
 import 'package:vocabinary/views/explore/update_card_view.dart';
@@ -33,6 +34,8 @@ import 'package:vocabinary/views/community/inside_topic_community_view.dart';
 import 'package:vocabinary/widgets/setting/change_password.dart';
 import 'package:vocabinary/widgets/setting/my_account_page.dart';
 import 'package:vocabinary/views/explore/update_folder_view.dart';
+
+import '../views/explore/update_topic_view.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
@@ -123,6 +126,13 @@ class AppRoutes {
             InsideTopicView(
                 topicID: topicID, topicName: topicName, wordCount: wordCount),
             settings);
+      case '/update-topic':
+        args = args as UpdateTopicArgs;
+        var data = args.data;
+        return _buildPageTransition(
+          UpdateTopicView(topic: data),
+          settings,
+        );
       case '/card-details':
         args = args as CardDetailsArgs;
         var topicID = args.topicID;

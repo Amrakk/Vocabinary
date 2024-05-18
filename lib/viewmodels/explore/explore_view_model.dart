@@ -39,7 +39,13 @@ class ExploreViewModel extends ChangeNotifier {
     notifyListeners(); // Notify the UI to update
   }
 
+  Stream<List<TopicModel>> getTopicsStream() {
+    print('UserID: $userID');
+    return _topicRepo.topicsStream(ownerID: userID);
+  }
+
   Future<void> loadFolders() async {
+    print('UserID: $userID');
     _folders = await _folderRepo.getFolders(userID);
     notifyListeners(); // Notify the UI to update
   }
@@ -86,8 +92,6 @@ class ExploreViewModel extends ChangeNotifier {
   }
 
   Future<void> updateFolder(String id, FolderModel data) async {
-    print('updateFolder');
-    print(data);
     await _folderRepo.updateFolder(userID, id, data);
   }
 

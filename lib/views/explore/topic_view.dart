@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vocabinary/models/arguments/explore/update_topic_args.dart';
 import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/decorator.dart';
 import 'package:vocabinary/utils/filter/topic_list.dart';
+import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/widgets/community/item_community_card.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
@@ -11,7 +14,12 @@ import '../../models/data/topic.dart';
 import '../../utils/dimensions.dart';
 
 class TopicView extends StatefulWidget {
-   TopicView({Key? key, this.isCommunity ,this.buttonAddTopic, required this.topics, required this.userID})
+  TopicView(
+      {Key? key,
+      this.isCommunity,
+      this.buttonAddTopic,
+      required this.topics,
+      required this.userID})
       : super(key: key);
   final List<TopicModel> topics;
   final String userID;
@@ -22,12 +30,22 @@ class TopicView extends StatefulWidget {
   State<TopicView> createState() => _TopicViewState();
 }
 
-
 class _TopicViewState extends State<TopicView> {
   var level = TopicLevel.Default;
   var wordNum = WordNum.Default;
   var publicity = Publicity.Private;
   List<TopicModel> filteredTopics = [];
+  List<TopicModel> topics = [];
+
+  late Stream<List<TopicModel>> topicsStream;
+  late ExploreViewModel _exploreViewModel;
+
+  @override
+  void initState() {
+    _exploreViewModel = Provider.of<ExploreViewModel>(context, listen: false);
+    topicsStream = _exploreViewModel.getTopicsStream();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +53,14 @@ class _TopicViewState extends State<TopicView> {
     var itemNum = screenWidth ~/ 200;
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: widget.buttonAddTopic ?? true ? FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, AppRoutes.exploreRoutes[5]);
-            },
-          child: const Icon(Icons.add),
-        ) : null,
+        floatingActionButton: widget.buttonAddTopic ?? true
+            ? FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.exploreRoutes[5]);
+                },
+                child: const Icon(Icons.add),
+              )
+            : null,
         appBar: AppBar(
           title: const Text("List Topic"),
           actions: [
@@ -52,70 +72,306 @@ class _TopicViewState extends State<TopicView> {
             ),
           ],
         ),
-        body: (widget.topics.isEmpty)
-            ? _emptyTopic(context)
-            : Padding(
-                padding: const EdgeInsets.all(10),
-                child: filterIsDefault() ?  GridView.builder(
-                  itemCount:  widget.topics.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.of(context, rootNavigator: true)
-                          .pushNamed(
-                        '/inside-topic',
-                        arguments: InsideTopicArgs(
-                          topicId: widget.topics[index].id!,
-                          topicName: widget.topics[index].name!,
-                          wordCount: widget.topics[index].wordCount,
-                        ),
-                      );
-                    },
-                    child: Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: _topicBuilder(
-                            context,
-                        widget.topics[index])),
-                  ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: itemNum,
-                      childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.5,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 20
-                  ),
-                ) : filteredTopics.isEmpty
-                    ? _emptyTopic(context)
-                    : GridView.builder(
-                        itemCount: filteredTopics.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () {
-                            Navigator.of(context, rootNavigator: true)
-                                .pushNamed(
-                              '/inside-topic',
-                              arguments: InsideTopicArgs(
-                                topicId: widget.topics[index].id!,
-                                topicName: widget.topics[index].name!,
-                                wordCount: widget.topics[index].wordCount,
-                              ),
-                            );
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: _topicBuilder(context, filteredTopics[index])),
-                        ),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: itemNum,
-                            childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.45,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 20
+        body: StreamBuilder<Object>(
+          stream: _exploreViewModel.getTopicsStream(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return const Text('Error');
+            } else {
+              topics = snapshot.data as List<TopicModel>;
+              // print(topics);
+              if (topics.isNotEmpty) {
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: filterIsDefault()
+                      ? GridView.builder(
+                          itemCount: topics.length,
+                          itemBuilder: (context, index) => GestureDetector(
+                            onLongPress: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Action",
+                                        textAlign: TextAlign.center),
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    actions: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                //confirm delete
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            "Delete Topic"),
+                                                        content: const Text(
+                                                            "Are you sure you want to delete this topic?"),
+                                                        actions: [
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: const Text(
+                                                                  "Cancel")),
+                                                          TextButton(
+                                                              onPressed: () {
+                                                                _exploreViewModel
+                                                                    .deleteTopic(
+                                                                        topics[index]
+                                                                            .id!);
+                                                                Navigator.pop(
+                                                                    context);
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: const Text(
+                                                                  "Delete"))
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          const Color(
+                                                              0xFF0248C2)),
+                                                  shape:
+                                                      MaterialStateProperty.all(
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20)))),
+                                              child: const Text(
+                                                "Delete",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                    "/update-topic",
+                                                    arguments: UpdateTopicArgs(
+                                                        data: widget
+                                                            .topics[index]));
+                                              },
+                                              style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          const Color(
+                                                              0xFF0248C2)),
+                                                  shape:
+                                                      MaterialStateProperty.all(
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20)))),
+                                              child: const Text(
+                                                "Edit",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            onTap: () {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushNamed(
+                                '/inside-topic',
+                                arguments: InsideTopicArgs(
+                                  topicId: topics[index].id!,
+                                  topicName: topics[index].name!,
+                                  wordCount: topics[index].wordCount,
+                                ),
+                              );
+                            },
+                            child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _topicBuilder(context, topics[index])),
+                          ),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: itemNum,
+                                  childAspectRatio:
+                                      Dimensions.screenType(context) ==
+                                              ScreenType.Small
+                                          ? 1 / 1.6
+                                          : 1 / 1.5,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 20),
                         )
-                ),
-              ),
+                      : filteredTopics.isEmpty
+                          ? _emptyTopic(context)
+                          : GridView.builder(
+                              itemCount: filteredTopics.length,
+                              itemBuilder: (context, index) => GestureDetector(
+                                    onLongPress: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text("Action",
+                                                textAlign: TextAlign.center),
+                                            actionsAlignment:
+                                                MainAxisAlignment.center,
+                                            actions: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        //confirm delete
+                                                        showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return AlertDialog(
+                                                                title: const Text(
+                                                                    "Delete Topic"),
+                                                                content: const Text(
+                                                                    "Are you sure you want to delete this topic?"),
+                                                                actions: [
+                                                                  TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Cancel")),
+                                                                  TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        _exploreViewModel
+                                                                            .deleteTopic(filteredTopics[index].id!);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Delete"))
+                                                                ],
+                                                              );
+                                                            });
+                                                      },
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all(const Color(
+                                                                      0xFF0248C2)),
+                                                          shape: MaterialStateProperty.all(
+                                                              RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20)))),
+                                                      child: const Text(
+                                                        "Delete",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Expanded(
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pushNamed(
+                                                            "/update-topic",
+                                                            arguments:
+                                                                UpdateTopicArgs(
+                                                                    data: filteredTopics[index]));
+                                                      },
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all(const Color(
+                                                                      0xFF0248C2)),
+                                                          shape: MaterialStateProperty.all(
+                                                              RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20)))),
+                                                      child: const Text(
+                                                        "Edit",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    onTap: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pushNamed(
+                                        '/inside-topic',
+                                        arguments: InsideTopicArgs(
+                                          topicId: topics[index].id!,
+                                          topicName: topics[index].name!,
+                                          wordCount: topics[index].wordCount,
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: _topicBuilder(
+                                            context, filteredTopics[index])),
+                                  ),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: itemNum,
+                                      childAspectRatio:
+                                          Dimensions.screenType(context) ==
+                                                  ScreenType.Small
+                                              ? 1 / 1.6
+                                              : 1 / 1.45,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 20)),
+                );
+              } else {
+                return _emptyTopic(context);
+              }
+            }
+          },
+        ),
       ),
     );
   }
+
   _topicBuilder(BuildContext context, TopicModel topic) {
     return CommunityCard(
-        topic: topic,
+      topic: topic,
       disableGesture: widget.isCommunity ?? false ? false : true,
     );
   }
@@ -303,14 +559,17 @@ class _TopicViewState extends State<TopicView> {
   void applyFilters(TopicList topicList) {
     TopicList filteredList = TopicList(widget.topics);
     if (level != TopicLevel.Default) {
-      filteredList = TopicLevelFilterDecorator(filteredList, wordLevelToInt(level));
+      print(wordLevelToInt(level));
+      filteredList =
+          TopicLevelFilterDecorator(filteredList, wordLevelToInt(level));
     }
     if (wordNum != WordNum.Default) {
       filteredList =
           TopicWordNumFilterDecorator(filteredList, wordNumConverter(wordNum));
     }
     if (publicity != Publicity.Private) {
-      filteredList = TopicPublicFilterDecorator(filteredList, isPublic(publicity));
+      filteredList =
+          TopicPublicFilterDecorator(filteredList, isPublic(publicity));
     }
     filteredTopics = filteredList.topics;
   }
