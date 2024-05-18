@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/models/arguments/explore/inside_topic_args.dart';
@@ -12,9 +13,10 @@ import 'package:vocabinary/widgets/global/category.dart';
 import 'package:vocabinary/widgets/global/avatar_mini.dart';
 
 class CommunityCard extends StatefulWidget {
-  CommunityCard({required this.topic, super.key});
+  CommunityCard({ this.disableGesture ,required this.topic, super.key});
 
   TopicModel topic;
+  bool? disableGesture;
 
   @override
   State<CommunityCard> createState() => _CommunityCardState();
@@ -53,7 +55,7 @@ class _CommunityCardState extends State<CommunityCard> {
     AppColorsThemeData myColors =
         Theme.of(context).extension<AppColorsThemeData>()!;
     return GestureDetector(
-      onTap: () async {
+      onTap: widget.disableGesture ?? false ? null :() async {
         Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.communityRoutes[0],
             arguments: InsideTopicArgs(
                 topicId: widget.topic.id!,
@@ -119,7 +121,7 @@ class _CommunityCardState extends State<CommunityCard> {
                       widget.topic.name!,
                       style: const TextStyle(
                           fontSize: 19, fontWeight: FontWeight.bold),
-                      maxLines: 2,
+                      maxLines: 1,
                     ),
                     const SizedBox(
                       height: 15,
@@ -142,7 +144,7 @@ class _CommunityCardState extends State<CommunityCard> {
                           ),
                           Category(
                               isAmountSaved: true,
-                              amountSaved: widget.topic.followers.length),
+                              amountSaved: widget.topic.followers.length  ),
                         ],
                       ),
                     ),

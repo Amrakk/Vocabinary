@@ -1,5 +1,4 @@
 import '../../data/topic.dart';
-import '../../data/word.dart';
 
 class InsideTopicArgs{
   final String topicId;

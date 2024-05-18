@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,7 +7,6 @@ import 'package:vocabinary/models/data/word.dart';
 import 'package:vocabinary/viewmodels/explore/create_word_view_model.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/viewmodels/explore/word_view_model.dart';
-import 'package:vocabinary/views/explore/explore_view.dart';
 import 'package:vocabinary/widgets/explore/create_new_card/item_topic_select.dart';
 import 'package:vocabinary/widgets/explore/create_new_card/slider_level.dart';
 import 'package:vocabinary/widgets/explore/create_new_topic/input_description_topic.dart';
@@ -38,7 +38,6 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
   @override
   void initState() {
     String userID = AuthenticationService.instance.currentUser?.uid ?? '';
-    userID = '4VtPfzFkETVqg29YJdpW';
     exploreViewModel = ExploreViewModel(userID);
     wordViewModel = WordViewModel();
     _loadTopicsFuture = exploreViewModel.loadTopics();
@@ -150,7 +149,7 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
                       height: Dimensions.heightRatio(context, 22),
                       child: GestureDetector(
                         onTap: () {
-                          // TODO: Add image picker
+                          //TODO: Add image picker
                         },
                         child: SvgPicture.asset(
                           'assets/images/upload.svg',
@@ -230,8 +229,7 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
                           //show a CircularProgressIndicator and add the word to the database
                           await createWordViewModel.addWord(word);
                           Navigator.pop(context);
-                          Navigator.pop(context);
-                        }else{
+                        } else {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

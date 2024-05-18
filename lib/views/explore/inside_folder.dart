@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:vocabinary/routes/routes.dart';
+import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/decorator.dart';
 import 'package:vocabinary/utils/filter/topic_list.dart';
-import 'package:vocabinary/widgets/community/item_community_card.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
-import '../../models/arguments/explore/inside_topic_args.dart';
 import '../../models/data/topic.dart';
 import '../../utils/dimensions.dart';
 
-class TopicView extends StatefulWidget {
-   TopicView({Key? key, this.isCommunity ,this.buttonAddTopic, required this.topics, required this.userID})
-      : super(key: key);
-  final List<TopicModel> topics;
-  final String userID;
-  bool? buttonAddTopic;
-  bool? isCommunity;
+class InsideFolderView extends StatefulWidget {
+  const InsideFolderView({Key? key, required this.folder}) : super(key: key);
+  final FolderModel folder;
 
   @override
-  State<TopicView> createState() => _TopicViewState();
+  State<InsideFolderView> createState() => _InsideFolderViewState();
 }
 
-
-class _TopicViewState extends State<TopicView> {
+class _InsideFolderViewState extends State<InsideFolderView> {
   var level = TopicLevel.Default;
   var wordNum = WordNum.Default;
   var publicity = Publicity.Private;
   List<TopicModel> filteredTopics = [];
+  List<TopicModel> topics = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +34,8 @@ class _TopicViewState extends State<TopicView> {
     var itemNum = screenWidth ~/ 200;
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: widget.buttonAddTopic ?? true ? FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, AppRoutes.exploreRoutes[5]);
-            },
-          child: const Icon(Icons.add),
-        ) : null,
         appBar: AppBar(
-          title: const Text("List Topic"),
+          title: const Text("Folder Details"),
           actions: [
             IconButton(
               onPressed: () {
@@ -52,71 +45,122 @@ class _TopicViewState extends State<TopicView> {
             ),
           ],
         ),
-        body: (widget.topics.isEmpty)
+        body: (widget.folder.topicIDs.isEmpty)
             ? _emptyTopic(context)
             : Padding(
                 padding: const EdgeInsets.all(10),
-                child: filterIsDefault() ?  GridView.builder(
-                  itemCount:  widget.topics.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.of(context, rootNavigator: true)
-                          .pushNamed(
-                        '/inside-topic',
-                        arguments: InsideTopicArgs(
-                          topicId: widget.topics[index].id!,
-                          topicName: widget.topics[index].name!,
-                          wordCount: widget.topics[index].wordCount,
-                        ),
+                child: FutureBuilder(
+                  future: widget.folder.getTopics,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
-                    },
-                    child: Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: _topicBuilder(
-                            context,
-                        widget.topics[index])),
-                  ),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: itemNum,
-                      childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.5,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 20
-                  ),
-                ) : filteredTopics.isEmpty
-                    ? _emptyTopic(context)
-                    : GridView.builder(
-                        itemCount: filteredTopics.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () {
-                            Navigator.of(context, rootNavigator: true)
-                                .pushNamed(
-                              '/inside-topic',
-                              arguments: InsideTopicArgs(
-                                topicId: widget.topics[index].id!,
-                                topicName: widget.topics[index].name!,
-                                wordCount: widget.topics[index].wordCount,
-                              ),
-                            );
-                          },
-                          child: Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: _topicBuilder(context, filteredTopics[index])),
-                        ),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: itemNum,
-                            childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.45,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 20
-                        )
+                    }
+                    if (snapshot.hasError) {
+                      return const Center(
+                        child: Text("Error loading topics"),
+                      );
+                    }
+                    topics = snapshot.data as List<TopicModel>;
+                    return GridView.builder(
+                      itemCount: filterIsDefault()
+                          ? topics.length
+                          : filteredTopics.length,
+                      itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: _topicBuilder(
+                              context,
+                              filterIsDefault()
+                                  ? topics[index]
+                                  : filteredTopics[index])),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: itemNum,
+                          childAspectRatio: 5 / 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10),
+                    );
+                  },
                 ),
               ),
       ),
     );
   }
+
   _topicBuilder(BuildContext context, TopicModel topic) {
-    return CommunityCard(
-        topic: topic,
-      disableGesture: widget.isCommunity ?? false ? false : true,
+    return Container(
+      height: 75,
+      width: 180,
+      decoration: BoxDecoration(
+        color: const Color(0xFF00324E),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Text(
+            topic.name!,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            topic.description!,
+            softWrap: true,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 10, color: Colors.white),
+          ),
+          const Expanded(flex: 1, child: SizedBox()),
+          const Divider(
+            color: Colors.white,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.format_list_bulleted),
+                    Text(topic.wordCount.toString(),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.star),
+                    Text(intLevelToString(topic.level),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white)),
+                  ],
+                ),
+                topic.isPublic
+                    ? Row(
+                        children: [
+                          const Icon(Icons.bookmark),
+                          Text(topic.followers.length.toString(),
+                              style: const TextStyle(
+                                  fontSize: 10, color: Colors.white)),
+                        ],
+                      )
+                    : const SizedBox(),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -230,14 +274,14 @@ class _TopicViewState extends State<TopicView> {
                           },
                           leading: ">100"),
                     ]),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Expanded(
                       flex: 1,
                       child: ElevatedButton(
                         onPressed: () {
-                          applyFilters(TopicList(widget.topics));
+                          applyFilters(TopicList(topics));
                           Navigator.pop(context);
                           this.setState(() {});
                         },
@@ -301,16 +345,18 @@ class _TopicViewState extends State<TopicView> {
   }
 
   void applyFilters(TopicList topicList) {
-    TopicList filteredList = TopicList(widget.topics);
+    TopicList filteredList = TopicList(topics);
     if (level != TopicLevel.Default) {
-      filteredList = TopicLevelFilterDecorator(filteredList, wordLevelToInt(level));
+      filteredList =
+          TopicLevelFilterDecorator(filteredList, wordLevelToInt(level));
     }
     if (wordNum != WordNum.Default) {
       filteredList =
           TopicWordNumFilterDecorator(filteredList, wordNumConverter(wordNum));
     }
     if (publicity != Publicity.Private) {
-      filteredList = TopicPublicFilterDecorator(filteredList, isPublic(publicity));
+      filteredList =
+          TopicPublicFilterDecorator(filteredList, isPublic(publicity));
     }
     filteredTopics = filteredList.topics;
   }

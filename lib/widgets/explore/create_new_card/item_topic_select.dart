@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 
 class ItemTopicSelect extends StatefulWidget {
-  ItemTopicSelect({required this.name, required this.onTap, Key? key, required this.id}) : super(key: key);
+  ItemTopicSelect({required this.name,this.isSelected, required this.onTap, Key? key, required this.id}) : super(key: key);
 
   final void Function(String id)? onTap;
 
   final String name;
   final String id;
+  final bool? isSelected;
 
   @override
   State<ItemTopicSelect> createState() => _ItemTopicSelectState();
@@ -16,6 +17,11 @@ class ItemTopicSelect extends StatefulWidget {
 
 class _ItemTopicSelectState extends State<ItemTopicSelect> {
   bool isSelected = false;
+  @override
+  void initState() {
+    isSelected = widget.isSelected ?? false;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

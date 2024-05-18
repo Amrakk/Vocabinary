@@ -173,10 +173,23 @@ class _ExploreViewState extends State<ExploreView> {
                             itemCount: itemNum < recentActivity.length
                                 ? itemNum
                                 : recentActivity.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: _activityBuilder(context,
-                                  recentActivity[index], destination[index]),
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pushNamed(
+                                  '/inside-topic',
+                                  arguments: InsideTopicArgs(
+                                    topicId: recentActivity[index].id!,
+                                    topicName: recentActivity[index].name!,
+                                    wordCount: recentActivity[index].wordCount,
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _activityBuilder(context,
+                                    recentActivity[index], destination[index]),
+                              ),
                             ),
                           ),
                         );
@@ -242,7 +255,7 @@ class _ExploreViewState extends State<ExploreView> {
                         );
                       } else {
                         return Container(
-                          height: 100,
+                          height: 300,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: itemNum < topics.length
@@ -271,6 +284,7 @@ class _ExploreViewState extends State<ExploreView> {
                     }
                   },
                 ),
+                const SizedBox(height: 25),
                 Row(
                   children: [
                     const Text(
@@ -329,7 +343,16 @@ class _ExploreViewState extends State<ExploreView> {
                                   ? itemNum
                                   : folders.length,
                               itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushNamed(
+                                    '/folder',
+                                    arguments: FolderArguments(
+                                      userID: 'userID',
+                                      folders: _viewModel.folders,
+                                    ),
+                                  );
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child:
@@ -422,6 +445,7 @@ class _ExploreViewState extends State<ExploreView> {
       ],
       child: CommunityCard(
         topic: topic,
+        disableGesture: true,
       ),
       // child: Container(
       //   height: 75,
