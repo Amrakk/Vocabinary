@@ -82,6 +82,7 @@ class ShowDialogTypingOtp {
                     textStyle: const TextStyle(fontSize: 20),
                     onSubmit: (String pin) {
                       if (authViewModel.verifyOtp(pin)) {
+                        resendTimeout = 0;
                         Navigator.of(context).pop(true);
                       } else {
                         setState(() {
@@ -119,7 +120,14 @@ class ShowDialogTypingOtp {
                                   resendTimeout --;
                                   isResendDisabled = true;
                                 });
-                              } else {
+                              } else if(resendTimeout == 0){
+                                timer.cancel();
+                                setState(() {
+                                  isResendDisabled = false;
+                                  resendTimeout = 60;
+                                });
+                              }
+                              else {
                                 timer.cancel();
                                 setState(() {
                                   isResendDisabled = false;

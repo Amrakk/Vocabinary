@@ -179,14 +179,19 @@ class QuizViewModel extends ChangeNotifier {
     final List<WordModel> randomWords = _words
         .where(
             (word) => word.id != wordID && _optionMaps.keys.contains(word.id))
-        .where((word) => _optionMaps[word.id]! < 3)
+        .where((word) => _optionMaps[word.id]! < 4)
         .toList()
       ..shuffle();
+
+    randomWords
+        .sort((a, b) => _optionMaps[a.id]!.compareTo(_optionMaps[b.id]!));
 
     for (var i = 0; i < 3; i++) {
       options.add(randomWords[i].userDefinition);
       _optionMaps[randomWords[i].id!] = _optionMaps[randomWords[i].id!]! + 1;
     }
+
+    options.shuffle();
 
     return options;
   }

@@ -61,6 +61,7 @@ class _SignUpViewState extends State<SignUpView> {
             } else {
               userRepo.createUser(user, credential.user!.uid);
               closeLoadingIndicator(context);
+              Navigator.of(context).pop();
             }
           } else {
             ShowSnackBar.showError("Failed to verify email", context);
