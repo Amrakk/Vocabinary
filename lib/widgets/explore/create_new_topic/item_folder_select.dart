@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/app_colors.dart';
 
-class ItemTopicSelect extends StatefulWidget {
-  ItemTopicSelect({required this.name,this.isSelected, required this.onTap, Key? key, required this.id}) : super(key: key);
+class ItemFolderSelect extends StatefulWidget {
+  ItemFolderSelect({required this.name,this.isSelected, required this.onTap, Key? key, required this.id}) : super(key: key);
 
   final void Function(String id)? onTap;
 
@@ -12,10 +12,10 @@ class ItemTopicSelect extends StatefulWidget {
   final bool? isSelected;
 
   @override
-  State<ItemTopicSelect> createState() => _ItemTopicSelectState();
+  State<ItemFolderSelect> createState() => _ItemFolderSelectState();
 }
 
-class _ItemTopicSelectState extends State<ItemTopicSelect> {
+class _ItemFolderSelectState extends State<ItemFolderSelect> {
   bool isSelected = false;
   @override
   void initState() {
@@ -53,15 +53,18 @@ class _ItemTopicSelectState extends State<ItemTopicSelect> {
               ),
             ],
           ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15),
-              child: Text(
-                widget.name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Text(
+                  widget.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),

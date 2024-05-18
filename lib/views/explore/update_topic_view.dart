@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/models/api_responses/imgbb_api_res.dart';
 import 'package:vocabinary/models/data/topic.dart';
@@ -18,32 +20,32 @@ import 'package:vocabinary/widgets/explore/create_new_topic/input_name_topic.dar
 import 'package:vocabinary/widgets/global/loading_indicator.dart';
 import 'package:vocabinary/widgets/global/show_snack_bar.dart';
 
-import 'package:vocabinary/models/data/folder.dart';
-import 'package:vocabinary/widgets/explore/create_new_topic/item_folder_select.dart';
-
-class CreateNewTopicView extends StatefulWidget {
-  const CreateNewTopicView({super.key});
+class UpdateTopicView extends StatefulWidget {
+  const UpdateTopicView({super.key, required this.topic});
+  final TopicModel topic;
 
   @override
-  State<CreateNewTopicView> createState() => _CreateNewTopicViewState();
+  State<UpdateTopicView> createState() => _UpdateTopicViewState();
 }
 
-class _CreateNewTopicViewState extends State<CreateNewTopicView> {
+class _UpdateTopicViewState extends State<UpdateTopicView> {
   bool isPublic = true;
   final nameController = TextEditingController();
   final descriptionController = TextEditingController();
   Uint8List? imageBytes;
   late TopicModel topic;
-   ExploreViewModel? _exploreViewModel;
+  late ExploreViewModel _exploreViewModel;
   int currentLevel = 1;
-  String folderID = '';
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    nameController.text = widget.topic.name!;
+    descriptionController.text = widget.topic.description!;
+    currentLevel = widget.topic.level;
+    isPublic = widget.topic.isPublic;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _exploreViewModel = Provider.of<ExploreViewModel>(context, listen: false);
-      setState(() {});
     });
   }
 
@@ -85,7 +87,7 @@ class _CreateNewTopicViewState extends State<CreateNewTopicView> {
                           ),
                           child: AppBar(
                             title: const Text(
-                              'Create New Topic',
+                              'Update Topic',
                               style: TextStyle(fontWeight: FontWeight.w500),
                             ),
                             centerTitle: true,
@@ -117,8 +119,7 @@ class _CreateNewTopicViewState extends State<CreateNewTopicView> {
                         setState(() {
                           currentLevel = value;
                         });
-                      }
-                  ),
+                      }),
                   SizedBox(height: Dimensions.heightRatio(context, 3)),
                   Text(
                     'Add to description',
@@ -143,27 +144,35 @@ class _CreateNewTopicViewState extends State<CreateNewTopicView> {
                       height: Dimensions.heightRatio(context, 22),
                       child: GestureDetector(
                         onTap: () async {
-                           await ImageService.pickImage().then((value) {
-                            setState(()  {
+                          await ImageService.pickImage().then((value) {
+                            setState(() {
                               imageBytes = value;
                             });
                           });
                         },
-                        child: imageBytes == null ? SvgPicture.asset(
-                          'assets/images/upload.svg',
-                          fit: BoxFit.contain,
-                        ) : Image.memory(
-                          imageBytes!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            ShowSnackBar.showError("Error loading image", context);
-                              imageBytes = null;
-                            return SvgPicture.asset(
-                              'assets/images/upload.svg',
-                              fit: BoxFit.contain,
-                            );
-                          }
-                        ),
+                        child: imageBytes == null
+                            ? Image.network(widget.topic.imageTopic!,
+                                fit: BoxFit.contain, loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: LoadingIndicator(
+                                      indicatorType: Indicator.squareSpin,
+                                      colors: [Colors.blue],
+                                    ));
+                              })
+                            : Image.memory(imageBytes!, fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                ShowSnackBar.showError(
+                                    "Error loading image", context);
+                                imageBytes = null;
+                                return Image.network(
+                                  widget.topic.imageTopic!,
+                                  fit: BoxFit.contain,
+                                );
+                              }),
                       ),
                     ),
                   ),
@@ -187,80 +196,45 @@ class _CreateNewTopicViewState extends State<CreateNewTopicView> {
                           })
                     ],
                   ),
-                  SizedBox(height: Dimensions.heightRatio(context, 3)),
-                  Text(
-                    'Select Folder',
-                    style: TextStyle(
-                        fontSize: Dimensions.fontSize(context, 22),
-                        fontWeight: FontWeight.normal),
-                  ),
-                  SizedBox(height: Dimensions.heightRatio(context, 2.5)),
-                   SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: _exploreViewModel != null ? _exploreViewModel!.folders
-                          .map((folder) => Row(
-                            children: [
-                              ItemFolderSelect(
-                                    name: folder.name!,
-                                    id: folder.id!,
-                                    isSelected: folderID == folder.id,
-                                    onTap: (id) {
-                                      setState(() {
-                                        folderID = id;
-                                      });
-                                    },
-                                  ),
-                                  SizedBox(width: Dimensions.widthRatio(context, 2)),
-                            ],
-                          ))
-                          .toList() : [],
-                    ),
-                  ),
-                  SizedBox(height: Dimensions.heightRatio(context, 5)),
+                  SizedBox(height: Dimensions.heightRatio(context, 4)),
                   Button(
                       nameButton: 'Apply',
                       onPressed: () async {
-                        if(nameController.text.isEmpty || descriptionController.text.isEmpty || imageBytes == null || folderID.isEmpty) {
-                          ShowSnackBar.showInfo("Please fill all fields", context);
+                        if (nameController.text.isEmpty ||
+                            descriptionController.text.isEmpty ) {
+                          ShowSnackBar.showInfo(
+                              "Some filed are empty!", context);
                           return;
                         }
+                        var myImage;
                         showLoadingIndicator(context);
-                        final myImage = await ImageService.uploadImage(imageBytes!);
-                        if(myImage == null) {
-                          ShowSnackBar.showError("Error uploading image", context);
-                          closeLoadingIndicator(context);
-                          return;
-                        }
-                          topic = TopicModel(
-                            name: nameController.text,
-                            description: descriptionController.text,
-                            isPublic: isPublic,
-                            createdAt: Timestamp.now(),
-                            ownerID: AuthenticationService.instance.currentUser!.uid,
-                            level: currentLevel,
-                            imageTopic: myImage.image,
-                          );
-                          String? topicId = await _exploreViewModel!.createTopicReturnId(topic);
-                          if(topicId == null) {
-                            ShowSnackBar.showError("Error creating topic", context);
+                        if (imageBytes != null) {
+                           myImage =
+                              await ImageService.uploadImage(imageBytes!);
+                          if (myImage == null) {
+                            ShowSnackBar.showError(
+                                "Error uploading image", context);
                             closeLoadingIndicator(context);
                             return;
                           }
-                          await _exploreViewModel!.addTopicToFolder(folderID, topicId!).then((value) {
-                            if(value) {
-                              closeLoadingIndicator(context);
-                              ShowSnackBar.showSuccess("Topic created successfully", context);
-                              Navigator.pop(context);
-                            } else {
-                              ShowSnackBar.showError("Error adding topic to folder", context);
-                              closeLoadingIndicator(context);
-                            }
-                          });
+                        }
+                        topic = TopicModel(
+                          name: nameController.text,
+                          description: descriptionController.text,
+                          isPublic: isPublic,
+                          createdAt: Timestamp.now(),
+                          ownerID:
+                              AuthenticationService.instance.currentUser!.uid,
+                          level: currentLevel,
+                          imageTopic: imageBytes != null ? myImage.image : widget.topic.imageTopic,
+                        );
 
-                      }
-
-                  ),
+                        await _exploreViewModel.updateTopic( widget.topic.id! ,topic);
+                        ShowSnackBar.showSuccess(
+                            "Topic updated successfully", context);
+                        closeLoadingIndicator(context);
+                        Navigator.pop(context);
+                      }),
                 ],
               ),
             ),

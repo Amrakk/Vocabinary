@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/utils/app_colors.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 
 class MyIconButton extends StatelessWidget {
@@ -15,16 +16,17 @@ class MyIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppColorsThemeData myColors = Theme.of(context).extension<AppColorsThemeData>()!;
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: Dimensions.height(context, size),
-        width: Dimensions.width(context, size),
+        height: 35,
+        width: 35,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: myColors.containerColor,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(icon, size: Dimensions.iconSize(context, size / 1.6)),
+        child: Icon(icon, size: 28),
       ),
     );
   }

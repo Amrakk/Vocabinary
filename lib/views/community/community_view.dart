@@ -47,10 +47,12 @@ class _CommunityViewState extends State<CommunityView> {
                 IconButton(
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true)
-                        .pushNamed(AppRoutes.exploreRoutes[0],
+                        .pushNamed(AppRoutes.communityRoutes[1],
                             arguments: TopicArguments(
                               topics: _topicViewModel.topicsPublic,
                               userID: "",
+                              enableButtonAdd: false,
+                              isCommunity: true,
                             ));
                   },
                   icon: const Icon(Icons.arrow_forward_ios_outlined),
@@ -94,10 +96,11 @@ class _CommunityViewState extends State<CommunityView> {
                 IconButton(
                   onPressed: () {
                     Navigator.of(context, rootNavigator: true)
-                        .pushNamed(AppRoutes.exploreRoutes[0],
+                        .pushNamed(AppRoutes.communityRoutes[1],
                             arguments: TopicArguments(
                               topics: _topicViewModel.topicsFollowing,
                               userID: "",
+                              enableButtonAdd: false,
                             ));
                   },
                   icon: const Icon(Icons.arrow_forward_ios_outlined),

@@ -73,28 +73,33 @@ class AnswerState extends State<Answer> {
           border: Border.all(color: const Color(0xFF878787), width: 1.5),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Row(
-          children: [
-            Icon(
-              _isSelected
-                  ? widget.isCorrect
-                      ? Icons.check_circle_rounded
-                      : Icons.cancel_rounded
-                  : Icons.circle_rounded,
-              size: Dimensions.iconSize(context, 34),
-              color: Colors.white30,
-            ),
-            SizedBox(width: Dimensions.widthRatio(context, 4)),
-            Text(
-              widget.answer,
-              style: TextStyle(
-                fontSize: Dimensions.fontSize16(context),
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              Icon(
+                _isSelected
+                    ? widget.isCorrect
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_rounded
+                    : Icons.circle_rounded,
+                size: Dimensions.iconSize(context, 34),
+                color: Colors.white30,
               ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+              SizedBox(width: Dimensions.widthRatio(context, 4)),
+              SizedBox(
+                child: Text(
+                  widget.answer,
+                  style: TextStyle(
+                    fontSize: Dimensions.fontSize16(context),
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

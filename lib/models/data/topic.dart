@@ -89,6 +89,7 @@ class TopicModel {
       'description': description,
       'createdAt': createdAt,
       'followers': followers,
+      'imageTopic': imageTopic,
     };
   }
 

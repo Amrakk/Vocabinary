@@ -82,8 +82,6 @@ class TopicRepo {
 
     // Limit the list to the specified number of recent topics (e.g. 5)
     recentTopicsWithLogs = recentTopicsWithLogs.take(limit).toList();
-    print('recentTopicsWithLogs');
-    print(recentTopicsWithLogs);
 
     // Extract the topics from the list and return them
     return recentTopicsWithLogs.map((e) => e['topic']).toList();

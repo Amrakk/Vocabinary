@@ -39,7 +39,6 @@ class _UpdateCardViewState extends State<UpdateCardView> {
   @override
   void initState() {
     String userID = AuthenticationService.instance.currentUser?.uid ?? '';
-    userID = '4VtPfzFkETVqg29YJdpW';
     exploreViewModel = ExploreViewModel(userID);
     wordViewModel = WordViewModel(widget.topicID);
     vocabNameController.text = widget.word.engWord?.word ?? '';

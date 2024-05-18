@@ -10,6 +10,7 @@ import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/viewmodels/explore/word_view_model.dart';
 import 'package:vocabinary/widgets/community/item_community_card.dart';
+import 'package:vocabinary/widgets/explore/folder_builder.dart';
 
 import '../../models/arguments/explore/folder_args.dart';
 import '../../models/arguments/explore/inside_topic_args.dart';
@@ -173,10 +174,23 @@ class _ExploreViewState extends State<ExploreView> {
                             itemCount: itemNum < recentActivity.length
                                 ? itemNum
                                 : recentActivity.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: _activityBuilder(context,
-                                  recentActivity[index], destination[index]),
+                            itemBuilder: (context, index) => GestureDetector(
+                              onTap: () {
+                                Navigator.of(context, rootNavigator: true)
+                                    .pushNamed(
+                                  '/inside-topic',
+                                  arguments: InsideTopicArgs(
+                                    topicId: recentActivity[index].id!,
+                                    topicName: recentActivity[index].name!,
+                                    wordCount: recentActivity[index].wordCount,
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: _activityBuilder(context,
+                                    recentActivity[index], destination[index]),
+                              ),
                             ),
                           ),
                         );
@@ -242,7 +256,7 @@ class _ExploreViewState extends State<ExploreView> {
                         );
                       } else {
                         return Container(
-                          height: 100,
+                          height: 300,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: itemNum < topics.length
@@ -271,6 +285,7 @@ class _ExploreViewState extends State<ExploreView> {
                     }
                   },
                 ),
+                const SizedBox(height: 25),
                 Row(
                   children: [
                     const Text(
@@ -322,14 +337,23 @@ class _ExploreViewState extends State<ExploreView> {
                           );
                         } else {
                           return Container(
-                            height: 100,
+                            height: 120,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: itemNum < folders.length
                                   ? itemNum
                                   : folders.length,
                               itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushNamed(
+                                    '/folder',
+                                    arguments: FolderArguments(
+                                      userID: 'userID',
+                                      folders: _viewModel.folders,
+                                    ),
+                                  );
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child:
@@ -341,6 +365,7 @@ class _ExploreViewState extends State<ExploreView> {
                         }
                       }
                     }),
+                const SizedBox(height: 50),
               ],
             ),
           ),
@@ -422,75 +447,8 @@ class _ExploreViewState extends State<ExploreView> {
       ],
       child: CommunityCard(
         topic: topic,
+        disableGesture: true,
       ),
-      // child: Container(
-      //   height: 75,
-      //   width: 180,
-      //   decoration: BoxDecoration(
-      //     color: const Color(0xFF00324E),
-      //     borderRadius: BorderRadius.circular(10),
-      //     boxShadow: const [
-      //       BoxShadow(
-      //         color: Colors.black,
-      //         blurRadius: 5,
-      //       ),
-      //     ],
-      //   ),
-      //   padding: const EdgeInsets.all(5),
-      //   child: Column(
-      //     crossAxisAlignment: CrossAxisAlignment.start,
-      //     mainAxisSize: MainAxisSize.max,
-      //     children: [
-      //       Text(
-      //         topic.name ?? '',
-      //         style: const TextStyle(
-      //           fontSize: 16,
-      //           color: Colors.white,
-      //           fontWeight: FontWeight.bold,
-      //         ),
-      //       ),
-      //       Text(
-      //         topic.description ?? '',
-      //         maxLines: 2,
-      //         overflow: TextOverflow.ellipsis,
-      //         style: const TextStyle(fontSize: 10, color: Colors.white),
-      //       ),
-      //       const Expanded(flex: 1, child: SizedBox()),
-      //       const Divider(
-      //         color: Colors.white,
-      //       ),
-      //       Row(
-      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //         children: [
-      //           Row(
-      //             children: [
-      //               const Icon(Icons.format_list_bulleted),
-      //               Text(topic.wordCount.toString(),
-      //                   style:
-      //                       const TextStyle(fontSize: 10, color: Colors.white)),
-      //             ],
-      //           ),
-      //           Row(
-      //             children: [
-      //               const Icon(Icons.star),
-      //               Text(intLevelToString(topic.level),
-      //                   style:
-      //                       const TextStyle(fontSize: 10, color: Colors.white)),
-      //             ],
-      //           ),
-      //           Row(
-      //             children: [
-      //               const Icon(Icons.bookmark),
-      //               Text(followerCount(topic.followers.length),
-      //                   style:
-      //                       const TextStyle(fontSize: 10, color: Colors.white)),
-      //             ],
-      //           ),
-      //         ],
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 
@@ -505,62 +463,6 @@ class _ExploreViewState extends State<ExploreView> {
   }
 
   _folderBuilder(BuildContext context, FolderModel folder) {
-    return Container(
-      height: 75,
-      width: 180,
-      decoration: BoxDecoration(
-        color: const Color(0xFF023E8A),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black,
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          Center(
-            child: Text(
-              folder.name ?? '',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const Expanded(
-            flex: 1,
-            child: SizedBox(),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.format_list_bulleted),
-                  Text(folder.topicIDs.length.toString(),
-                      style:
-                          const TextStyle(fontSize: 10, color: Colors.white)),
-                ],
-              ),
-              const SizedBox(width: 10),
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today),
-                  Text(folder.createdAtFormatted,
-                      style:
-                          const TextStyle(fontSize: 10, color: Colors.white)),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return FolderCard(folder: folder);
   }
 }
