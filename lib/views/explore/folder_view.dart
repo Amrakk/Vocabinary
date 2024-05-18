@@ -8,6 +8,7 @@ import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/folder_list.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
+import 'package:vocabinary/widgets/explore/folder_builder.dart';
 
 import '../../utils/dimensions.dart';
 import '../../utils/filter/decorator.dart';
@@ -82,7 +83,7 @@ class _FolderViewState extends State<FolderView> {
                         ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: itemNum,
-                            childAspectRatio: 2 / 1,
+                            childAspectRatio: Dimensions.screenType(context) == ScreenType.Medium ? 1 / 1.9 : 1 / 1.5,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10),
                       ),
@@ -168,62 +169,8 @@ class _FolderViewState extends State<FolderView> {
           },
         );
       },
-      child: Container(
-        height: 75,
-        width: 180,
-        decoration: BoxDecoration(
-          color: const Color(0xFF023E8A),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black,
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Center(
-              child: Text(
-                folder.name!,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const Expanded(
-              flex: 1,
-              child: SizedBox(),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.format_list_bulleted),
-                    Text(folder.topicIDs.length.toString(),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-                const SizedBox(width: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.calendar_today),
-                    Text(folder.createdAtFormatted,
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
+      child: FolderCard(
+        folder: folder,
       ),
     );
   }

@@ -81,6 +81,12 @@ class ExploreViewModel extends ChangeNotifier {
     });
   }
 
+  Future<bool> addTopicToFolder(String folderID, String topicID) async {
+    return await _folderRepo.addTopicToFolder(userID, folderID, topicID);
+  }
+
+
+
   Future<void> createFolder(FolderModel data) async {
     await _folderRepo.createFolder(userID, data);
   }
@@ -108,6 +114,10 @@ class ExploreViewModel extends ChangeNotifier {
       // Reload topics to include the newly created topic
       await loadTopics();
     }
+  }
+
+  Future<String?> createTopicReturnId(TopicModel data) async {
+    return await _topicRepo.createTopic(data);
   }
 
   // Update an existing topic and refresh the topics list
