@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/routes/routes.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/decorator.dart';
 import 'package:vocabinary/utils/filter/topic_list.dart';
 import 'package:vocabinary/widgets/community/item_community_card.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
+import '../../models/arguments/explore/inside_topic_args.dart';
 import '../../models/data/topic.dart';
 import '../../utils/dimensions.dart';
 
 class TopicView extends StatefulWidget {
-  const TopicView({Key? key, required this.topics, required this.userID})
+   TopicView({Key? key, this.isCommunity ,this.buttonAddTopic, required this.topics, required this.userID})
       : super(key: key);
   final List<TopicModel> topics;
   final String userID;
+  bool? buttonAddTopic;
+  bool? isCommunity;
 
   @override
   State<TopicView> createState() => _TopicViewState();
@@ -31,12 +35,12 @@ class _TopicViewState extends State<TopicView> {
     var itemNum = screenWidth ~/ 200;
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: widget.buttonAddTopic ?? true ? FloatingActionButton(
           onPressed: () {
-            //navigate to add topic
-          },
-          child: const Icon(Icons.add_to_photos_outlined),
-        ),
+            Navigator.pushNamed(context, AppRoutes.exploreRoutes[5]);
+            },
+          child: const Icon(Icons.add),
+        ) : null,
         appBar: AppBar(
           title: const Text("List Topic"),
           actions: [
@@ -54,11 +58,24 @@ class _TopicViewState extends State<TopicView> {
                 padding: const EdgeInsets.all(10),
                 child: filterIsDefault() ?  GridView.builder(
                   itemCount:  widget.topics.length,
-                  itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: _topicBuilder(
-                          context,
-                      widget.topics[index])),
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true)
+                          .pushNamed(
+                        '/inside-topic',
+                        arguments: InsideTopicArgs(
+                          topicId: widget.topics[index].id!,
+                          topicName: widget.topics[index].name!,
+                          wordCount: widget.topics[index].wordCount,
+                        ),
+                      );
+                    },
+                    child: Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: _topicBuilder(
+                            context,
+                        widget.topics[index])),
+                  ),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: itemNum,
                       childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.5,
@@ -69,12 +86,25 @@ class _TopicViewState extends State<TopicView> {
                     ? _emptyTopic(context)
                     : GridView.builder(
                         itemCount: filteredTopics.length,
-                        itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: _topicBuilder(context, filteredTopics[index])),
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true)
+                                .pushNamed(
+                              '/inside-topic',
+                              arguments: InsideTopicArgs(
+                                topicId: widget.topics[index].id!,
+                                topicName: widget.topics[index].name!,
+                                wordCount: widget.topics[index].wordCount,
+                              ),
+                            );
+                          },
+                          child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: _topicBuilder(context, filteredTopics[index])),
+                        ),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: itemNum,
-                            childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.5,
+                            childAspectRatio: Dimensions.screenType(context) == ScreenType.Small ? 1/1.6 : 1/1.45,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 20
                         )
@@ -84,7 +114,10 @@ class _TopicViewState extends State<TopicView> {
     );
   }
   _topicBuilder(BuildContext context, TopicModel topic) {
-    return CommunityCard(topic: topic);
+    return CommunityCard(
+        topic: topic,
+      disableGesture: widget.isCommunity ?? false ? false : true,
+    );
   }
 
   _showfilter(BuildContext context) {

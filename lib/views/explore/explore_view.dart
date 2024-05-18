@@ -255,7 +255,7 @@ class _ExploreViewState extends State<ExploreView> {
                         );
                       } else {
                         return Container(
-                          height: 100,
+                          height: 300,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: itemNum < topics.length
@@ -284,6 +284,7 @@ class _ExploreViewState extends State<ExploreView> {
                     }
                   },
                 ),
+                const SizedBox(height: 25),
                 Row(
                   children: [
                     const Text(
@@ -444,6 +445,7 @@ class _ExploreViewState extends State<ExploreView> {
       ],
       child: CommunityCard(
         topic: topic,
+        disableGesture: true,
       ),
       // child: Container(
       //   height: 75,

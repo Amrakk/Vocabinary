@@ -1,14 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/widgets/home/pie_chart.dart';
-import 'package:vocabinary/widgets/home/line_chart.dart';
 import 'package:vocabinary/widgets/my_animated_container.dart';
-import 'package:vocabinary/widgets/home/drop_down_button.dart';
-
-import '../../services/firebase/authentication_service.dart';
-import '../../viewmodels/home_view_model.dart';
+import 'package:vocabinary/services/firebase/authentication_service.dart';
+import 'package:vocabinary/viewmodels/home_view_model.dart';
 
 class AnalysisView extends StatefulWidget {
   const AnalysisView({super.key});
@@ -91,7 +88,8 @@ class _AnalysisViewState extends State<AnalysisView> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
+                              return const Text('Loading...',
+                                  style: TextStyle(fontWeight: FontWeight.bold));
                             } else if (snapshot.hasError) {
                               return const Text('Error');
                             } else {

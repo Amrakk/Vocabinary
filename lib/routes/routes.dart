@@ -25,13 +25,12 @@ import 'package:vocabinary/views/explore/folder_view.dart';
 import 'package:vocabinary/views/explore/inside_topic_view.dart';
 
 import 'package:vocabinary/views/authenticate/login_view.dart';
-import 'package:vocabinary/views/explore/topic_view.dart';
-import '../models/arguments/explore/card_details_args.dart';
+import 'package:vocabinary/models/arguments/explore/card_details_args.dart';
 import '../models/arguments/explore/folder_args.dart';
-import '../models/arguments/explore/inside_topic_args.dart';
-import '../views/explore/card_details_view.dart';
-import '../views/explore/create_new_folder_view.dart';
-import '../views/explore/folder_view.dart';
+import 'package:vocabinary/models/arguments/explore/inside_topic_args.dart';
+import 'package:vocabinary/views/explore/card_details_view.dart';
+import 'package:vocabinary/views/explore/create_new_folder_view.dart';
+import 'package:vocabinary/views/explore/create_new_topic_view.dart';
 import '../views/explore/inside_topic_view.dart';
 import 'package:vocabinary/widgets/setting/about_page.dart';
 import 'package:vocabinary/models/arguments/explore/inside_topic_args.dart';
@@ -57,7 +56,9 @@ class AppRoutes {
     '/topic',
     '/inside-topic',
     '/folder',
-    'inside-folder'
+    'inside-folder',
+    '/create-folder',
+    '/create-topic',
   ];
   static final authRoutes = ['/login', '/register', '/forgot-password'];
   static final communityRoutes = ['/community/inside-topic'];
@@ -113,8 +114,11 @@ class AppRoutes {
         args = args as TopicArguments;
         var userID = args.userID;
         var topics = args.topics;
+        var enableButtonAdd = args.enableButtonAdd ?? true;
+        var isCommunity = args.isCommunity ?? false;
         return _buildPageTransition(
-          TopicView(userID: userID, topics: topics),
+          TopicView(
+              userID: userID, topics: topics, buttonAddTopic: enableButtonAdd, isCommunity: isCommunity,),
           settings,
         );
       case '/inside-topic':
@@ -138,7 +142,8 @@ class AppRoutes {
         args = args as UpdateCardArgs;
         var topicID = args.topicID;
         var word = args.word;
-        return _buildPageTransition(UpdateCardView(topicID: topicID, word: word), settings);
+        return _buildPageTransition(
+            UpdateCardView(topicID: topicID, word: word), settings);
       case '/folder':
         args = args as FolderArguments;
         var userID = args.userID;
@@ -149,6 +154,8 @@ class AppRoutes {
         );
       case '/create-folder':
         return _buildPageTransition(const CreateNewFolderView(), settings);
+      case '/create-topic':
+        return _buildPageTransition(const CreateNewTopicView(), settings);
       // Community Routes
       case '/community/inside-topic':
         args = args as InsideTopicArgs;
