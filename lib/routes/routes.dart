@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:vocabinary/models/arguments/explore/topic_args.dart';
 import 'package:vocabinary/models/arguments/explore/update_card_args.dart';
-import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/views/explore/create_new_card_view.dart';
 import 'package:vocabinary/views/explore/topic_view.dart';
 import 'package:vocabinary/views/explore/update_card_view.dart';
@@ -16,33 +15,24 @@ import 'package:vocabinary/views/community/community_view.dart';
 import 'package:vocabinary/views/learnings/select_type_view.dart';
 import 'package:vocabinary/views/learnings/select_level_view.dart';
 import 'package:vocabinary/models/arguments/learnings/select_words_args.dart';
-
 import 'package:vocabinary/models/arguments/explore/folder_args.dart';
-import 'package:vocabinary/models/arguments/explore/topic_args.dart';
 import 'package:vocabinary/views/authenticate/forgot_password_view.dart';
 import 'package:vocabinary/views/authenticate/register_view.dart';
 import 'package:vocabinary/views/explore/folder_view.dart';
 import 'package:vocabinary/views/explore/inside_topic_view.dart';
-
 import 'package:vocabinary/views/authenticate/login_view.dart';
-import 'package:vocabinary/views/explore/topic_view.dart';
-import '../models/arguments/explore/card_details_args.dart';
-import '../models/arguments/explore/folder_args.dart';
-import '../models/arguments/explore/inside_topic_args.dart';
-import '../views/explore/card_details_view.dart';
-import '../views/explore/create_new_folder_view.dart';
-import '../views/explore/folder_view.dart';
-import '../views/explore/inside_topic_view.dart';
-import 'package:vocabinary/widgets/setting/about_page.dart';
+import 'package:vocabinary/models/arguments/explore/card_details_args.dart';
+import 'package:vocabinary/models/arguments/explore/inside_folder_args.dart';
 import 'package:vocabinary/models/arguments/explore/inside_topic_args.dart';
-import 'package:vocabinary/models/arguments/explore/update_card_args.dart';
+import 'package:vocabinary/views/explore/card_details_view.dart';
+import 'package:vocabinary/views/explore/create_new_folder_view.dart';
+import 'package:vocabinary/views/explore/create_new_topic_view.dart';
+import 'package:vocabinary/views/explore/inside_folder.dart';
+import 'package:vocabinary/widgets/setting/about_page.dart';
 import 'package:vocabinary/views/community/inside_topic_community_view.dart';
-import 'package:vocabinary/views/explore/create_new_card_view.dart';
-import 'package:vocabinary/views/explore/update_card_view.dart';
 import 'package:vocabinary/widgets/setting/change_password.dart';
 import 'package:vocabinary/widgets/setting/my_account_page.dart';
-
-import '../views/explore/update_folder_view.dart';
+import 'package:vocabinary/views/explore/update_folder_view.dart';
 
 class AppRoutes {
   static const initialRoute = '/';
