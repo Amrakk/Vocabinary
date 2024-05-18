@@ -11,6 +11,15 @@ class FolderRepo {
   Future<FolderModel?> getFolder(String userID, String id) =>
       folderStream(userID, id).first;
 
+  Future<bool> addTopicToFolder(String userID, String folderID, String topicID) async {
+    final folder = await getFolder(userID, folderID);
+    if (folder != null) {
+      folder.topicIDs.add(topicID);
+      return updateFolder(userID, folderID, folder);
+    }
+    return false;
+  }
+
   Future<List<FolderModel>> getFolders(String userID) =>
       foldersStream(userID).first;
 

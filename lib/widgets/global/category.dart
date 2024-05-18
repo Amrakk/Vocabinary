@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:vocabinary/utils/app_colors.dart';
 
 class Category extends StatefulWidget {
-   Category({ this.date  ,String? level, int? size, int? amountSaved, bool? isDate ,bool? isLevel, bool? isSize, bool? isAmountSaved ,super.key}):
+   Category({ this.date, bool? isBorder  ,String? level, int? size, int? amountSaved, bool? isDate ,bool? isLevel, bool? isSize, bool? isAmountSaved ,super.key}):
          isLevel = isLevel ?? false,
          isSize = isSize ?? false,
          isAmountSaved = isAmountSaved ?? false,
          level = level ?? "Easy",
          size = size ?? 0,
          amountSaved = amountSaved ?? 0,
-         isDate = isDate ?? false;
+         isDate = isDate ?? false,
+         isBorder = isBorder ?? true;
 
   bool isLevel;
   bool isSize;
   bool isAmountSaved;
   bool isDate;
+  bool isBorder;
 
   String level = "Easy";
   int size;
@@ -27,9 +30,10 @@ class Category extends StatefulWidget {
 class _CategoryState extends State<Category> {
   @override
   Widget build(BuildContext context) {
+    AppColorsThemeData _appColorsThemeData = Theme.of(context).extension<AppColorsThemeData>()!;
     return   Container(
         decoration: BoxDecoration(
-          color: const Color(0x73757575),
+          color: widget.isBorder ? const Color(0x73757575) : Colors.transparent,
           borderRadius: BorderRadius.circular(30),
         ),
         child:  Padding(

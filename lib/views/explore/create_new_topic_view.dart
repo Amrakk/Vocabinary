@@ -18,6 +18,9 @@ import 'package:vocabinary/widgets/explore/create_new_topic/input_name_topic.dar
 import 'package:vocabinary/widgets/global/loading_indicator.dart';
 import 'package:vocabinary/widgets/global/show_snack_bar.dart';
 
+import 'package:vocabinary/models/data/folder.dart';
+import 'package:vocabinary/widgets/explore/create_new_topic/item_folder_select.dart';
+
 class CreateNewTopicView extends StatefulWidget {
   const CreateNewTopicView({super.key});
 
@@ -31,14 +34,16 @@ class _CreateNewTopicViewState extends State<CreateNewTopicView> {
   final descriptionController = TextEditingController();
   Uint8List? imageBytes;
   late TopicModel topic;
-  late ExploreViewModel _exploreViewModel;
+   ExploreViewModel? _exploreViewModel;
   int currentLevel = 1;
+  String folderID = '';
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _exploreViewModel = Provider.of<ExploreViewModel>(context, listen: false);
+      setState(() {});
     });
   }
 
@@ -182,11 +187,41 @@ class _CreateNewTopicViewState extends State<CreateNewTopicView> {
                           })
                     ],
                   ),
-                  SizedBox(height: Dimensions.heightRatio(context, 4)),
+                  SizedBox(height: Dimensions.heightRatio(context, 3)),
+                  Text(
+                    'Select Folder',
+                    style: TextStyle(
+                        fontSize: Dimensions.fontSize(context, 22),
+                        fontWeight: FontWeight.normal),
+                  ),
+                  SizedBox(height: Dimensions.heightRatio(context, 2.5)),
+                   SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _exploreViewModel != null ? _exploreViewModel!.folders
+                          .map((folder) => Row(
+                            children: [
+                              ItemFolderSelect(
+                                    name: folder.name!,
+                                    id: folder.id!,
+                                    isSelected: folderID == folder.id,
+                                    onTap: (id) {
+                                      setState(() {
+                                        folderID = id;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(width: Dimensions.widthRatio(context, 2)),
+                            ],
+                          ))
+                          .toList() : [],
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.heightRatio(context, 5)),
                   Button(
                       nameButton: 'Apply',
                       onPressed: () async {
-                        if(nameController.text.isEmpty || descriptionController.text.isEmpty || imageBytes == null) {
+                        if(nameController.text.isEmpty || descriptionController.text.isEmpty || imageBytes == null || folderID.isEmpty) {
                           ShowSnackBar.showInfo("Please fill all fields", context);
                           return;
                         }
@@ -206,11 +241,23 @@ class _CreateNewTopicViewState extends State<CreateNewTopicView> {
                             level: currentLevel,
                             imageTopic: myImage.image,
                           );
+                          String? topicId = await _exploreViewModel!.createTopicReturnId(topic);
+                          if(topicId == null) {
+                            ShowSnackBar.showError("Error creating topic", context);
+                            closeLoadingIndicator(context);
+                            return;
+                          }
+                          await _exploreViewModel!.addTopicToFolder(folderID, topicId!).then((value) {
+                            if(value) {
+                              closeLoadingIndicator(context);
+                              ShowSnackBar.showSuccess("Topic created successfully", context);
+                              Navigator.pop(context);
+                            } else {
+                              ShowSnackBar.showError("Error adding topic to folder", context);
+                              closeLoadingIndicator(context);
+                            }
+                          });
 
-                          await _exploreViewModel.createTopic(topic);
-                          ShowSnackBar.showSuccess("Topic created successfully", context);
-                          closeLoadingIndicator(context);
-                        Navigator.pop(context);
                       }
 
                   ),

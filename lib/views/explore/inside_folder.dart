@@ -3,8 +3,10 @@ import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/utils/enums.dart';
 import 'package:vocabinary/utils/filter/decorator.dart';
 import 'package:vocabinary/utils/filter/topic_list.dart';
+import 'package:vocabinary/widgets/community/item_community_card.dart';
 import 'package:vocabinary/widgets/explore/custom_radio_button.dart';
 
+import '../../models/arguments/explore/inside_topic_args.dart';
 import '../../models/data/topic.dart';
 import '../../utils/dimensions.dart';
 
@@ -67,16 +69,27 @@ class _InsideFolderViewState extends State<InsideFolderView> {
                       itemCount: filterIsDefault()
                           ? topics.length
                           : filteredTopics.length,
-                      itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: _topicBuilder(
-                              context,
-                              filterIsDefault()
-                                  ? topics[index]
-                                  : filteredTopics[index])),
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true).pushNamed(
+                            '/inside-topic',
+                            arguments: InsideTopicArgs(
+                              topicId: topics[index].id!,
+                              topicName: topics[index].name!,
+                              wordCount: topics[index].wordCount,
+                            ),
+                          );
+                        },
+                        child: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: _topicBuilder(context, topics[index])),
+                      ),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: itemNum,
-                          childAspectRatio: 5 / 3,
+                          childAspectRatio:
+                              Dimensions.screenType(context) == ScreenType.Small
+                                  ? 1 / 1.6
+                                  : 1 / 1.45,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10),
                     );
@@ -88,80 +101,84 @@ class _InsideFolderViewState extends State<InsideFolderView> {
   }
 
   _topicBuilder(BuildContext context, TopicModel topic) {
-    return Container(
-      height: 75,
-      width: 180,
-      decoration: BoxDecoration(
-        color: const Color(0xFF00324E),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black,
-            blurRadius: 5,
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-            topic.name!,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            topic.description!,
-            softWrap: true,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 10, color: Colors.white),
-          ),
-          const Expanded(flex: 1, child: SizedBox()),
-          const Divider(
-            color: Colors.white,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.format_list_bulleted),
-                    Text(topic.wordCount.toString(),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.star),
-                    Text(intLevelToString(topic.level),
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white)),
-                  ],
-                ),
-                topic.isPublic
-                    ? Row(
-                        children: [
-                          const Icon(Icons.bookmark),
-                          Text(topic.followers.length.toString(),
-                              style: const TextStyle(
-                                  fontSize: 10, color: Colors.white)),
-                        ],
-                      )
-                    : const SizedBox(),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return CommunityCard(
+      topic: topic,
+      disableGesture: true,
     );
+    // return Container(
+    //   height: 75,
+    //   width: 180,
+    //   decoration: BoxDecoration(
+    //     color: const Color(0xFF00324E),
+    //     borderRadius: BorderRadius.circular(10),
+    //     boxShadow: const [
+    //       BoxShadow(
+    //         color: Colors.black,
+    //         blurRadius: 5,
+    //       ),
+    //     ],
+    //   ),
+    //   padding: const EdgeInsets.all(5),
+    //   child: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.start,
+    //     mainAxisSize: MainAxisSize.max,
+    //     children: [
+    //       Text(
+    //         topic.name!,
+    //         style: const TextStyle(
+    //           fontSize: 16,
+    //           color: Colors.white,
+    //           fontWeight: FontWeight.bold,
+    //         ),
+    //       ),
+    //       Text(
+    //         topic.description!,
+    //         softWrap: true,
+    //         maxLines: 2,
+    //         overflow: TextOverflow.ellipsis,
+    //         style: const TextStyle(fontSize: 10, color: Colors.white),
+    //       ),
+    //       const Expanded(flex: 1, child: SizedBox()),
+    //       const Divider(
+    //         color: Colors.white,
+    //       ),
+    //       Padding(
+    //         padding: const EdgeInsets.all(5.0),
+    //         child: Row(
+    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //           children: [
+    //             Row(
+    //               children: [
+    //                 const Icon(Icons.format_list_bulleted),
+    //                 Text(topic.wordCount.toString(),
+    //                     style:
+    //                         const TextStyle(fontSize: 10, color: Colors.white)),
+    //               ],
+    //             ),
+    //             Row(
+    //               children: [
+    //                 const Icon(Icons.star),
+    //                 Text(intLevelToString(topic.level),
+    //                     style:
+    //                         const TextStyle(fontSize: 10, color: Colors.white)),
+    //               ],
+    //             ),
+    //             topic.isPublic
+    //                 ? Row(
+    //                     children: [
+    //                       const Icon(Icons.bookmark),
+    //                       Text(topic.followers.length.toString(),
+    //                           style: const TextStyle(
+    //                               fontSize: 10, color: Colors.white)),
+    //                     ],
+    //                   )
+    //                 : const SizedBox(),
+    //           ],
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
   _showfilter(BuildContext context) {
