@@ -117,11 +117,15 @@ class _CommunityCardState extends State<CommunityCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      widget.topic.name!,
-                      style: const TextStyle(
-                          fontSize: 19, fontWeight: FontWeight.bold),
-                      maxLines: 1,
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        widget.topic.name!,
+                        style: const TextStyle(
+                            fontSize: 19, fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     const SizedBox(
                       height: 15,

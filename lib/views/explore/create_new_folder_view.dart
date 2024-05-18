@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/models/data/folder.dart';
 import 'package:vocabinary/utils/dimensions.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
-import 'package:vocabinary/widgets/explore/create_new_topic/input_description_topic.dart';
 import 'package:vocabinary/widgets/global/button.dart';
 import 'package:vocabinary/widgets/explore/create_new_topic/input_name_topic.dart';
 
@@ -90,39 +88,39 @@ class _CreateNewFolderViewState extends State<CreateNewFolderView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: Dimensions.heightRatio(context, 6)),
-                SizedBox(
-                  height: 42,
-                  child: FutureBuilder(future: loadTopicsFuture, builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else {
-                      final topics = exploreViewModel.topics;
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: topics.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: ItemTopicSelect(
-                              name: topics[index].name ?? '',
-                              id: topics[index].id ?? '',
-                              onTap: (topicID) {
-                                setState(() {
-                                  if (selectedTopics.contains(topicID)) {
-                                    selectedTopics.remove(topicID);
-                                  } else {
-                                    selectedTopics.add(topicID);
-                                  }
-                                });
-                              },
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  }),
-                ),
-                const Expanded(child: SizedBox(),flex: 1,),
+                // SizedBox(
+                //   height: 42,
+                //   child: FutureBuilder(future: loadTopicsFuture, builder: (context, snapshot) {
+                //     if (snapshot.connectionState == ConnectionState.waiting) {
+                //       return const Center(child: CircularProgressIndicator());
+                //     } else {
+                //       final topics = exploreViewModel.topics;
+                //       return ListView.builder(
+                //         scrollDirection: Axis.horizontal,
+                //         itemCount: topics.length,
+                //         itemBuilder: (context, index) {
+                //           return Padding(
+                //             padding: const EdgeInsets.only(right: 10),
+                //             child: ItemTopicSelect(
+                //               name: topics[index].name ?? '',
+                //               id: topics[index].id ?? '',
+                //               onTap: (topicID) {
+                //                 setState(() {
+                //                   if (selectedTopics.contains(topicID)) {
+                //                     selectedTopics.remove(topicID);
+                //                   } else {
+                //                     selectedTopics.add(topicID);
+                //                   }
+                //                 });
+                //               },
+                //             ),
+                //           );
+                //         },
+                //       );
+                //     }
+                //   }),
+                // ),
+                const Expanded(flex: 1,child: SizedBox(),),
                 Button(nameButton: 'Create',onPressed: () async{
                   showLoadingDialog(context);
                   // Create new folder

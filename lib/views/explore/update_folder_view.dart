@@ -9,6 +9,8 @@ import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/widgets/explore/create_new_topic/input_description_topic.dart';
 import 'package:vocabinary/widgets/global/button.dart';
 import 'package:vocabinary/widgets/explore/create_new_topic/input_name_topic.dart';
+import 'package:vocabinary/widgets/global/loading_indicator.dart';
+import 'package:vocabinary/widgets/global/show_snack_bar.dart';
 
 import '../../widgets/explore/create_new_card/item_topic_select.dart';
 
@@ -92,6 +94,14 @@ class _UpdateFolderViewState extends State<UpdateFolderView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: Dimensions.heightRatio(context, 6)),
+                 Text(
+                  'Select or delete your topic from this folder:',
+                  style: TextStyle(
+                    fontSize: Dimensions.fontSize(context, 20),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: Dimensions.heightRatio(context, 3)),
                 SizedBox(
                   height: 42,
                   child: FutureBuilder(future: loadTopicsFuture, builder: (context, snapshot) {
@@ -127,7 +137,7 @@ class _UpdateFolderViewState extends State<UpdateFolderView> {
                 ),
                 const Expanded(child: SizedBox(),flex: 1,),
                 Button(nameButton: 'Save',onPressed: () async{
-                  showLoadingDialog(context);
+                  showLoadingIndicator(context);
                   // Create new folder
                   final folder = FolderModel(
                     name: nameController.text,
@@ -136,10 +146,9 @@ class _UpdateFolderViewState extends State<UpdateFolderView> {
                     createdAt: Timestamp.fromDate(DateTime.now()),
                   );
                   await exploreViewModel.updateFolder(widget.folder.id!, folder);
+                  closeLoadingIndicator(context);
+                  ShowSnackBar.showSuccess('Folder updated successfully', context );
                   Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-
                 },),
               ],
             ),
@@ -147,19 +156,4 @@ class _UpdateFolderViewState extends State<UpdateFolderView> {
     );
   }
 
-  void showLoadingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          backgroundColor: Colors.transparent,
-          content: Row(
-            children: [
-              CircularProgressIndicator(),
-            ],
-          ),
-        );
-      },
-    );
-  }
 }

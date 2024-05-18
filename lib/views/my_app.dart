@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary/routes/routes.dart';
@@ -29,43 +30,75 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     AuthenticationService _authenticationService = AuthenticationService.instance;
-    String uid = _authenticationService.currentUser?.uid ?? '';
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => ThemeViewModel()),
-        ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
-        ChangeNotifierProvider(create: (context) => TypingViewModel()),
-        ChangeNotifierProvider(create: (context) => QuizViewModel(),),
-        ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
-        ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
-        ChangeNotifierProvider(create: (context) => CommunityViewModel()),
-        ChangeNotifierProvider(create: (context) => SettingViewModel()),
-      ],
-      child: Consumer<ThemeViewModel>(
-        builder: (_, themeViewModel, __) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Vocabinary',
-          darkTheme: AppThemes.darkTheme(),
-          themeMode:
-              themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-          home: StreamBuilder(
-            stream: _authenticationService.authStateChanges,
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return const MyLoadingIndicator();
-              }
-              if(snapshot.hasData){
-                return const MyHomePage();
-              }
-              return  const LoginView();
-            },
-          ),
-          onGenerateRoute: AppRoutes.generateRoutes,
-        ),
-      ),
+    return StreamBuilder<User?>(
+      stream: _authenticationService.authStateChanges,
+      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show loading indicator while waiting for auth state to change
+        } else {
+          String uid = snapshot.data?.uid ?? '';
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (context) => ThemeViewModel()),
+              ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
+              ChangeNotifierProvider(create: (context) => TypingViewModel()),
+              ChangeNotifierProvider(create: (context) => QuizViewModel(),),
+              ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
+              ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
+              ChangeNotifierProvider(create: (context) => CommunityViewModel()),
+              ChangeNotifierProvider(create: (context) => SettingViewModel()),
+            ],
+            child: Consumer<ThemeViewModel>(
+              builder: (_, themeViewModel, __) => MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Vocabinary',
+                darkTheme: AppThemes.darkTheme(),
+                themeMode:
+                themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+                home: snapshot.hasData ? const MyHomePage() : const LoginView(),
+                onGenerateRoute: AppRoutes.generateRoutes,
+              ),
+            ),
+          );
+        }
+      },
     );
   }
-}
+    // return MultiProvider(
+    //   providers: [
+    //     ChangeNotifierProvider(create: (context) => ThemeViewModel()),
+    //     ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
+    //     ChangeNotifierProvider(create: (context) => TypingViewModel()),
+    //     ChangeNotifierProvider(create: (context) => QuizViewModel(),),
+    //     ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
+    //     ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
+    //     ChangeNotifierProvider(create: (context) => CommunityViewModel()),
+    //     ChangeNotifierProvider(create: (context) => SettingViewModel()),
+    //   ],
+    //   child: Consumer<ThemeViewModel>(
+    //     builder: (_, themeViewModel, __) => MaterialApp(
+    //       debugShowCheckedModeBanner: false,
+    //       title: 'Vocabinary',
+    //       darkTheme: AppThemes.darkTheme(),
+    //       themeMode:
+    //           themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+    //       home: StreamBuilder(
+    //         stream: _authenticationService.authStateChanges,
+    //         builder: (context, snapshot) {
+    //           if(snapshot.connectionState == ConnectionState.waiting){
+    //             return const MyLoadingIndicator();
+    //           }
+    //           if(snapshot.hasData){
+    //             return const MyHomePage();
+    //           }
+    //           return  const LoginView();
+    //         },
+    //       ),
+    //       onGenerateRoute: AppRoutes.generateRoutes,
+    //     ),
+    //   ),
+    // );
+  }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
