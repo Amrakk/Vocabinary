@@ -112,6 +112,7 @@ class _FolderViewState extends State<FolderView> {
                 title: const Text("Delete"),
                 leading: const Icon(Icons.delete),
                 onTap: () {
+                  Navigator.pop(context);
                   showDialog(
                     context: context,
                     builder: (context) {
@@ -145,6 +146,7 @@ class _FolderViewState extends State<FolderView> {
                 title: const Text("Edit"),
                 leading: const Icon(Icons.edit),
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.of(context).pushNamed("/update-folder",
                       arguments: InsideFolderArgs(folder));
                 },

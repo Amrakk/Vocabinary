@@ -100,6 +100,7 @@ class _TopicViewState extends State<TopicView> {
                                     title: const Text("Delete"),
                                     leading: const Icon(Icons.delete),
                                     onTap: () {
+                                      Navigator.pop(context);
                                       showDialog(
                                         context: context,
                                         builder: (context) {
@@ -132,6 +133,7 @@ class _TopicViewState extends State<TopicView> {
                                     title: const Text("Edit"),
                                     leading: const Icon(Icons.edit),
                                     onTap: () {
+                                      Navigator.pop(context);
                                       Navigator.of(context).pushNamed(
                                           "/update-topic",
                                           arguments: UpdateTopicArgs(
