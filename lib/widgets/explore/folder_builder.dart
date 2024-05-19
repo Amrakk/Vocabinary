@@ -57,12 +57,13 @@ class _FolderCardState extends State<FolderCard> {
                     )),
                 const SizedBox(width: 10),
                 categoryBuilder(
-                    title: widget.folder.createdAtFormatted,
-                    icon: Icon(
-                      color: myColor.subTextColor,
-                      Icons.calendar_today,
-                      size: 15,
-                    )),
+                  title: widget.folder.createdAtFormatted,
+                  icon: Icon(
+                    color: myColor.subTextColor,
+                    Icons.calendar_today,
+                    size: 15,
+                  ),
+                ),
               ],
             ),
           ),
