@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vocabinary//../utils/app_colors.dart';
@@ -36,7 +37,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
 
   void init() async {
     _settingViewModel = Provider.of<SettingViewModel>(context, listen: false);
-    user = await _settingViewModel.getUser();
+    user = await _settingViewModel.getUser(AuthenticationService.instance.currentUser!.uid);
     if (user != null) {
       nameController.text = user!.name ?? "";
       emailController.text = user!.email ?? "";
@@ -231,6 +232,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                       }
                     }
                     await _settingViewModel.updateUser(
+                      FirebaseAuth.instance.currentUser!.uid,
                       user = UserModel(
                         avatar:
                             imageUploaded != null ? result.image : user!.avatar,
