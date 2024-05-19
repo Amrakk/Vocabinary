@@ -7,6 +7,8 @@ import 'package:vocabinary/utils/dimensions.dart';
 import 'package:vocabinary/viewmodels/explore/explore_view_model.dart';
 import 'package:vocabinary/widgets/global/button.dart';
 import 'package:vocabinary/widgets/explore/create_new_topic/input_name_topic.dart';
+import 'package:vocabinary/widgets/global/loading_indicator.dart';
+import 'package:vocabinary/widgets/global/show_snack_bar.dart';
 
 import '../../widgets/explore/create_new_card/item_topic_select.dart';
 
@@ -122,7 +124,12 @@ class _CreateNewFolderViewState extends State<CreateNewFolderView> {
                 // ),
                 const Expanded(flex: 1,child: SizedBox(),),
                 Button(nameButton: 'Create',onPressed: () async{
-                  showLoadingDialog(context);
+                  showLoadingIndicator(context);
+                  if(nameController.text.isEmpty){
+                    closeLoadingIndicator(context);
+                    ShowSnackBar.showInfo("Please fill all fields", context);
+                    return;
+                  }
                   // Create new folder
                   final folder = FolderModel(
                     name: nameController.text,
@@ -140,19 +147,4 @@ class _CreateNewFolderViewState extends State<CreateNewFolderView> {
     );
   }
 
-  void showLoadingDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const AlertDialog(
-          backgroundColor: Colors.transparent,
-          content: Row(
-            children: [
-              CircularProgressIndicator(),
-            ],
-          ),
-        );
-      },
-    );
-  }
 }
