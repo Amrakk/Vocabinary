@@ -37,72 +37,74 @@ class _QuizViewState extends State<QuizView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: handle disable/dialog for back button
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        scrolledUnderElevation: 0.0,
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          margin: EdgeInsets.only(
-            left: Dimensions.widthRatio(context, 5),
-            top: Dimensions.heightRatio(context, 2),
-          ),
-          height: Dimensions.heightRatio(context, 7),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Quiz Mode',
-                style: TextStyle(
-                  fontSize: Dimensions.fontSize18(context),
-                  fontWeight: FontWeight.w500,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          scrolledUnderElevation: 0.0,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          title: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: EdgeInsets.only(
+              left: Dimensions.widthRatio(context, 5),
+              top: Dimensions.heightRatio(context, 2),
+            ),
+            height: Dimensions.heightRatio(context, 7),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Quiz Mode',
+                  style: TextStyle(
+                    fontSize: Dimensions.fontSize18(context),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              SizedBox(height: Dimensions.height(context, 2)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Consumer<QuizViewModel>(
-                    builder: (_, quizViewModel, __) => Text(
-                      quizViewModel.progress < 1
-                          ? '${quizViewModel.count} words'
-                          : 'Done',
-                      style: TextStyle(
-                        fontSize: Dimensions.fontSize(context, 15),
-                        color: Colors.white60,
+                SizedBox(height: Dimensions.height(context, 2)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Consumer<QuizViewModel>(
+                      builder: (_, quizViewModel, __) => Text(
+                        quizViewModel.progress < 1
+                            ? '${quizViewModel.count} words'
+                            : 'Done',
+                        style: TextStyle(
+                          fontSize: Dimensions.fontSize(context, 15),
+                          color: Colors.white60,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: Dimensions.width(context, 14)),
-                  Consumer<QuizViewModel>(
-                    builder: (_, quizViewModel, __) {
-                      return SizedBox(
-                        width: Dimensions.widthRatio(context, 40),
-                        child: ProgressBar(
-                          height: Dimensions.height(context, 10),
-                          duration: 300,
-                          value: quizViewModel.progress,
-                          color: const Color(0xFFCCFF33),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
+                    SizedBox(width: Dimensions.width(context, 14)),
+                    Consumer<QuizViewModel>(
+                      builder: (_, quizViewModel, __) {
+                        return SizedBox(
+                          width: Dimensions.widthRatio(context, 40),
+                          child: ProgressBar(
+                            height: Dimensions.height(context, 10),
+                            duration: 300,
+                            value: quizViewModel.progress,
+                            color: const Color(0xFFCCFF33),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      body: Stack(
-        children: [
-          const BackgroundLayer(ratio: 12),
-          _isDone
-              ? ResultView(quizViewModel: _quizViewModel)
-              : _buildQuizScreen(),
-        ],
+        body: Stack(
+          children: [
+            const BackgroundLayer(ratio: 12),
+            _isDone
+                ? ResultView(quizViewModel: _quizViewModel)
+                : _buildQuizScreen(),
+          ],
+        ),
       ),
     );
   }

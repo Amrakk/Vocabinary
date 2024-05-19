@@ -29,6 +29,9 @@ class QuizViewModel extends ChangeNotifier {
     _score = 0;
     _currentIndex = 0;
     _words = words;
+    print(words.length);
+    print(words.length);
+    print(words.length);
     _topicID = topicID;
     _startTime = Timestamp.now();
 

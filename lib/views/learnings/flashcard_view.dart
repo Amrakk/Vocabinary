@@ -50,172 +50,176 @@ class _FlashcardViewState extends State<FlashcardView> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: handle disable/dialog for back button
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          margin: EdgeInsets.only(
-            left: Dimensions.widthRatio(context, 5),
-            top: Dimensions.heightRatio(context, 2),
-          ),
-          height: Dimensions.heightRatio(context, 7),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Reviewing Vocabulary',
-                style: TextStyle(
-                  fontSize: Dimensions.fontSize18(context),
-                  fontWeight: FontWeight.w500,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          title: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: EdgeInsets.only(
+              left: Dimensions.widthRatio(context, 5),
+              top: Dimensions.heightRatio(context, 2),
+            ),
+            height: Dimensions.heightRatio(context, 7),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Reviewing Vocabulary',
+                  style: TextStyle(
+                    fontSize: Dimensions.fontSize18(context),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              SizedBox(height: Dimensions.height(context, 2)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Consumer<FlashcardViewModel>(
-                    builder: (_, flashcardViewModel, __) => Text(
-                      _flashcardViewModel.progress < 1
-                          ? '${_flashcardViewModel.count} words'
-                          : 'Done',
-                      style: TextStyle(
-                        fontSize: Dimensions.fontSize(context, 15),
-                        color: Colors.white60,
+                SizedBox(height: Dimensions.height(context, 2)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Consumer<FlashcardViewModel>(
+                      builder: (_, flashcardViewModel, __) => Text(
+                        _flashcardViewModel.progress < 1
+                            ? '${_flashcardViewModel.count} words'
+                            : 'Done',
+                        style: TextStyle(
+                          fontSize: Dimensions.fontSize(context, 15),
+                          color: Colors.white60,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: Dimensions.width(context, 14)),
-                  Consumer<FlashcardViewModel>(
-                    builder: (_, flashcardViewModel, __) {
-                      return SizedBox(
-                        width: Dimensions.widthRatio(context, 40),
-                        child: ProgressBar(
-                          height: Dimensions.height(context, 10),
-                          duration: 300,
-                          value: flashcardViewModel.progress,
-                          color: const Color(0xFFCCFF33),
+                    SizedBox(width: Dimensions.width(context, 14)),
+                    Consumer<FlashcardViewModel>(
+                      builder: (_, flashcardViewModel, __) {
+                        return SizedBox(
+                          width: Dimensions.widthRatio(context, 40),
+                          child: ProgressBar(
+                            height: Dimensions.height(context, 10),
+                            duration: 300,
+                            value: flashcardViewModel.progress,
+                            color: const Color(0xFFCCFF33),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+            const BackgroundLayer(ratio: 40),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: Dimensions.heightRatio(context, 15)),
+
+                // swiper
+                SizedBox(
+                  height: Dimensions.heightRatio(context, 65),
+                  width: Dimensions.widthRatio(context, 90),
+                  child: FutureBuilder(
+                    future: Future.delayed(const Duration(milliseconds: 350)),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      return AppinioSwiper(
+                        controller: _cardSwiperController,
+                        defaultDirection: AxisDirection.left,
+                        allowUnSwipe: true,
+                        onSwipeEnd: _onSwipeEnd,
+                        onEnd: _onEnd,
+                        backgroundCardCount: 0,
+                        onCardPositionChanged: (position) {
+                          if (position.index == _flashcardViewModel.count)
+                            return;
+                          if (_flashcardViewModel.isPlaying) {
+                            _flashcardViewModel.pause();
+                          }
+                          if (position.offset.dx > 0) {
+                            _flashcardControllers[position.index]
+                                .setBorderColor(AppColors.mainGreen);
+                          } else if (position.offset.dx < 0) {
+                            _flashcardControllers[position.index]
+                                .setBorderColor(AppColors.mainRed);
+                          } else {
+                            _flashcardControllers[position.index]
+                                .setBorderColor(Colors.transparent);
+                          }
+                        },
+                        threshold: 100,
+                        cardCount: _flashcardViewModel.count,
+                        swipeOptions:
+                            const SwipeOptions.symmetric(horizontal: true),
+                        maxAngle: 0,
+                        loop: false,
+                        duration: Duration(
+                          milliseconds:
+                              _flashcardViewModel.isPlaying ? 650 : 550,
                         ),
+                        backgroundCardScale: 0.0,
+                        cardBuilder: (context, index) {
+                          return Flashcard(
+                            key: ValueKey(_flashcardViewModel.words[index].id),
+                            controller: _flashcardControllers[index],
+                            word: _flashcardViewModel.words[index],
+                          );
+                        },
                       );
                     },
                   ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: Stack(
-        children: [
-          const BackgroundLayer(ratio: 40),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: Dimensions.heightRatio(context, 15)),
+                ),
+                SizedBox(height: Dimensions.heightRatio(context, 5)),
 
-              // swiper
-              SizedBox(
-                height: Dimensions.heightRatio(context, 65),
-                width: Dimensions.widthRatio(context, 90),
-                child: FutureBuilder(
-                  future: Future.delayed(const Duration(milliseconds: 350)),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    return AppinioSwiper(
-                      controller: _cardSwiperController,
-                      defaultDirection: AxisDirection.left,
-                      allowUnSwipe: true,
-                      onSwipeEnd: _onSwipeEnd,
-                      onEnd: _onEnd,
-                      backgroundCardCount: 0,
-                      onCardPositionChanged: (position) {
-                        if (position.index == _flashcardViewModel.count) return;
+                //   // functional buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    MyIconButton(
+                      onTap: () async {
                         if (_flashcardViewModel.isPlaying) {
                           _flashcardViewModel.pause();
                         }
-                        if (position.offset.dx > 0) {
-                          _flashcardControllers[position.index]
-                              .setBorderColor(AppColors.mainGreen);
-                        } else if (position.offset.dx < 0) {
-                          _flashcardControllers[position.index]
-                              .setBorderColor(AppColors.mainRed);
-                        } else {
-                          _flashcardControllers[position.index]
-                              .setBorderColor(Colors.transparent);
-                        }
+                        await _cardSwiperController.unswipe();
                       },
-                      threshold: 100,
-                      cardCount: _flashcardViewModel.count,
-                      swipeOptions:
-                          const SwipeOptions.symmetric(horizontal: true),
-                      maxAngle: 0,
-                      loop: false,
-                      duration: Duration(
-                        milliseconds: _flashcardViewModel.isPlaying ? 650 : 550,
-                      ),
-                      backgroundCardScale: 0.0,
-                      cardBuilder: (context, index) {
-                        return Flashcard(
-                          key: ValueKey(_flashcardViewModel.words[index].id),
-                          controller: _flashcardControllers[index],
-                          word: _flashcardViewModel.words[index],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: Dimensions.heightRatio(context, 5)),
-
-              //   // functional buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  MyIconButton(
-                    onTap: () async {
-                      if (_flashcardViewModel.isPlaying) {
-                        _flashcardViewModel.pause();
-                      }
-                      await _cardSwiperController.unswipe();
-                    },
-                    icon: Icons.replay_rounded,
-                    size: Dimensions.iconSize(context, 60),
-                  ),
-                  MyIconButton(
-                    onTap: () async {
-                      if (_flashcardViewModel.isPlaying) {
-                        _flashcardViewModel.pause();
-                      }
-
-                      widget.words.shuffle();
-                      _flashcardViewModel.init(widget.words);
-                      setState(() {});
-                    },
-                    icon: Icons.shuffle_rounded,
-                    size: Dimensions.iconSize(context, 60),
-                  ),
-                  Consumer<FlashcardViewModel>(
-                    builder: (_, flashcardViewModel, __) => MyIconButton(
-                      onTap: flashcardViewModel.isPlaying
-                          ? flashcardViewModel.pause
-                          : flashcardViewModel.play,
-                      icon: flashcardViewModel.isPlaying
-                          ? Icons.pause_rounded
-                          : Icons.play_arrow_rounded,
+                      icon: Icons.replay_rounded,
                       size: Dimensions.iconSize(context, 60),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                    MyIconButton(
+                      onTap: () async {
+                        if (_flashcardViewModel.isPlaying) {
+                          _flashcardViewModel.pause();
+                        }
+
+                        widget.words.shuffle();
+                        _flashcardViewModel.init(widget.words);
+                        setState(() {});
+                      },
+                      icon: Icons.shuffle_rounded,
+                      size: Dimensions.iconSize(context, 60),
+                    ),
+                    Consumer<FlashcardViewModel>(
+                      builder: (_, flashcardViewModel, __) => MyIconButton(
+                        onTap: flashcardViewModel.isPlaying
+                            ? flashcardViewModel.pause
+                            : flashcardViewModel.play,
+                        icon: flashcardViewModel.isPlaying
+                            ? Icons.pause_rounded
+                            : Icons.play_arrow_rounded,
+                        size: Dimensions.iconSize(context, 60),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

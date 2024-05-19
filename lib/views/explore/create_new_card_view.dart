@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -228,6 +227,7 @@ class _CreateNewCardViewState extends State<CreateNewCardView> {
                           );
                           //show a CircularProgressIndicator and add the word to the database
                           await createWordViewModel.addWord(word);
+                          Navigator.pop(context);
                           Navigator.pop(context);
                         } else {
                           Navigator.pop(context);

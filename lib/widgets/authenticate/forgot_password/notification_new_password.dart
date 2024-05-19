@@ -8,12 +8,13 @@ import 'package:vocabinary/widgets/global/show_snack_bar.dart';
 import '../../global/button.dart';
 
 class NewPasswordNotification extends StatefulWidget {
-   NewPasswordNotification({required this.email ,super.key});
+  NewPasswordNotification({required this.email, super.key});
 
   String email;
 
   @override
-  State<NewPasswordNotification> createState() => _NewPasswordNotificationState();
+  State<NewPasswordNotification> createState() =>
+      _NewPasswordNotificationState();
 }
 
 class _NewPasswordNotificationState extends State<NewPasswordNotification> {
@@ -27,7 +28,8 @@ class _NewPasswordNotificationState extends State<NewPasswordNotification> {
         SizedBox(
             width: 300,
             height: 300,
-            child: Image.asset('images/email_sent.png', fit: BoxFit.fill)),
+            child:
+                Image.asset('assets/images/email_sent.png', fit: BoxFit.fill)),
         Text("Password Reset Email Sent",
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -51,42 +53,47 @@ class _NewPasswordNotificationState extends State<NewPasswordNotification> {
         ),
         InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: _isResendDisabled ?  null : () {
-            showLoadingIndicator(context);
-            AuthenticationService.instance.sendEmailResetPassword(widget.email).then((value) {
-              if(value){
-                closeLoadingIndicator(context);
-                ShowSnackBar.showSuccess( "Email Sent Successfully", context,);
-              }
-              else{
-                closeLoadingIndicator(context);
-                ShowSnackBar.showError("Email Can Not Sent", context);
-              }
-            });
-            setState(() {
-              _isResendDisabled = true;
-            });
-            Timer.periodic(const Duration(seconds: 1), (timer) {
-              if(_resendTimeout >0){
-                _resendTimeout--;
-              }
-              else{
-                timer.cancel();
-                setState(() {
-                  _isResendDisabled = false;
-                  _resendTimeout = 10;
-                });
-              }
-            });
-          },
-          child:  SizedBox(
+          onTap: _isResendDisabled
+              ? null
+              : () {
+                  showLoadingIndicator(context);
+                  AuthenticationService.instance
+                      .sendEmailResetPassword(widget.email)
+                      .then((value) {
+                    if (value) {
+                      closeLoadingIndicator(context);
+                      ShowSnackBar.showSuccess(
+                        "Email Sent Successfully",
+                        context,
+                      );
+                    } else {
+                      closeLoadingIndicator(context);
+                      ShowSnackBar.showError("Email Can Not Sent", context);
+                    }
+                  });
+                  setState(() {
+                    _isResendDisabled = true;
+                  });
+                  Timer.periodic(const Duration(seconds: 1), (timer) {
+                    if (_resendTimeout > 0) {
+                      _resendTimeout--;
+                    } else {
+                      timer.cancel();
+                      setState(() {
+                        _isResendDisabled = false;
+                        _resendTimeout = 10;
+                      });
+                    }
+                  });
+                },
+          child: SizedBox(
             height: 40,
             width: 120,
             child: Center(
               child: Text(
                 "Resend Email",
                 style: TextStyle(
-                  color: _isResendDisabled ?  Colors.grey : Colors.blue,
+                  color: _isResendDisabled ? Colors.grey : Colors.blue,
                   fontWeight: FontWeight.bold,
                 ),
               ),

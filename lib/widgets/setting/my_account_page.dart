@@ -49,7 +49,8 @@ class _MyAccountPageState extends State<MyAccountPage> {
 
   void changeCheck() {
     if (nameController.text != user!.name ||
-        emailController.text != user!.email || imageUploaded != null) {
+        emailController.text != user!.email ||
+        imageUploaded != null) {
       setState(() {
         isChange = true;
       });
@@ -95,37 +96,40 @@ class _MyAccountPageState extends State<MyAccountPage> {
             children: [
               Stack(
                 children: [
-                 isLoading ?  const SizedBox(
-                    height: 140,
-                    width: 140,
-                    child: InputLoading(),
-                 )  : CircleAvatar(
-                   onBackgroundImageError: (exception, stackTrace) {
-                     ShowSnackBar.showError('Image Error', context);
-                     setState(() {
-                        imageUploaded = null;
-                        isChange = false;
-                     });
-                   },
-                    radius: 70,
-                    backgroundImage: imageUploaded == null
-                        ? user!.avatar!.isNotEmpty ?
-                    Image.network(user!.avatar!,
-                      loadingBuilder:
-                      (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return  const SizedBox(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                      }
-                    )
-                        .image :
-                    Image.asset('images/avatar.jpg').image
-                        : Image.memory(imageUploaded!, fit: BoxFit.cover).image,
-                  ),
+                  isLoading
+                      ? const SizedBox(
+                          height: 140,
+                          width: 140,
+                          child: InputLoading(),
+                        )
+                      : CircleAvatar(
+                          onBackgroundImageError: (exception, stackTrace) {
+                            print(exception.toString());
+                            ShowSnackBar.showError('Image Error', context);
+                            setState(() {
+                              imageUploaded = null;
+                              isChange = false;
+                            });
+                          },
+                          radius: 70,
+                          backgroundImage: imageUploaded == null
+                              ? user!.avatar!.isNotEmpty
+                                  ? Image.network(user!.avatar!, loadingBuilder:
+                                      (BuildContext context, Widget child,
+                                          ImageChunkEvent? loadingProgress) {
+                                      if (loadingProgress == null) {
+                                        return child;
+                                      } else {
+                                        return const SizedBox(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      }
+                                    }).image
+                                  : Image.asset('assets/images/avatar.jpg')
+                                      .image
+                              : Image.memory(imageUploaded!, fit: BoxFit.cover)
+                                  .image,
+                        ),
                   Positioned(
                     bottom: 0,
                     right: 10,
@@ -136,8 +140,8 @@ class _MyAccountPageState extends State<MyAccountPage> {
                       ),
                       child: GestureDetector(
                         onTap: () async {
-                            imageUploaded = await ImageService.pickImage();
-                            changeCheck();
+                          imageUploaded = await ImageService.pickImage();
+                          changeCheck();
                         },
                         child: const Icon(
                           Icons.camera_alt,
@@ -219,16 +223,17 @@ class _MyAccountPageState extends State<MyAccountPage> {
                     showLoadingIndicator(context);
                     isChange = false;
                     var result;
-                    if(imageUploaded != null){
+                    if (imageUploaded != null) {
                       result = await ImageService.uploadImage(imageUploaded!);
-                      if(result == null){
+                      if (result == null) {
                         ShowSnackBar.showError('Something went wrong', context);
                         return;
                       }
                     }
                     await _settingViewModel.updateUser(
                       user = UserModel(
-                        avatar: imageUploaded != null ? result.image : user!.avatar,
+                        avatar:
+                            imageUploaded != null ? result.image : user!.avatar,
                         name: nameController.text,
                         email: emailController.text,
                       ),
