@@ -19,7 +19,8 @@ class ThemeViewModel extends ChangeNotifier {
   }
 
   void updateTheme(bool isDarkModeOn) async {
-    _sharedPrefsHelper.changeTheme(isDarkModeOn);
+    _sharedPrefsHelper.changeTheme(
+        true); // TODO: change this to isDarkModeOn after implement light theme
     _sharedPrefsHelper.isDarkMode.then((darkModeStatus) {
       _isDarkModeOn = darkModeStatus;
     });
