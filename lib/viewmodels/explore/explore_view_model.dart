@@ -27,6 +27,11 @@ class ExploreViewModel extends ChangeNotifier {
   // Constructor that takes the repository as a parameter
   ExploreViewModel(this.userID);
 
+  // Set userID
+  void setUserID(String id) {
+    userID = id;
+  }
+
   // Getter for the list of topics
   List<TopicModel> get topics => _topics;
 
@@ -60,17 +65,16 @@ class ExploreViewModel extends ChangeNotifier {
     notifyListeners(); // Notify the UI to update
   }
 
-  Future<List> getTopicSaveDestination() async{
+  Future<List> getTopicSaveDestination() async {
     //return folder destination name of the topics
     await loadRecentActivities();
     List<String> destination = [];
     for (var topic in recentTopics) {
       var topicID = topic.id;
       var folder = await _folderRepo.getFolderByTopicID(userID, topicID);
-      if(folder.name != null)
-      {
+      if (folder.name != null) {
         destination.add(folder.name!);
-      }else{
+      } else {
         destination.add('No Folder');
       }
     }
@@ -83,15 +87,15 @@ class ExploreViewModel extends ChangeNotifier {
 
   Stream<List<FolderModel>> getFoldersStreamByTopicNum(int numberOfTopics) {
     return _folderRepo.foldersStream(userID).map((folders) {
-      return folders.where((folder) => folder.topicIDs.length > numberOfTopics).toList();
+      return folders
+          .where((folder) => folder.topicIDs.length > numberOfTopics)
+          .toList();
     });
   }
 
   Future<bool> addTopicToFolder(String folderID, String topicID) async {
     return await _folderRepo.addTopicToFolder(userID, folderID, topicID);
   }
-
-
 
   Future<void> createFolder(FolderModel data) async {
     await _folderRepo.createFolder(userID, data);

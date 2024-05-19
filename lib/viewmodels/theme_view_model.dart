@@ -12,7 +12,8 @@ class ThemeViewModel extends ChangeNotifier {
 
   bool get isDarkModeOn {
     _sharedPrefsHelper.isDarkMode.then((statusValue) {
-      _isDarkModeOn = statusValue;
+      _isDarkModeOn =
+          true; // TODO: change this to isDarkModeOn after implement light theme
     });
 
     return _isDarkModeOn;

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -32,6 +33,8 @@ class _ExploreViewState extends State<ExploreView> {
 
   void init() {
     _viewModel = Provider.of<ExploreViewModel>(context, listen: false);
+    String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+    _viewModel.setUserID(uid);
     _loadTopicsFuture = _viewModel.loadTopics();
     _loadFoldersFuture = _viewModel.loadFolders();
     _loadRecentActivitiesDestinationFuture =
@@ -92,7 +95,7 @@ class _ExploreViewState extends State<ExploreView> {
                         child: Wrap(
                           children: [
                             RichText(
-                              text:  TextSpan(
+                              text: TextSpan(
                                 style: TextStyle(
                                   fontSize: Dimensions.fontSize(context, 22),
                                   color: Colors.white,
@@ -113,11 +116,13 @@ class _ExploreViewState extends State<ExploreView> {
                           ],
                         ),
                       ),
-                        const SizedBox(
+                      const SizedBox(
                         width: 140,
                         height: 110,
                         child: Image(
-                          image: AssetImage('assets/images/explore.png',),
+                          image: AssetImage(
+                            'assets/images/explore.png',
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),

@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator(); // Show loading indicator while waiting for auth state to change
         } else {
-          String uid = snapshot.data?.uid ?? '';
+          String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(create: (context) => ThemeViewModel()),
