@@ -218,7 +218,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                   if (_formKey.currentState!.validate()) {
                     showLoadingIndicator(context);
                     isChange = false;
-                    late final result;
+                    var result;
                     if(imageUploaded != null){
                       result = await ImageService.uploadImage(imageUploaded!);
                       if(result == null){
@@ -228,7 +228,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
                     }
                     await _settingViewModel.updateUser(
                       user = UserModel(
-                        avatar: imageUploaded != null ? (result as ImgbbResponse).image : user!.avatar,
+                        avatar: imageUploaded != null ? result.image : user!.avatar,
                         name: nameController.text,
                         email: emailController.text,
                       ),
