@@ -24,7 +24,7 @@ class _FolderCardState extends State<FolderCard> {
            const SizedBox(
              width: 160,
              child: Image(
-               image: AssetImage('images/folder.png'),
+               image: AssetImage('assets/images/folder.png'),
                fit: BoxFit.fitWidth,
              ),
            ),

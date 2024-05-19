@@ -79,6 +79,7 @@ dependencies:
     otp: ^3.1.4
     shimmer: ^3.0.0
     image_picker: ^1.1.1
+    pull_to_refresh_flutter3: ^2.0.2
 
 dev_dependencies:
     flutter_test:

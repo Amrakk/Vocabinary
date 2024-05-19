@@ -9,7 +9,6 @@ class ImgbbResponse {
     return ImgbbResponse(
       image: map['image']['url'] ?? '',
       thumb: map['thumb']['url'] ?? '',
-      medium: map['medium']['url'] ?? '',
     );
 
   }
