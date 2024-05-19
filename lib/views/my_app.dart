@@ -68,40 +68,6 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
-  // return MultiProvider(
-  //   providers: [
-  //     ChangeNotifierProvider(create: (context) => ThemeViewModel()),
-  //     ChangeNotifierProvider(create: (context) => FlashcardViewModel()),
-  //     ChangeNotifierProvider(create: (context) => TypingViewModel()),
-  //     ChangeNotifierProvider(create: (context) => QuizViewModel(),),
-  //     ChangeNotifierProvider(create: (context) => ExploreViewModel(uid)),
-  //     ChangeNotifierProvider(create: (context) => AuthenticateViewModel()),
-  //     ChangeNotifierProvider(create: (context) => CommunityViewModel()),
-  //     ChangeNotifierProvider(create: (context) => SettingViewModel()),
-  //   ],
-  //   child: Consumer<ThemeViewModel>(
-  //     builder: (_, themeViewModel, __) => MaterialApp(
-  //       debugShowCheckedModeBanner: false,
-  //       title: 'Vocabinary',
-  //       darkTheme: AppThemes.darkTheme(),
-  //       themeMode:
-  //           themeViewModel.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-  //       home: StreamBuilder(
-  //         stream: _authenticationService.authStateChanges,
-  //         builder: (context, snapshot) {
-  //           if(snapshot.connectionState == ConnectionState.waiting){
-  //             return const MyLoadingIndicator();
-  //           }
-  //           if(snapshot.hasData){
-  //             return const MyHomePage();
-  //           }
-  //           return  const LoginView();
-  //         },
-  //       ),
-  //       onGenerateRoute: AppRoutes.generateRoutes,
-  //     ),
-  //   ),
-  // );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -117,7 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void dispose() {
-    _mainNavigatorKey.currentState!.dispose();
     super.dispose();
   }
 

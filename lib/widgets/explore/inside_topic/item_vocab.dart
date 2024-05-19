@@ -13,10 +13,10 @@ import '../../../viewmodels/explore/word_view_model.dart';
 class ItemVocab extends StatefulWidget {
   final EngWordModel engWord;
   final WordModel word;
-   bool? isEditable= true;
+  bool? isEditable = true;
   final String topicID;
 
-   ItemVocab({
+  ItemVocab({
     super.key,
     this.isEditable,
     required this.topicID,
@@ -42,54 +42,58 @@ class _ItemVocabState extends State<ItemVocab> {
     final AppColorsThemeData appColors =
         Theme.of(context).extension<AppColorsThemeData>()!;
     return Slidable(
-      startActionPane: widget.isEditable ?? true ? ActionPane(motion: const DrawerMotion(), children: [
-        SlidableAction(
-          onPressed: (ctx) {
-            //confirm dialog
-            showDialog(
-                context: context,
-                builder: (ctx) {
-                  return AlertDialog(
-                    title: const Text('Delete Word'),
-                    content: const Text('Are you sure you want to delete this word?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          await _wordViewModel.deleteWord(widget.word.id!);
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Delete'),
-                      ),
-                    ],
-                  );
-                });
-          },
-          icon: Icons.delete,
-          backgroundColor: AppColors.mainRed,
-          foregroundColor: Colors.white,
-        ),
-        SlidableAction(
-          onPressed: (ctx) {
-            //navigate to edit word
-            Navigator.of(context).pushNamed(
-              '/update-card',
-              arguments: UpdateCardArgs(
-                topicID: widget.topicID,
-                word: widget.word,
+      startActionPane: widget.isEditable ?? true
+          ? ActionPane(motion: const DrawerMotion(), children: [
+              SlidableAction(
+                onPressed: (ctx) {
+                  //confirm dialog
+                  showDialog(
+                      context: context,
+                      builder: (ctx) {
+                        return AlertDialog(
+                          title: const Text('Delete Word'),
+                          content: const Text(
+                              'Are you sure you want to delete this word?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await _wordViewModel
+                                    .deleteWord(widget.word.id!);
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Delete'),
+                            ),
+                          ],
+                        );
+                      });
+                },
+                icon: Icons.delete,
+                backgroundColor: AppColors.mainRed,
+                foregroundColor: Colors.white,
               ),
-            );
-          },
-          icon: Icons.edit,
-          backgroundColor: AppColors.mainYellow,
-          foregroundColor: Colors.white,
-        ),
-      ]) : null ,
+              SlidableAction(
+                onPressed: (ctx) {
+                  //navigate to edit word
+                  Navigator.of(context).pushNamed(
+                    '/update-card',
+                    arguments: UpdateCardArgs(
+                      topicID: widget.topicID,
+                      word: widget.word,
+                    ),
+                  );
+                },
+                icon: Icons.edit,
+                backgroundColor: AppColors.mainYellow,
+                foregroundColor: Colors.white,
+              ),
+            ])
+          : null,
       child: Stack(
         children: [
           Container(
@@ -126,7 +130,7 @@ class _ItemVocabState extends State<ItemVocab> {
                       ),
                       SizedBox(height: Dimensions.heightRatio(context, 1)),
                       Text(
-                        widget.engWord.phonetic!,
+                        widget.engWord.phonetic ?? '',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: Dimensions.fontSize18(context),
