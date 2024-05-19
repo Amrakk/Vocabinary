@@ -40,9 +40,7 @@ class _LoginViewState extends State<LoginView> {
           duration: const Duration(seconds: 5),
         ).show(context);
       } else {
-        if (mounted) {
           closeLoadingIndicator(context);
-        }
       }
     }
   }
