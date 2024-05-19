@@ -38,6 +38,7 @@ class _LoginWithGoogleState extends State<LoginWithGoogle> {
       // Login
       for (var i in signInMethods) {
         if(i == 'google.com'){
+          print("Google Sign In calling");
           await FirebaseAuth.instance.signInWithCredential(credential);
         }
         else {

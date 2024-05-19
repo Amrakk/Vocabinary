@@ -26,7 +26,7 @@ class _SettingViewState extends State<SettingView> {
 
   void init() async{
     settingViewModel = Provider.of<SettingViewModel>(context, listen: false);
-    user = await settingViewModel?.getUser() ?? UserModel();
+    user = await settingViewModel?.getUser(FirebaseAuth.instance.currentUser!.uid) ?? UserModel();
     setState(() {
       isLoading = false;
     });
@@ -337,8 +337,9 @@ class _SettingViewState extends State<SettingView> {
               const SizedBox(height: 25),
               Button(
                 nameButton: 'Log Out',
-                onPressed: () {
-                  AuthenticationService.instance.signOut();
+                onPressed: () async {
+                  AuthenticationService.instance.destroyInstance();
+                  await FirebaseAuth.instance.signOut();
                 },
               ),
               const SizedBox(height: 40),

@@ -5,9 +5,15 @@ class AuthenticationService {
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
   User? get currentUser => _firebaseAuth.currentUser;
   // Singleton
-  AuthenticationService._privateConstructor();
-  static final AuthenticationService _instance = AuthenticationService._privateConstructor();
-  static AuthenticationService get instance => _instance;
+   AuthenticationService._privateConstructor();
+   // Static instance of the singleton
+   static AuthenticationService? _instance;
+
+   // Getter to access the singleton instance
+   static AuthenticationService get instance {
+     _instance ??= AuthenticationService._privateConstructor();
+     return _instance!;
+   }
 
   Future<String?> signIn({required String email, required String password}) async {
     try {
@@ -53,6 +59,9 @@ class AuthenticationService {
         throw e;
       }
     }
+  }
+  void destroyInstance(){
+    _instance = null;
   }
 
 
